@@ -101,6 +101,15 @@ service cloud.firestore {
       allow delete: if ownsPlayer(resource.data.pid);
     }
 
+    // Login link: which card a username + PIN account owns. Only that account can read it.
+    match /accounts/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['pid', 'code', 'user'])
+        && request.resource.data.user is string && request.resource.data.user.size() <= 20;
+      allow delete: if false;
+    }
+
     // Room to grow: per-player extras (achievements, settings) without new rules.
     match /extras/{pid}/{doc} {
       allow read: if true;

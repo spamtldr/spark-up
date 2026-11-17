@@ -118,6 +118,8 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .phs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.ph{display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:8px;min-height:130px;background:#fff;text-align:center}.ph b{font-weight:700}.ph .amp{font-weight:700;font-size:20px}.ld2{font-size:13px;background:#F4F7FA;border:2px solid var(--ink);border-radius:8px;padding:2px 4px}
 .updbar{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:35;background:var(--grn);color:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);font:700 16px Fredoka,system-ui,sans-serif;padding:10px 16px;-webkit-text-stroke:.3px var(--ink)}
 .vers{font-size:12px;opacity:.6;text-align:center;margin-top:6px}
+.lockbar,.tipbar{display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:10px;font-size:15px}.lockbar{background:#FFE1E1;cursor:pointer}.tipbar{background:#E6F4FF;display:flex;gap:8px;align-items:center;justify-content:space-between}
+.bigcode{font:700 26px 'Courier New',monospace;text-align:center;background:#FFF3C4;border:3px solid var(--ink);border-radius:12px;padding:10px;letter-spacing:1px}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -196,7 +198,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.16-7';
+const VER='2026.11.16-8';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -357,7 +359,7 @@ function bindNav(){$('#nj').onclick=()=>{tick();board()};$('#nh').onclick=()=>{t
 function title(){
  let armed=false;
  app.innerHTML=`<div class="title"><svg class="logo" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="#FFF8E7" stroke="${INK}" stroke-width="5"/><path d="M68 12L32 66h24l-8 42 40-58H64z" fill="#FFC93C" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/></svg><h1>Spark Up</h1><p>Wire it. Fix it. Pass the exam. Go from apprentice to journeyman.</p><button class="btn big" id="go">${S.xp?'Clock back in':'Clock in'}</button>${S.xp?'<button class="link" id="wipe">Start over</button>':''}</div>`;
- $('#go').onclick=()=>{tick();S.name?board():signup()};
+ $('#go').onclick=()=>{tick();S.name?board():welcome()};
  const w=$('#wipe');if(w)w.onclick=()=>{if(!armed){armed=true;w.textContent='Tap again to erase your progress and earnings';return}
   S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:S.mute,view:0,look:{hat:'yellow'},owned:{},name:S.name,pid:S.pid,code:S.code,ownerUid:S.ownerUid,joinPosted:S.joinPosted,joinedSync:S.joinedSync};save();syncMe();title()};
 }
@@ -373,7 +375,10 @@ function board(){
  const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
  const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
  const dj=daily&&!dDone?J(daily):null;
- app.innerHTML=hud()+nav('jobs')+ceBox+`<div class="yrsel"><button class="arw" id="yp" ${canPrev?'':'disabled'} aria-label="Previous year">&lsaquo;</button><h2 class="sec">Year ${yr} jobs${passed?' <span class="ok">✓</span>':''}</h2><button class="arw" id="yn" ${canNext?'':'disabled'} aria-label="Next year">&rsaquo;</button></div>
+ const ios=/iP(hone|ad|od)/.test(navigator.userAgent)&&!navigator.standalone;
+ const lockBox=S.name&&!S.user&&fbState==='online'?`<button class="lockbar card" id="lkb">🔒 <b>Lock in your card.</b> Set a username + PIN so you never lose your progress.</button>`:'';
+ const tipBox=ios&&!S.a2hs?`<div class="tipbar card"><span>📲 Tip: tap <b>Share → Add to Home Screen</b>. It plays like an app and keeps your progress safer.</span><button class="link" id="tipx" style="margin:0;min-height:32px">Got it</button></div>`:'';
+ app.innerHTML=hud()+nav('jobs')+lockBox+tipBox+ceBox+`<div class="yrsel"><button class="arw" id="yp" ${canPrev?'':'disabled'} aria-label="Previous year">&lsaquo;</button><h2 class="sec">Year ${yr} jobs${passed?' <span class="ok">✓</span>':''}</h2><button class="arw" id="yn" ${canNext?'':'disabled'} aria-label="Next year">&rsaquo;</button></div>
  ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>Year ${yr} exam${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
@@ -381,6 +386,7 @@ function board(){
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
  bindHud();bindNav();
  const g=$('#goce');if(g)g.onclick=()=>{S.view=ce;save();tick();board()};
+ const lkb=$('#lkb');if(lkb)lkb.onclick=()=>lockScreen();const tx=$('#tipx');if(tx)tx.onclick=()=>{S.a2hs=1;saveLocal();tick();board()};
  const dd=$('#dj');if(dd)dd.onclick=()=>{tick();S.view=dj.yr;save();JOBF[dj.id]()};
  $('#yp').onclick=()=>{if(!canPrev)return;S.view=yr-1;saveLocal();tick();board()};$('#yn').onclick=()=>{if(!canNext)return;S.view=yr+1;saveLocal();tick();board()};
  const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
@@ -1644,8 +1650,10 @@ async function initFB(){
   const base=`https://www.gstatic.com/firebasejs/${FBV}/`;
   await Promise.race([to,(async()=>{
    const[A0,A,F]=await Promise.all([import(base+'firebase-app.js'),import(base+'firebase-auth.js'),import(base+'firebase-firestore.js')]);
-   const app=A0.initializeApp(CFG);const auth=A.getAuth(app);const cred=await A.signInAnonymously(auth);
-   fb={db:F.getFirestore(app),uid:cred.user.uid,F};
+   const app=A0.initializeApp(CFG);const auth=A.getAuth(app);
+   const cur=await new Promise(res=>{const u=A.onAuthStateChanged(auth,x=>{u();res(x)})});
+   const user=cur||(await A.signInAnonymously(auth)).user;
+   fb={db:F.getFirestore(app),uid:user.uid,F,A,auth};
   })()]);
   fbState='online';
   await ensureId();
@@ -1684,33 +1692,83 @@ async function restore(raw){
 }
 const ago=ts=>{if(!ts||!ts.toMillis)return 'just now';const s=(Date.now()-ts.toMillis())/1000;return s<60?'just now':s<3600?Math.floor(s/60)+'m ago':s<86400?Math.floor(s/3600)+'h ago':Math.floor(s/86400)+'d ago'};
 
+/* ---------- ACCOUNTS: username + PIN ---------- */
+const UEMAIL=u=>u+'@players.sparkup.game',PW=p=>'sparkup:'+p;
+function validUP(u,p){if(!/^[a-z0-9_]{3,20}$/.test(u))return 'Username: 3 to 20 letters, numbers or underscores. No spaces.';if(!/^\d{6}$/.test(p))return 'PIN must be exactly 6 numbers.';return ''}
+const authErr=err=>{const c=String(err&&err.code||'');return c.includes('email-already-in-use')||c.includes('credential-already-in-use')?'That username is taken. Try another.':c.includes('operation-not-allowed')?'Logins aren\'t switched on yet. Ask your hall steward.':c.includes('network')?'No connection. Try again.':c.includes('too-many-requests')?'Too many tries. Wait a minute and try again.':'Couldn\'t do that. Try again.'};
+async function lockIn(u,p){if(!fb)throw new Error('Can\'t reach the hall right now. Try again in a minute.');const e=validUP(u,p);if(e)throw new Error(e);
+ await ensureId();const cur=fb.auth.currentUser;
+ if(!cur||!cur.isAnonymous)throw new Error('This device is already locked in.');
+ try{await fb.A.linkWithCredential(cur,fb.A.EmailAuthProvider.credential(UEMAIL(u),PW(p)))}catch(err){throw new Error(authErr(err))}
+ try{await fb.F.setDoc(fb.F.doc(fb.db,'accounts',fb.uid),{pid:S.pid,code:S.code,user:u})}catch(err){}
+ S.user=u;save()}
+async function logIn(u,p){if(!fb)throw new Error('Can\'t reach the hall right now. Try again in a minute.');const e=validUP(u,p);if(e)throw new Error(e);
+ let user;try{user=(await fb.A.signInWithEmailAndPassword(fb.auth,UEMAIL(u),PW(p))).user}catch(err){throw new Error(String(err.code||'').includes('operation-not-allowed')?authErr(err):'Wrong username or PIN.')}
+ fb.uid=user.uid;const F=fb.F;let a;try{a=await F.getDoc(F.doc(fb.db,'accounts',user.uid))}catch(err){throw new Error('Can\'t read your card. Try again.')}
+ if(!a.exists())throw new Error('That login has no card attached. Use your hall code instead.');
+ await restore(a.data().code);S.user=u;S.ownerUid=fb.uid;save()}
+const slugU=n=>String(n||'').toLowerCase().replace(/[^a-z0-9]+/g,'').slice(0,16);
+const fieldsUP=(u)=>`<label for="un" style="font-weight:600">Username</label><input id="un" class="inp" maxlength="20" autocapitalize="none" autocomplete="username" spellcheck="false" value="${esc(u||'')}" placeholder="like mike_r">
+ <label for="pn" style="font-weight:600">6-digit PIN</label><input id="pn" class="inp" type="password" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="new-password" placeholder="••••••">`;
+
+function welcome(){
+ app.innerHTML=`<div class="title" style="padding-top:5vh">${hatSvg('yellow','width:110px;height:110px')}<h1 style="font-size:44px">Union Hall</h1><p>${LOCAL}</p>
+ <button class="btn big" id="wj" style="width:100%;max-width:340px">New here? Join the hall</button>
+ <button class="btn alt big" id="wl" style="width:100%;max-width:340px;margin-top:12px">I'm a member. Log in</button></div>`;
+ $('#wj').onclick=()=>{tick();signup()};$('#wl').onclick=()=>{tick();login()};
+}
 function signup(edit){
- app.innerHTML=`<div class="title" style="padding-top:4vh">${hatSvg(S.look.hat,'width:110px;height:110px')}
- <h1 style="font-size:44px">Union Hall</h1><p>${edit?'Change the name on your hall card.':'Sign in at '+LOCAL+' before you clock in. Just your name. Other members will see it on the roster.'}</p>
- <div class="card" style="padding:16px;text-align:left;max-width:360px;margin:0 auto"><label for="nm" style="font-weight:600">Your name</label>
- <input id="nm" maxlength="24" autocomplete="name" value="${esc(S.name||'')}" placeholder="First name and last initial" class="inp">
- <p id="ne" class="err"></p>
- <button class="btn" id="join" style="width:100%">${edit?'Save name':'Join the hall'}</button>
- ${edit?'<button class="link" id="cx">Cancel</button>':''}</div>
- ${edit?'':`<button class="link" id="rsl">Already in the hall? Use your hall code</button>
- <div class="card" id="rsb" style="padding:16px;text-align:left;max-width:360px;margin:6px auto 0;display:none"><label for="rc" style="font-weight:600">Hall code</label>
- <input id="rcx" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="ABCD-EFGH-JK" class="inp">
- <p id="re" class="err"></p><button class="btn alt" id="rsg" style="width:100%">Bring back my card</button></div>`}
- <p class="fine">Tip: first name and last initial works great, like "Mike R."</p></div>`;
- const inp=$('#nm');inp.oninput=()=>{$('#ne').textContent=''};
- const go=()=>{const v=inp.value.replace(/\s+/g,' ').trim();
-  if(v.length<2){$('#ne').textContent='Enter at least 2 letters.';return}
-  if(!/^[A-Za-zÀ-ÿ' .\-]+$/.test(v)){$('#ne').textContent='Letters only, please. Spaces, periods, dashes and apostrophes are OK.';return}
-  const first=!S.name;S.name=v;save();good();syncMe();
-  if(first&&fb&&!S.joinPosted){S.joinPosted=1;saveLocal();post(`${v} joined the hall. Welcome!`)}
-  board()};
- $('#join').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
- const cx=$('#cx');if(cx)cx.onclick=()=>{tick();board()};
- const rl=$('#rsl');if(rl){rl.onclick=()=>{tick();$('#rsb').style.display='block';rl.style.display='none';$('#rcx').focus()};
-  $('#rcx').oninput=()=>{$('#re').textContent=''};
-  $('#rsg').onclick=async()=>{const b=$('#rsg');b.disabled=true;b.textContent='Checking…';
-   try{await restore($('#rcx').value);good();confetti();board()}catch(e){bad();$('#re').textContent=e.message;b.disabled=false;b.textContent='Bring back my card'}}}
- if(!edit)setTimeout(()=>inp.focus(),50);
+ if(edit){app.innerHTML=`<div class="title" style="padding-top:4vh">${hatSvg(S.look.hat,'width:100px;height:100px')}<h1 style="font-size:40px">Edit name</h1>
+  <div class="card" style="padding:16px;text-align:left;max-width:360px;margin:0 auto"><label for="nm" style="font-weight:600">Your name</label><input id="nm" maxlength="24" value="${esc(S.name||'')}" class="inp"><p id="ne" class="err"></p><button class="btn" id="join" style="width:100%">Save name</button><button class="link" id="cx">Cancel</button></div></div>`;
+  $('#cx').onclick=()=>{tick();board()};
+  $('#join').onclick=()=>{const v=$('#nm').value.replace(/\s+/g,' ').trim();if(v.length<2||!/^[A-Za-zÀ-ÿ' .\-]+$/.test(v)){$('#ne').textContent='Letters only, at least 2.';return}S.name=v;save();syncMe();good();board()};return}
+ app.innerHTML=`<div class="title" style="padding-top:3vh">${hatSvg('yellow','width:90px;height:90px')}<h1 style="font-size:40px">Join the hall</h1><p>Your name goes on the roster. Your username and PIN let you log in on any phone.</p>
+ <div class="card" style="padding:16px;text-align:left;max-width:360px;margin:0 auto">
+ <label for="nm" style="font-weight:600">Your name (shown on the roster)</label><input id="nm" maxlength="24" autocomplete="name" placeholder="First name and last initial" class="inp">
+ ${fieldsUP('')}<p id="ne" class="err"></p>
+ <button class="btn" id="join" style="width:100%">Join the hall</button><button class="link" id="back2">Back</button></div></div>`;
+ const nm=$('#nm'),un=$('#un');let touched=false;un.oninput=()=>{touched=true;$('#ne').textContent=''};nm.oninput=()=>{if(!touched)un.value=slugU(nm.value);$('#ne').textContent=''};
+ $('#back2').onclick=()=>{tick();welcome()};
+ $('#join').onclick=async()=>{const v=nm.value.replace(/\s+/g,' ').trim(),u=un.value.trim().toLowerCase(),p=$('#pn').value.trim(),er=$('#ne'),b=$('#join');
+  if(v.length<2){er.textContent='Enter your name (at least 2 letters).';return}
+  if(!/^[A-Za-zÀ-ÿ' .\-]+$/.test(v)){er.textContent='Name: letters only. Spaces, periods, dashes and apostrophes are OK.';return}
+  const ve=validUP(u,p);if(ve){er.textContent=ve;return}
+  b.disabled=true;b.textContent='Joining…';
+  if(fb){try{await lockIn(u,p)}catch(e){if(!/switched on/.test(e.message)){bad();er.textContent=e.message;b.disabled=false;b.textContent='Join the hall';return}}}
+  S.name=v;save();good();syncMe();if(fb&&!S.joinPosted){S.joinPosted=1;saveLocal();post(`${v} joined the hall. Welcome!`)}
+  saved(u)};
+ setTimeout(()=>nm.focus(),50);
+}
+function saved(u){
+ app.innerHTML=`<div class="title" style="padding-top:4vh">${hatSvg(S.look.hat,'width:90px;height:90px')}<h1 style="font-size:38px">You're in!</h1>
+ <div class="card" style="padding:16px;text-align:left;max-width:360px;margin:0 auto">
+ ${S.user?`<p style="margin:0 0 6px"><b>Log in anywhere with:</b><br>Username: <b>${esc(S.user)}</b><br>PIN: the 6 numbers you picked</p>`:'<p style="margin:0 0 6px"><b>You\'re offline,</b> so lock in a username and PIN from the job board once you\'re connected.</p>'}
+ ${S.code?`<p style="margin:10px 0 4px"><b>Backup hall code</b></p><div class="bigcode">${fmtCode(S.code)}</div>`:''}
+ <p class="err" style="color:var(--ink);font-weight:600;margin-top:10px">📸 Take a screenshot of this screen now.</p>
+ <button class="btn" id="ok2" style="width:100%">I saved it. Let's work!</button></div></div>`;
+ $('#ok2').onclick=()=>{tick();board()};
+}
+function login(){
+ app.innerHTML=`<div class="title" style="padding-top:4vh">${hatSvg('yellow','width:90px;height:90px')}<h1 style="font-size:40px">Welcome back</h1>
+ <div class="card" style="padding:16px;text-align:left;max-width:360px;margin:0 auto">${fieldsUP('')}<p id="ne" class="err"></p>
+ <button class="btn" id="li" style="width:100%">Log in</button>
+ <button class="link" id="lc">Use a hall code instead</button>
+ <div id="rsb" style="display:none"><label for="rcx" style="font-weight:600">Hall code</label><input id="rcx" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="ABCD-EFGH-JK" class="inp"><p id="re" class="err"></p><button class="btn alt" id="rsg" style="width:100%">Bring back my card</button></div>
+ <button class="link" id="back2">Back</button></div></div>`;
+ $('#pn').setAttribute('autocomplete','current-password');
+ $('#back2').onclick=()=>{tick();welcome()};
+ $('#li').onclick=async()=>{const u=$('#un').value.trim().toLowerCase(),p=$('#pn').value.trim(),b=$('#li');b.disabled=true;b.textContent='Logging in…';
+  try{await logIn(u,p);good();confetti();board()}catch(e){bad();$('#ne').textContent=e.message;b.disabled=false;b.textContent='Log in'}};
+ $('#lc').onclick=()=>{tick();$('#rsb').style.display='block';$('#lc').style.display='none'};
+ $('#rsg').onclick=async()=>{const b=$('#rsg');b.disabled=true;b.textContent='Checking…';try{await restore($('#rcx').value);good();confetti();board()}catch(e){bad();$('#re').textContent=e.message;b.disabled=false;b.textContent='Bring back my card'}};
+}
+function lockScreen(){
+ const o=document.createElement('div');o.className='modal';
+ o.innerHTML=`<div class="res card" style="text-align:left"><h2 style="font-size:24px;text-align:center">Lock in your card</h2><p style="margin:6px 0 10px">Pick a username and PIN. Then you can log in on any phone and your card, cash and rank come with you.</p>${fieldsUP(slugU(S.name))}<p id="ne" class="err"></p><button class="btn" id="lk2" style="width:100%">Lock it in</button><button class="link" id="lx">Later</button></div>`;
+ document.body.appendChild(o);tick();
+ o.querySelector('#lx').onclick=()=>{o.remove()};
+ o.querySelector('#lk2').onclick=async()=>{const u=o.querySelector('#un').value.trim().toLowerCase(),p=o.querySelector('#pn').value.trim(),b=o.querySelector('#lk2');b.disabled=true;b.textContent='Saving…';
+  try{await lockIn(u,p);o.remove();good();confetti();saved(u)}catch(e){bad();o.querySelector('#ne').textContent=e.message;b.disabled=false;b.textContent='Lock it in'}};
 }
 
 /* ---------- HALL NEWS: reactions + comments ---------- */
@@ -1785,7 +1843,7 @@ function profile(m,mine){
  ${lk.truck||lk.belt?`<div class="prow">${lk.truck?`<div>${truckSvg(lk.truck,'width:96px;height:60px')}<small>${TRUCKS[lk.truck][0]}</small></div>`:''}${lk.belt?`<div>${beltSvg(lk.belt,'width:96px;height:60px')}<small>${BELTS[lk.belt][0]}</small></div>`:''}</div>`:''}
  <div class="ptools">${Object.keys(TOOLS).map(t=>`<span class="pt${lk.tools.includes(t)?'':' no'}${lk.tool===t?' fav':''}" title="${TOOLS[t][0]}">${toolSvg(t,'width:34px;height:38px')}</span>`).join('')}</div>
  <p class="fine" style="margin:6px 0 12px">${lk.tool?'Favorite tool: '+TOOLS[lk.tool][0]:lk.tools.length?'':'No tools yet.'}</p>
- ${mine?`<div class="mine"><button class="btn alt sm" id="psnd">Sound: ${S.mute?'off':'on'}</button><button class="btn alt sm" id="pname">Edit name</button>${S.code?`<div class="codebox"><b>Your hall code</b><small>Keep it safe. It moves your card and progress to a new phone.</small><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button><button class="link" id="prs" style="margin-top:4px">Have an older hall code? Bring that card back</button></div>`:''}</div>`:''}
+ ${mine?`<div class="mine">${S.user?`<p style="grid-column:1/-1;margin:0;font-size:15px">Logged in as <b>${esc(S.user)}</b></p>`:`<button class="btn sm" id="plk" style="grid-column:1/-1">🔒 Lock in your card (username + PIN)</button>`}<button class="btn alt sm" id="psnd">Sound: ${S.mute?'off':'on'}</button><button class="btn alt sm" id="pname">Edit name</button>${S.code?`<div class="codebox"><b>Your hall code</b><small>Keep it safe. It moves your card and progress to a new phone.</small><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button><button class="link" id="prs" style="margin-top:4px">Have an older hall code? Bring that card back</button></div>`:''}</div>`:''}
  <button class="btn" id="pclose" style="width:100%">Close</button></div>`;
  document.body.appendChild(o);tick();
  o.onclick=e=>{if(e.target===o)o.remove()};
@@ -1793,6 +1851,7 @@ function profile(m,mine){
  const sn=o.querySelector('#psnd');if(sn)sn.onclick=()=>{S.mute=!S.mute;saveLocal();sn.textContent='Sound: '+(S.mute?'off':'on');tick()};
  const prs=o.querySelector('#prs');if(prs)prs.onclick=()=>{const cb=prs.parentElement;cb.innerHTML=`<b>Bring back an old card</b><small>This replaces this phone's progress with the old card's.</small><input id="rcx2" class="inp" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="ABCD-EFGH-JK"><p id="re2" class="err"></p><button class="btn alt sm" id="rsg2">Bring it back</button>`;
   o.querySelector('#rsg2').onclick=async()=>{const b=o.querySelector('#rsg2');b.disabled=true;b.textContent='Checking…';try{await restore(o.querySelector('#rcx2').value);good();confetti();o.remove();board()}catch(e){bad();o.querySelector('#re2').textContent=e.message;b.disabled=false;b.textContent='Bring it back'}}};
+ const plk=o.querySelector('#plk');if(plk)plk.onclick=()=>{o.remove();lockScreen()};
  const pn=o.querySelector('#pname');if(pn)pn.onclick=()=>{o.remove();tick();onHall=false;signup(true)};
  const cc=o.querySelector('#cc');if(cc)cc.onclick=()=>{try{navigator.clipboard.writeText(fmtCode(S.code)).then(()=>{cc.textContent='Copied!';setTimeout(()=>{cc.textContent=fmtCode(S.code)},1500)}).catch(()=>{})}catch(e){}};
 }
