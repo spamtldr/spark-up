@@ -139,6 +139,10 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .dcj{background:#2B2F36;color:#fff}
 .review{pointer-events:none;padding-bottom:46vh}.rvw{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;width:calc(100% - 20px);max-width:540px;max-height:44vh;overflow:auto;z-index:24;padding:10px 12px;background:#FFF8E7;animation:cin .25s ease-out}
 .rvh{display:flex;align-items:center;justify-content:space-between;position:sticky;top:-10px;background:#FFF8E7;padding:2px 0 6px}.rvh b{font-size:18px}.rvl p{display:flex;gap:6px;margin:6px 0;font-size:15px;line-height:1.35}.rk{color:#1E6B3A}.rk span,.rb span{color:var(--ink)}.rb{color:#C0392B}.rvl summary{font-weight:600;cursor:pointer;margin-top:6px}
+.dmm text,.dmm path{pointer-events:none}#psv text,#rsv text{pointer-events:none}.sideh{color:#fff;text-shadow:0 2px 0 var(--ink);font-size:20px;margin:22px 2px 8px}.sideh small{display:block;font-size:13.5px;font-weight:500;text-shadow:none;opacity:.95}
+.lcdbox{display:inline-block;min-width:150px;background:#C8E6B0;border:3px solid var(--ink);border-radius:10px;padding:6px 14px}.lcdbox b{font-family:monospace;font-size:28px;color:#22381A;display:inline-block;transition:transform .15s}.lcdbox b.pop{transform:scale(1.18)}
+.wzg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wzg .col{display:flex;flex-direction:column;gap:8px}.brk,.spl{display:flex;align-items:center;gap:8px;padding:8px 10px;font:inherit;color:var(--ink);text-align:left;min-height:52px;cursor:pointer}.brk b,.spl b{font-weight:600}.brk small,.spl small{margin-left:auto;font-size:12px}.spl{flex-wrap:wrap}.spl small{margin-left:0;width:100%;opacity:.7}
+.brk .bh{width:14px;height:28px;border-radius:4px;background:#3A3F4A;border:2px solid var(--ink)}.brk.on{background:var(--yel)}.brk.ok{background:#DDF7E6}.sp{width:28px;height:28px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-size:12px;font-weight:700}.wdot{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);margin-right:6px;vertical-align:-2px}
 .coach{position:fixed;left:50%;transform:translateX(-50%);top:10px;width:calc(100% - 24px);max-width:520px;z-index:26;padding:12px 44px 16px 14px;background:#FFF8E7;animation:cin .25s ease-out;overflow:hidden}
 .coach.out{animation:cout .22s ease-in forwards}.coach.k-arc{background:#E8F1FF}.coach.k-smoke{background:#EEF0F3}.coach.k-hot{background:#FFE9DE}.coach.k-trip{background:#FFF1D6}
 .coach .ch{display:flex;align-items:center;gap:8px;font-size:18px;margin-bottom:4px}.coach .ci{font-size:24px}.coach .sk{margin-left:auto;font-size:13px;font-weight:700;background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:2px 8px;white-space:nowrap}.coach .sk.out{background:#FF5A5A;color:#fff}.coach .cb{font-size:16px;line-height:1.4}
@@ -233,7 +237,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.17-5';
+const VER='2026.11.17-6';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -290,66 +294,70 @@ off:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#E3E7EC" str
 const RANK=['','1st year apprentice','2nd year apprentice','3rd year apprentice','4th year apprentice','5th year apprentice','Journeyman','Master electrician'];
 const YMAX=5,PLAN={1:6,2:8,3:10,4:16,5:20};
 const JOBS=[
- {id:'install',yr:1,kind:'Install job',title:'Swap a receptacle',pay:80,xp:40,icon:'plug',color:'#FFC93C'},
- {id:'service',yr:1,kind:'Service call',title:'"My bathroom outlets died!"',pay:120,xp:50,icon:'meter',color:'#7FD8FF'},
- {id:'layout',yr:1,kind:'Layout job',title:'Route the kitchen circuit',pay:100,xp:50,icon:'grid',color:'#8EE59B'},
- {id:'emerg',yr:1,kind:'Emergency call',title:'Party panel meltdown',pay:100,xp:50,icon:'bolt',color:'#FF9C9C'},
- {id:'bench',yr:1,kind:'Shop job',title:'Bench test with the foreman',pay:90,xp:40,icon:'bulb',color:'#FFD6A5'},
- {id:'lockout',yr:1,kind:'Safety job',title:'Lock it out, prove it dead',pay:90,xp:40,icon:'lock',color:'#B8E1FF'},
- {id:'install2',yr:2,kind:'Install job',title:'Wire a 3-way switch',pay:140,xp:60,icon:'sw',color:'#FFC93C'},
- {id:'service2',yr:2,kind:'Service call',title:'"Some of my outlets quit!"',pay:160,xp:70,icon:'chain',color:'#7FD8FF'},
- {id:'layout2',yr:2,kind:'Layout job',title:'Bathroom remodel circuit',pay:140,xp:60,icon:'grid',color:'#8EE59B'},
- {id:'inspect2',yr:2,kind:'Inspection rush',title:'Safe or hazard?',pay:140,xp:60,icon:'insp',color:'#C9B6FF'},
- {id:'boxfill',yr:2,kind:'Rough-in job',title:'Pack the junction box',pay:150,xp:60,icon:'box',color:'#FFD6A5'},
- {id:'roughin',yr:2,kind:'Rough-in job',title:'Staple the rough-in',pay:150,xp:60,icon:'staple',color:'#F2D8A7'},
- {id:'heater240',yr:2,kind:'Install job',title:'Wire a 240 V water heater',pay:170,xp:70,icon:'heater',color:'#FFB3B3'},
- {id:'subpanel',yr:2,kind:'Panel job',title:'Garage subpanel',pay:170,xp:70,icon:'panel',color:'#B8E1FF'},
- {id:'bend',yr:3,kind:'Conduit job',title:'Bend an offset',pay:260,xp:90,icon:'pipe',color:'#D5DAE1'},
- {id:'pull',yr:3,kind:'Conduit job',title:'Pull the wire',pay:250,xp:90,icon:'emt',color:'#B8E1FF'},
- {id:'motor',yr:3,kind:'Motor job',title:'3-phase pump motor',pay:300,xp:100,icon:'motor',color:'#7FD8FF'},
- {id:'balance',yr:3,kind:'Panel job',title:'Balance the phases',pay:280,xp:100,icon:'phase',color:'#C9B6FF'},
- {id:'lighting',yr:3,kind:'Commercial job',title:'Office lighting fit-out',pay:280,xp:100,icon:'bulb',color:'#FFE9A6'},
- {id:'service3',yr:3,kind:'Service job',title:'200 A service upgrade',pay:350,xp:120,icon:'house',color:'#FFB3B3'},
- {id:'vdrop',yr:3,kind:'Feeder job',title:'Long run to the shop',pay:300,xp:100,icon:'run',color:'#8EE59B'},
- {id:'megger',yr:3,kind:'Service call',title:'"Trips when it rains!"',pay:320,xp:110,icon:'meter',color:'#7FD8FF'},
- {id:'xfmr',yr:3,kind:'Commercial job',title:'Land a transformer',pay:340,xp:120,icon:'xf',color:'#FFD6A5'},
- {id:'storm',yr:3,kind:'Emergency call',title:'Storm night restore',pay:300,xp:100,icon:'bolt',color:'#FF9C9C'},
- {id:'mwbc',yr:4,kind:'Panel job',title:'Multi-wire branch circuit',pay:420,xp:130,icon:'panel',color:'#B8E1FF'},
- {id:'fourway',yr:4,kind:'Install job',title:'Wire a 4-way switch',pay:450,xp:140,icon:'sw',color:'#FFC93C'},
- {id:'ev',yr:4,kind:'Install job',title:'EV charger in the garage',pay:500,xp:150,icon:'ev',color:'#8EE59B'},
- {id:'genint',yr:4,kind:'Emergency call',title:'Generator switchover',pay:480,xp:140,icon:'gen',color:'#FF9C9C'},
- {id:'kitchen4',yr:4,kind:'Layout job',title:'Restaurant kitchen line',pay:450,xp:140,icon:'grid',color:'#8EE59B'},
- {id:'locations',yr:4,kind:'Supply run',title:'Dry, damp or wet?',pay:400,xp:120,icon:'drop',color:'#7FD8FF'},
- {id:'heat3',yr:4,kind:'Commercial job',title:'3-phase unit heater',pay:500,xp:150,icon:'heater',color:'#FFB3B3'},
- {id:'faultpath',yr:4,kind:'Shop talk',title:'Follow the fault',pay:400,xp:120,icon:'bolt',color:'#FFE9A6'},
- {id:'openneutral',yr:4,kind:'Service call',title:'"Half my lights are bright!"',pay:550,xp:160,icon:'meter',color:'#7FD8FF'},
- {id:'pool',yr:4,kind:'Install job',title:'Pool bonding grid',pay:500,xp:150,icon:'pool',color:'#7FD8FF'},
- {id:'inspect4',yr:4,kind:'Inspection rush',title:'Commercial final walk',pay:450,xp:140,icon:'insp',color:'#C9B6FF'},
- {id:'stub90',yr:4,kind:'Conduit job',title:'90° stub-up',pay:420,xp:130,icon:'pipe',color:'#D5DAE1'},
- {id:'derate',yr:4,kind:'Conduit job',title:'Crowded conduit',pay:450,xp:140,icon:'emt',color:'#B8E1FF'},
- {id:'ladder',yr:4,kind:'Motor job',title:'Start/stop control',pay:600,xp:180,icon:'motor',color:'#FFD6A5'},
- {id:'recept',yr:4,kind:'Punch list',title:'Receptacle check rush',pay:420,xp:130,icon:'plug',color:'#FFC93C'},
- {id:'emlight',yr:4,kind:'Inspection job',title:'Emergency lighting test',pay:450,xp:140,icon:'exit',color:'#FF9C9C'},
- {id:'dwellcalc',yr:5,kind:'Calc job',title:'Size a house service',pay:750,xp:187,icon:'house',color:'#FFB3B3'},
- {id:'codebook1',yr:5,kind:'Exam prep',title:'Code book speed run I',pay:600,xp:150,icon:'clip',color:'#FFE9A6'},
- {id:'codebook2',yr:5,kind:'Exam prep',title:'Code book speed run II',pay:600,xp:150,icon:'clip',color:'#FFE9A6'},
- {id:'solar',yr:5,kind:'Install job',title:'Rooftop solar string',pay:900,xp:225,icon:'sun',color:'#FFD6A5'},
- {id:'hazloc',yr:5,kind:'Industrial job',title:'Hazardous locations',pay:700,xp:175,icon:'drop',color:'#FF9C9C'},
- {id:'counter',yr:5,kind:'Layout job',title:'Kitchen counter receptacles',pay:650,xp:162,icon:'plug',color:'#E3E7EC'},
- {id:'wallrecs',yr:5,kind:'Layout job',title:'Living room receptacles',pay:650,xp:162,icon:'plug',color:'#FFF8E7'},
- {id:'gensize',yr:5,kind:'Sales call',title:'Size a generator',pay:800,xp:200,icon:'gen',color:'#FF9C9C'},
- {id:'xfsize',yr:5,kind:'Commercial job',title:'Size a transformer',pay:850,xp:212,icon:'xf',color:'#FFD6A5'},
- {id:'motorbranch',yr:5,kind:'Motor job',title:'Motor branch circuit',pay:950,xp:237,icon:'motor',color:'#7FD8FF'},
- {id:'gesystem',yr:5,kind:'Service job',title:'Grounding electrode system',pay:850,xp:212,icon:'house',color:'#9BE3AE'},
- {id:'panelswap',yr:5,kind:'Service job',title:'Panel swap day',pay:900,xp:225,icon:'panel',color:'#B8E1FF'},
- {id:'torque',yr:5,kind:'Panel job',title:'Torque it right',pay:700,xp:175,icon:'panel',color:'#C9B6FF'},
- {id:'fusehunt',yr:5,kind:'Service call',title:'"Compressor just hums!"',pay:950,xp:237,icon:'motor',color:'#7FD8FF'},
- {id:'gfcitrip',yr:5,kind:'Service call',title:'"GFCI won\'t reset!"',pay:800,xp:200,icon:'plug',color:'#7FD8FF'},
- {id:'afcirooms',yr:5,kind:'Layout job',title:'AFCI or not?',pay:650,xp:162,icon:'panel',color:'#B8E1FF'},
- {id:'lowv',yr:5,kind:'Smart home job',title:'Low-voltage separation',pay:700,xp:175,icon:'meter',color:'#8EE59B'},
- {id:'aic',yr:5,kind:'Commercial job',title:'Fault current check',pay:850,xp:212,icon:'bolt',color:'#FFE9A6'},
- {id:'clearance',yr:5,kind:'Service job',title:'Service drop clearance',pay:750,xp:187,icon:'house',color:'#7FD8FF'},
- {id:'rush',yr:5,kind:'Exam prep',title:'Journeyman rush',pay:1000,xp:250,icon:'clip',color:'#FFC93C'},
+ {id:'dial',yr:1,kind:'Shop job',title:'Set up the meter',pay:80,xp:40,icon:'meter',color:'#FFE070'},
+ {id:'probe',yr:1,kind:'Service call',title:'Where do the probes go?',pay:90,xp:43,icon:'plug',color:'#7FD8FF'},
+ {id:'readings',yr:1,kind:'Shop job',title:'Test and sort the parts bin',pay:100,xp:46,icon:'clip',color:'#8EE59B'},
+ {id:'wiresize',yr:1,kind:'Supply run',title:'Match the wire',pay:110,xp:49,icon:'grid',color:'#FFB98A'},
+ {id:'lockout',yr:1,kind:'Safety job',title:'Lock it out, prove it dead',pay:120,xp:52,icon:'lock',color:'#B8E1FF'},
+ {id:'bench',yr:1,kind:'Shop job',title:'Bench test with the foreman',pay:130,xp:55,icon:'bulb',color:'#FFD6A5'},
+ {id:'install',yr:2,kind:'Install job',title:'Swap a receptacle',pay:150,xp:60,icon:'plug',color:'#FFC93C'},
+ {id:'install2',yr:2,kind:'Install job',title:'Wire a 3-way switch',pay:160,xp:63,icon:'sw',color:'#FFC93C'},
+ {id:'fourway',yr:2,kind:'Install job',title:'Wire a 4-way switch',pay:180,xp:66,icon:'sw',color:'#FFC93C'},
+ {id:'roughin',yr:2,kind:'Rough-in job',title:'Staple the rough-in',pay:190,xp:69,icon:'staple',color:'#F2D8A7'},
+ {id:'boxfill',yr:2,kind:'Rough-in job',title:'Pack the junction box',pay:200,xp:72,icon:'box',color:'#FFD6A5'},
+ {id:'wallrecs',yr:2,kind:'Layout job',title:'Living room receptacles',pay:210,xp:75,icon:'plug',color:'#FFF8E7'},
+ {id:'counter',yr:2,kind:'Layout job',title:'Kitchen counter receptacles',pay:230,xp:78,icon:'plug',color:'#E3E7EC'},
+ {id:'heater240',yr:2,kind:'Install job',title:'Wire a 240 V water heater',pay:240,xp:81,icon:'heater',color:'#FFB3B3'},
+ {id:'emerg',yr:3,kind:'Emergency call',title:'Party panel meltdown',pay:260,xp:100,icon:'bolt',color:'#FF9C9C'},
+ {id:'layout',yr:3,kind:'Layout job',title:'Route the kitchen circuit',pay:270,xp:103,icon:'grid',color:'#8EE59B'},
+ {id:'layout2',yr:3,kind:'Layout job',title:'Bathroom remodel circuit',pay:290,xp:106,icon:'grid',color:'#8EE59B'},
+ {id:'service',yr:3,kind:'Service call',title:'"My bathroom outlets died!"',pay:300,xp:109,icon:'meter',color:'#7FD8FF'},
+ {id:'subpanel',yr:3,kind:'Panel job',title:'Garage subpanel',pay:310,xp:112,icon:'panel',color:'#B8E1FF'},
+ {id:'mwbc',yr:3,kind:'Panel job',title:'Multi-wire branch circuit',pay:330,xp:115,icon:'panel',color:'#B8E1FF'},
+ {id:'bend',yr:3,kind:'Conduit job',title:'Bend an offset',pay:340,xp:118,icon:'pipe',color:'#D5DAE1'},
+ {id:'stub90',yr:3,kind:'Conduit job',title:'90° stub-up',pay:350,xp:121,icon:'pipe',color:'#D5DAE1'},
+ {id:'pull',yr:3,kind:'Conduit job',title:'Pull the wire',pay:370,xp:124,icon:'emt',color:'#B8E1FF'},
+ {id:'derate',yr:3,kind:'Conduit job',title:'Crowded conduit',pay:380,xp:127,icon:'emt',color:'#B8E1FF'},
+ {id:'vdrop',yr:4,kind:'Feeder job',title:'Long run to the shop',pay:400,xp:140,icon:'run',color:'#8EE59B'},
+ {id:'lighting',yr:4,kind:'Commercial job',title:'Office lighting fit-out',pay:410,xp:143,icon:'bulb',color:'#FFE9A6'},
+ {id:'emlight',yr:4,kind:'Inspection job',title:'Emergency lighting test',pay:430,xp:146,icon:'exit',color:'#FF9C9C'},
+ {id:'kitchen4',yr:4,kind:'Layout job',title:'Restaurant kitchen line',pay:440,xp:149,icon:'grid',color:'#8EE59B'},
+ {id:'balance',yr:4,kind:'Panel job',title:'Balance the phases',pay:460,xp:152,icon:'phase',color:'#C9B6FF'},
+ {id:'motor',yr:4,kind:'Motor job',title:'3-phase pump motor',pay:470,xp:155,icon:'motor',color:'#7FD8FF'},
+ {id:'ladder',yr:4,kind:'Motor job',title:'Start/stop control',pay:490,xp:158,icon:'motor',color:'#FFD6A5'},
+ {id:'heat3',yr:4,kind:'Commercial job',title:'3-phase unit heater',pay:500,xp:161,icon:'heater',color:'#FFB3B3'},
+ {id:'xfmr',yr:4,kind:'Commercial job',title:'Land a transformer',pay:520,xp:164,icon:'xf',color:'#FFD6A5'},
+ {id:'megger',yr:4,kind:'Service call',title:'"Trips when it rains!"',pay:530,xp:167,icon:'meter',color:'#7FD8FF'},
+ {id:'faultpath',yr:4,kind:'Shop talk',title:'Follow the fault',pay:550,xp:170,icon:'bolt',color:'#FFE9A6'},
+ {id:'gesystem',yr:4,kind:'Service job',title:'Grounding electrode system',pay:560,xp:173,icon:'house',color:'#9BE3AE'},
+ {id:'service3',yr:4,kind:'Service job',title:'200 A service upgrade',pay:580,xp:176,icon:'house',color:'#FFB3B3'},
+ {id:'panelswap',yr:4,kind:'Service job',title:'Panel swap day',pay:590,xp:179,icon:'panel',color:'#B8E1FF'},
+ {id:'xfsize',yr:4,kind:'Commercial job',title:'Size a transformer',pay:610,xp:182,icon:'xf',color:'#FFD6A5'},
+ {id:'motorbranch',yr:4,kind:'Motor job',title:'Motor branch circuit',pay:620,xp:185,icon:'motor',color:'#7FD8FF'},
+ {id:'locations',yr:5,kind:'Supply run',title:'Dry, damp or wet?',pay:650,xp:190,icon:'drop',color:'#7FD8FF'},
+ {id:'afcirooms',yr:5,kind:'Layout job',title:'AFCI or not?',pay:670,xp:193,icon:'panel',color:'#B8E1FF'},
+ {id:'lowv',yr:5,kind:'Smart home job',title:'Low-voltage separation',pay:690,xp:196,icon:'meter',color:'#8EE59B'},
+ {id:'ev',yr:5,kind:'Install job',title:'EV charger in the garage',pay:710,xp:199,icon:'ev',color:'#8EE59B'},
+ {id:'pool',yr:5,kind:'Install job',title:'Pool bonding grid',pay:720,xp:202,icon:'pool',color:'#7FD8FF'},
+ {id:'solar',yr:5,kind:'Install job',title:'Rooftop solar string',pay:740,xp:205,icon:'sun',color:'#FFD6A5'},
+ {id:'hazloc',yr:5,kind:'Industrial job',title:'Hazardous locations',pay:760,xp:208,icon:'drop',color:'#FF9C9C'},
+ {id:'torque',yr:5,kind:'Panel job',title:'Torque it right',pay:780,xp:211,icon:'panel',color:'#C9B6FF'},
+ {id:'clearance',yr:5,kind:'Service job',title:'Service drop clearance',pay:800,xp:214,icon:'house',color:'#7FD8FF'},
+ {id:'openneutral',yr:5,kind:'Service call',title:'"Half my lights are bright!"',pay:820,xp:217,icon:'meter',color:'#7FD8FF'},
+ {id:'gfcitrip',yr:5,kind:'Service call',title:'"GFCI won\'t reset!"',pay:830,xp:220,icon:'plug',color:'#7FD8FF'},
+ {id:'fusehunt',yr:5,kind:'Service call',title:'"Compressor just hums!"',pay:850,xp:223,icon:'motor',color:'#7FD8FF'},
+ {id:'genint',yr:5,kind:'Emergency call',title:'Generator switchover',pay:870,xp:226,icon:'gen',color:'#FF9C9C'},
+ {id:'gensize',yr:5,kind:'Sales call',title:'Size a generator',pay:890,xp:229,icon:'gen',color:'#FF9C9C'},
+ {id:'aic',yr:5,kind:'Commercial job',title:'Fault current check',pay:910,xp:232,icon:'bolt',color:'#FFE9A6'},
+ {id:'dwellcalc',yr:5,kind:'Calc job',title:'Size a house service',pay:930,xp:235,icon:'house',color:'#FFB3B3'},
+ {id:'inspect4',yr:5,kind:'Inspection rush',title:'Commercial final walk',pay:940,xp:238,icon:'insp',color:'#C9B6FF'},
+ {id:'codebook1',yr:5,kind:'Exam prep',title:'Code book speed run I',pay:960,xp:241,icon:'clip',color:'#FFE9A6'},
+ {id:'codebook2',yr:5,kind:'Exam prep',title:'Code book speed run II',pay:980,xp:244,icon:'clip',color:'#FFE9A6'},
+ {id:'rush',yr:5,kind:'Exam prep',title:'Journeyman rush',pay:1000,xp:247,icon:'clip',color:'#FFC93C'},
+ {id:'service2',yr:0,kind:'Service call',title:'"Some of my outlets quit!"',pay:150,xp:40,icon:'chain',color:'#7FD8FF'},
+ {id:'inspect2',yr:0,kind:'Inspection rush',title:'Safe or hazard?',pay:180,xp:43,icon:'insp',color:'#C9B6FF'},
+ {id:'recept',yr:0,kind:'Punch list',title:'Receptacle check rush',pay:200,xp:46,icon:'plug',color:'#FFC93C'},
+ {id:'storm',yr:0,kind:'Emergency call',title:'Storm night restore',pay:240,xp:49,icon:'bolt',color:'#FF9C9C'},
  {id:'dcsite',yr:6,kind:'Master project',title:'Site layout',pay:2000,xp:400,icon:'grid',color:'#BFE8A8'},
  {id:'dcphase',yr:6,kind:'Master project',title:'Land the services',pay:2200,xp:400,icon:'meter',color:'#FFC29A'},
  {id:'dcgear',yr:6,kind:'Master project',title:'Main-tie-main',pay:2400,xp:400,icon:'panel',color:'#C9D2DE'},
@@ -357,7 +365,8 @@ const JOBS=[
  {id:'dcbatt',yr:6,kind:'Master project',title:'UPS batteries',pay:2800,xp:400,icon:'bolt',color:'#D6CCF2'},
  {id:'dcbus',yr:6,kind:'Master project',title:'Busway + racks',pay:3000,xp:400,icon:'server',color:'#9CCBFF'},
  {id:'dcground',yr:6,kind:'Master project',title:'Ground grid',pay:3200,xp:400,icon:'chain',color:'#9BE3AE'},
- {id:'datacenter',yr:6,kind:'Master project',title:'Final test: pull the plug',pay:5000,xp:800,icon:'server',color:'#FF8A8A'}];
+ {id:'datacenter',yr:6,kind:'Master project',title:'Final test: pull the plug',pay:5000,xp:800,icon:'server',color:'#FF8A8A'}
+];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
 const stop=()=>{timers.forEach(clearInterval);timers=[]};
@@ -429,7 +438,7 @@ const jobsOf=y=>JOBS.filter(j=>j.yr===y);
 const doneAll=y=>jobsOf(y).every(j=>S.stars[j.id]>0);
 function ceYear(){for(let y=1;y<S.year&&y<=YMAX;y++)if(S.exams[y]&&!doneAll(y))return y;return 0}
 const dayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
-function dailyId(){const ce=ceYear(),top=ce||Math.min(S.year,YMAX);const pool=JOBS.filter(j=>j.yr<=top);if(!pool.length)return null;let h=7;for(const c of dayKey())h=(h*31+c.charCodeAt(0))>>>0;return pool[h%pool.length].id}
+function dailyId(){const ce=ceYear(),top=ce||Math.min(S.year,YMAX);const pool=JOBS.filter(j=>j.yr>=1&&j.yr<=top);if(!pool.length)return null;let h=7;for(const c of dayKey())h=(h*31+c.charCodeAt(0))>>>0;return pool[h%pool.length].id}
 
 function hud(){const ce=ceYear();return `<div class="hud card"><button class="meb" id="meb" aria-label="My profile">${hatSvg(S.look.hat)}<span><small>Rank${ce?' &middot; <span class="cebadge">CE due</span>':''}</small><b>${RANK[S.year]}</b></span></button><button class="cash" id="cashb" aria-label="Open the shop">${money(S.cash)}</button></div>`}
 function bindHud(){const c=$('#cashb');if(c)c.onclick=()=>{tick();shop()};const m=$('#meb');if(m)m.onclick=()=>{tick();profile(Object.assign({id:S.pid||'me'},{name:S.name,year:S.year,earned:S.earned,stars:totalStars(),look:myLook(),ce:!!ceYear()}),true)}}
@@ -465,6 +474,7 @@ function board(){
  ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${lockLeft(j.id)?`<span class="tg lkd">🔒 ${Math.ceil(lockLeft(j.id)/60000)}m</span>`:''}${!lockLeft(j.id)&&failsOf(j.id)?`<span class="tg wrn">${chancesFor(j.yr)-failsOf(j.id)} left</span>`:''}${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>${yr===5?'Journeyman exam':'Year '+yr+' exam'}${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
+ <h3 class="sideh">Side jobs <small>Optional. Play any time for extra cash.</small></h3><div class="jobs">${jobsOf(0).map(j=>{const isNew=false;return `<button class="job card" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${lockLeft(j.id)?`<span class="tg lkd">🔒 ${Math.ceil(lockLeft(j.id)/60000)}m</span>`:''}${!lockLeft(j.id)&&failsOf(j.id)?`<span class="tg wrn">${chancesFor(j.yr)-failsOf(j.id)} left</span>`:''}${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${yr===5&&passed?`<div class="exam card dcj" style="cursor:default">${IC.server}<div><b>Master job</b><small>Coming soon. Keep stacking cash and stars.</small></div></div>`:''}
  <div class="msg" id="bmsg"></div>
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
@@ -474,7 +484,7 @@ function board(){
  const dd=$('#dj');if(dd)dd.onclick=()=>{tick();S.view=dj.yr;save();JOBF[dj.id]()};
  $('#yp').onclick=()=>{if(!canPrev)return;S.view=yr-1;saveLocal();tick();board()};$('#yn').onclick=()=>{if(!canNext)return;S.view=yr+1;saveLocal();tick();board()};
  const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
- app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
+ app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked&&J(b.dataset.j).yr!==0){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
  $('#exam').onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}if(left&&!passed){bm(`Finish all ${js.length} Year ${yr} jobs first. ${left} to go.`);return}tick();exam(yr)};
 }
 
@@ -1784,6 +1794,19 @@ function rush(){const j=J('rush');shell(j,'Final warm-up before the Journeyman e
 
 /* ---------- EXAM (every question is taught in a job) ---------- */
 const QB1=[
+ ['On a multimeter, the black lead always goes in which jack?',['COM','10A','VΩ','mA'],0,'Black always goes in COM (common), the reference point for every reading.','dial'],
+ ['You\'re checking if a 120 V outlet is live. Which setting?',['V~ (AC volts)','V⎓ (DC volts)','Ω (ohms)','A (amps)'],0,'Outlets are AC. On the DC setting a live outlet can read near zero and look dead.','dial'],
+ ['What happens if you leave the red lead in the 10A jack and probe an outlet?',['It\'s a near short. The meter\'s fuse blows, or worse','It reads 120 V normally','It reads 0 V','It reads OL'],0,'The amps jack has almost no resistance. Across voltage, it\'s a short. Red goes back to VΩ for volts.','dial'],
+ ['To measure current with a multimeter, the meter must be connected&hellip;',['In series with the load','Across the load (in parallel)','From hot to ground','Only to the neutral'],0,'Current has to flow through the meter, so it goes in series, with the red lead in the A jack.','dial'],
+ ['Hot to neutral at a good 120 V receptacle reads about&hellip;',['120 V','240 V','0 V','12 V'],0,'Hot to neutral is the circuit voltage, about 120 V.','probe'],
+ ['Neutral to ground on a healthy circuit should read&hellip;',['Almost 0 V','120 V','240 V','OL'],0,'Neutral and ground are bonded at the main panel, so there\'s nearly no voltage between them. A high reading points to a loose or overloaded neutral.','probe'],
+ ['Two breakers stacked in the same row of a panel read what between their terminals?',['0 V: same leg','240 V','120 V','208 V'],0,'Breakers in the same row sit on the same leg of the bus. Opposite rows give 240 V.','probe'],
+ ['A fuse reads OL on the ohms setting. The fuse is&hellip;',['Blown (open)','Good','Shorted','Overloaded'],0,'OL means open loop: no path. A good fuse reads near 0 Ω.','readings'],
+ ['An unplugged cord reads 0 Ω between hot and neutral. That means&hellip;',['It\'s shorted','It\'s good','It\'s open','It\'s grounded correctly'],0,'With nothing plugged in, hot and neutral shouldn\'t connect. 0 Ω is a dead short.','readings'],
+ ['Why should you never use the ohms setting on a live circuit?',['The meter supplies its own voltage for ohms, and outside voltage can damage it','It reads too high','It trips the breaker','Ohms only works on DC'],0,'Ohms and continuity are for dead parts only.','readings'],
+ ['What\'s the smallest copper NM cable you can put on a 20 A breaker?',['12 AWG','14 AWG','10 AWG','16 AWG'],0,'14 AWG is good to 15 A, 12 AWG to 20 A, 10 AWG to 30 A.','wiresize'],
+ ['On a receptacle, the black (hot) wire goes on the&hellip;',['Brass screw','Silver screw','Green screw','Either screw'],0,'Black to brass, white to silver, bare or green to the green screw.','wiresize'],
+ ['A yellow NM cable jacket means the wire is&hellip;',['12 AWG','14 AWG','10 AWG','8 AWG'],0,'NM jackets are color-coded: white 14, yellow 12, orange 10, black 8 and 6.','wiresize'],
  ['A 120 V circuit has 10 Ω of resistance. How many amps flow?',['12 A','1,200 A','0.08 A','130 A'],0,'Ohm\'s law: I = V ÷ R. 120 ÷ 10 = 12 A.','bench'],
  ['A 1,200 W toaster runs on 120 V. How many amps does it draw?',['10 A','12 A','100 A','1.2 A'],0,'Amps = watts ÷ volts. 1,200 ÷ 120 = 10 A.','emerg'],
  ['In US wiring, white insulation normally marks the&hellip;',['Grounded conductor (neutral)','Hot conductor','Equipment ground','Traveler'],0,'White or gray marks the grounded conductor, which is the neutral.','install'],
@@ -1805,7 +1828,7 @@ const QB1=[
  ['A "continuous load" runs for&hellip;',['3 hours or more','30 minutes','10 minutes','24 hours'],0,'A continuous load runs 3 hours or more. Keep it to 80% of the breaker rating.','emerg'],
  ['The National Electrical Code is also known as&hellip;',['NFPA 70','OSHA 1910','UL 94','IEEE 802'],0,'The NEC is NFPA 70, published by the National Fire Protection Association and updated every 3 years.','lockout'],
  ['Kitchen countertop receptacles need at least&hellip;',['Two 20 A small-appliance circuits','One 15 A circuit','One 30 A circuit','Three 15 A circuits'],0,'The NEC requires at least two 20 A small-appliance branch circuits for kitchen countertop receptacles.','layout']];
-const MATCH1=[['Black wire','Hot conductor'],['White wire','Neutral'],['Bare copper','Equipment ground'],['GFCI','Protects people from shock'],['AFCI','Protects against arcing fires']];
+const MATCH1=[['V~','AC volts: outlets'],['V⎓','DC volts: batteries'],['OL','Open: no path'],['COM jack','Where black always goes'],['0 Ω','Solid path: good fuse']];
 const QB2=[
  ['How many travelers run between two 3-way switches?',['2','1','3','4'],0,'Two travelers. Each 3-way switch picks which one is live.','install2'],
  ['To control one light from 3 places, you need&hellip;',['Two 3-way switches and one 4-way','Three 3-way switches','Three single-pole switches','One 3-way and two 4-ways'],0,'The 3-ways go at the ends and the 4-way goes in the middle. Add one more 4-way for each extra location.','install2'],
@@ -1833,7 +1856,7 @@ const QB2=[
  ['A subpanel feeder needs&hellip;',['4 wires: two hots, a neutral and a ground','3 wires: two hots and a neutral','2 hots only','1 hot and a ground'],0,'Two hots, an isolated neutral and a separate equipment ground.','subpanel'],
  ['A 240 V water heater is fed from a&hellip;',['2-pole breaker','Single-pole breaker','GFCI receptacle','3-way switch'],0,'A 2-pole breaker grabs both hot legs, and 240 V is the voltage between them.','heater240'],
  ['Where are neutral and ground bonded together?',['Only at the service (main panel)','In every subpanel','At every receptacle','Nowhere'],0,'They\'re bonded only at the service. In a subpanel, neutrals and grounds stay on separate bars.','subpanel']];
-const MATCH2=[['3-way switch','Controls a light from 2 places'],['4-way switch','Goes between two 3-ways'],['Traveler','Wire between 3-way switches'],['Backstab','Push-in hole that can work loose'],['Pigtail','Short jumper, one wire per screw']];
+const MATCH2=[['3-way switch','Controls a light from 2 places'],['4-way switch','Goes between two 3-ways'],['Traveler','Wire between 3-way switches'],['Brass screw','Where the hot lands'],['Pigtail','Short jumper, one wire per screw']];
 const QB3=[
  ['For a 30° offset, the distance between marks is the offset height times&hellip;',['2','1.4','2.6','6'],0,'30° multiplier is 2. 45° is 1.4, 22.5° is 2.6 and 10° is 6.','bend'],
  ['For a 45° offset, the multiplier is&hellip;',['1.4','2','2.6','1'],0,'45° bends use a 1.4 multiplier.','bend'],
@@ -1855,7 +1878,7 @@ const QB3=[
  ['A transformer\'s low-voltage (secondary) terminals are marked&hellip;',['X','H','L','T'],0,'H is the high side (primary). X is the low side (secondary). X0 is the neutral.','xfmr'],
  ['A transformer secondary is a separately derived system, so its neutral&hellip;',['Gets its own bond to ground','Stays isolated like a subpanel','Connects to the primary neutral','Isn\'t needed'],0,'A new system needs its own system bonding jumper at the transformer or first disconnect.','xfmr'],
  ['After a long outage, everything starting at once is called&hellip;',['Cold load pickup','Voltage drop','Ground fault','Load shedding'],0,'Motors pull big starting current. Bring loads back in stages, critical ones first.','storm']];
-const MATCH3=[['Delta primary','No neutral, 3 wires'],['X0','Transformer secondary neutral'],['Megger','Insulation resistance tester'],['Offset','Two equal bends'],['Overload relay','Protects the motor from overheating']];
+const MATCH3=[['GFCI','Protects people from shock'],['Handle tie','Shuts both hots off together'],['Offset','Two equal bends'],['Take-up','Pipe used by a 90° bend'],['Derating','Fewer amps when wires are bundled']];
 const QB4=[
  ['In a multi-wire branch circuit, the two hots must be on&hellip;',['Opposite legs','The same leg','Any slots','GFCI breakers only'],0,'Opposite legs, so the shared neutral carries only the difference.','mwbc'],
  ['Why must a multi-wire branch circuit\'s hots disconnect together?',['So nobody works on it while the shared neutral is still live','To save panel space','So it can use smaller wire','It\'s optional'],0,'A 2-pole breaker or handle tie shuts both off at once.','mwbc'],
@@ -1879,7 +1902,7 @@ const QB4=[
  ['A STOP button in a control circuit is normally&hellip;',['Closed (NC)','Open (NO)','Either','Not used'],0,'NC, so pressing it breaks the circuit.','ladder'],
  ['Hot to neutral 120 V, hot to ground 0 V. The receptacle has&hellip;',['An open ground','An open neutral','Reversed polarity','No problem'],0,'No voltage to ground means the ground isn\'t connected.','recept'],
  ['Battery emergency lights get an annual test of&hellip;',['90 minutes','30 seconds','10 minutes','24 hours'],0,'Monthly: 30 seconds. Yearly: a full 90 minutes.','emlight']];
-const MATCH4=[['Handle tie','Shuts both hots off together'],['Seal-in contact','Keeps a starter running after START'],['Interlock','Stops generator backfeed'],['Take-up','Pipe used by a 90° bend'],['Bonding grid','Keeps pool parts at the same voltage']];
+const MATCH4=[['Delta primary','No neutral, 3 wires'],['X0','Transformer secondary neutral'],['Megger','Insulation resistance tester'],['Overload relay','Protects the motor from overheating'],['Seal-in contact','Keeps a starter running after START']];
 const QB5=[
  ['Dwelling general lighting load is calculated at&hellip;',['3 VA per ft²','1 VA per ft²','5 VA per ft²','10 VA per ft²'],0,'3 VA per square foot for dwellings.','dwellcalc'],
  ['Each small-appliance circuit counts in a dwelling load calc as&hellip;',['1,500 VA','1,000 VA','2,400 VA','3,000 VA'],0,'1,500 VA each, and you need at least two.','dwellcalc'],
@@ -1906,12 +1929,12 @@ const QB5=[
  ['Class 2 data cable can share a box with 120 V wiring if&hellip;',['There\'s a barrier separating them','It\'s taped up','It\'s a short run','Never, under any conditions'],0,'A barrier keeps them separated.','lowv'],
  ['A breaker\'s interrupting rating must be at least&hellip;',['The available fault current where it\'s installed','The load current','Its trip rating','10,000 A, always'],0,'It has to safely interrupt the worst fault available.','aic'],
  ['Minimum service drop clearance over a residential driveway (120/240 V):',['12 ft','10 ft','18 ft','8 ft'],0,'12 ft over residential driveways, 18 ft over public streets, 10 ft over grade and sidewalks.','clearance']];
-const MATCH5=[['Article 250','Grounding and bonding'],['Article 430','Motors'],['Article 690','Solar PV'],['Class II','Combustible dust'],['AIC rating','Max fault current a breaker can open']];
+const MATCH5=[['Article 250','Grounding and bonding'],['Article 690','Solar PV'],['Class II','Combustible dust'],['AIC rating','Max fault current a breaker can open'],['Interlock','Stops generator backfeed']];
 const QB={1:QB1,2:QB2,3:QB3,4:QB4,5:QB5},MATCH={1:MATCH1,2:MATCH2,3:MATCH3,4:MATCH4,5:MATCH5};
 
 function exam(yr){
  const EN=yr===5?'Journeyman exam':`Year ${yr} exam`;
- const pool=(yr===5?[].concat(...Object.values(QB)):QB[yr]).filter(q=>{const s=J(q[4]);return s&&s.yr<=yr});
+ const pool=[].concat(...Object.values(QB)).filter(q=>{const s=J(q[4]);return s&&(yr===5?s.yr>=1&&s.yr<=5:s.yr===yr)});
  const N=Math.min(yr===5?15:8,pool.length),TOT=N+5,PASS=Math.ceil(TOT*.75);
  const qs=shuffle(pool).slice(0,N).map(q=>{const ord=shuffle([0,1,2,3]);return{q:q[0],a:ord.map(i=>q[1][i]),c:ord.indexOf(q[2]),e:q[3],src:q[4]}});
  let qi=0,right=0,res=[];
@@ -2706,6 +2729,174 @@ function datacenter(){
 }
 
 
+
+/* ===== YEAR 1: THE METER ===== */
+const DIALS=[['off','OFF',-130],['vac','V~',-80],['vdc','V⎓',-35],['ohm','Ω',10],['cont','·)))',55],['amp','A',105]];
+const JACKS=[['a10','10A',34],['com','COM',80],['vo','VΩ',126]];
+function dmm(st){ // st:{dial,red,black,lcd,unit}
+ const I=INK,cx=80,cy=128;
+ const d=DIALS.find(x=>x[0]===st.dial)||DIALS[0],ang=d[2]*Math.PI/180;
+ const lab=DIALS.map(([k,t,a])=>{const r=a*Math.PI/180,x=cx+Math.sin(r)*54,y=cy-Math.cos(r)*54;return `<g class="dl" data-d="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="15" fill="${st.dial===k?'#FFC93C':'#4A505C'}" stroke="${st.dial===k?I:'#4A505C'}" stroke-width="2"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="${t.length>2?10:13}" font-weight="700" fill="${st.dial===k?I:'#fff'}">${t}</text></g>`}).join('');
+ const jk=JACKS.map(([k,t,x])=>{const col=st.red===k?'#FF5A5A':st.black===k?'#1B1F27':null;return `<g class="jk" data-j="${k}" style="cursor:pointer"><circle cx="${x}" cy="214" r="13" fill="${k==='a10'?'#FFE0E0':'#fff'}" stroke="${I}" stroke-width="2.5"/>${col?`<circle cx="${x}" cy="214" r="9" fill="${col}" stroke="${I}" stroke-width="2"/><path d="M${x} 224 Q${x} 246 ${x+(col==='#FF5A5A'?14:-14)} 262" stroke="${col}" stroke-width="6" fill="none" stroke-linecap="round"/>`:`<circle cx="${x}" cy="214" r="4" fill="#3A3F4A"/>`}<text x="${x}" y="196" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">${t}</text></g>`}).join('');
+ return `<svg class="dmm" viewBox="0 0 160 266" style="display:block;width:100%;max-width:230px;margin:0 auto">
+ <rect x="4" y="4" width="152" height="236" rx="22" fill="#FFC93C" stroke="${I}" stroke-width="3.5"/><rect x="14" y="14" width="132" height="216" rx="14" fill="#3A3F4A"/>
+ <rect x="22" y="22" width="116" height="44" rx="6" fill="${st.lcd?'#C8E6B0':'#9DB394'}" stroke="${I}" stroke-width="2.5"/>
+ <text x="${st.unit?120:80}" y="54" text-anchor="${st.unit?'end':'middle'}" font-size="24" font-weight="700" font-family="monospace" fill="#22381A">${st.lcd||''}</text><text x="132" y="54" text-anchor="end" font-size="11" font-weight="700" fill="#22381A">${st.unit||''}</text>
+ <circle cx="${cx}" cy="${cy}" r="30" fill="#2B2F36" stroke="#1B1F27" stroke-width="3"/><circle cx="${cx}" cy="${cy}" r="22" fill="#5A6270"/><path d="M${cx} ${cy}L${cx+Math.sin(ang)*28} ${cy-Math.cos(ang)*28}" stroke="#FFC93C" stroke-width="7" stroke-linecap="round"/>
+ ${lab}${jk}</svg>`}
+
+/* Job: set up the meter */
+function dial(){
+ const j=J('dial');let miss=0,ri=0;
+ const TASKS=shuffle([
+  {t:'Is this outlet live?',pic:'outlet',need:{dial:'vac',red:'vo'},lcd:'120.4',u:'V AC'},
+  {t:'Is this AA battery good?',pic:'aa',need:{dial:'vdc',red:'vo'},lcd:'1.58',u:'V DC'},
+  {t:'Is this fuse blown? (It\'s out of the circuit.)',pic:'fuse',need:{dial:['ohm','cont'],red:'vo'},lcd:'0.1',u:'Ω'},
+  {t:'Check the truck battery.',pic:'car',need:{dial:'vdc',red:'vo'},lcd:'12.6',u:'V DC'},
+  {t:'Check the doorbell transformer output.',pic:'bell',need:{dial:'vac',red:'vo'},lcd:'16.2',u:'V AC'}]).slice(0,4);
+ TASKS.push({t:'Measure the current of a small 2 A load. The meter goes <b>in series</b>.',pic:'amp',need:{dial:'amp',red:'a10'},lcd:'2.03',u:'A'});
+ let st={dial:'off',red:null,black:null,lcd:'',unit:''},hold='red';
+ const PIC={outlet:'🔌 Receptacle',aa:'🔋 AA battery',fuse:'🧯 Cartridge fuse',car:'🚚 Truck battery',bell:'🔔 Doorbell transformer',amp:'⚙️ 2 A load'};
+ shell(j,'Your first week. The foreman hands you a multimeter and five things to test. Set the <b>dial</b>, plug the <b>leads</b> into the right jacks, then test. Wrong setup can blow the meter, or fool you into thinking something is dead.',
+ `<div class="gamehud card"><span>Test <b id="ti">1</b> of ${TASKS.length}</span><span>Mistakes: <b id="mi">0</b></span></div>
+ <div class="qcard card" style="padding:12px 14px"><h3 id="pic" style="margin-bottom:2px"></h3><p class="q" id="tq" style="font-size:17px;margin:0"></p></div>
+ <div class="stage card" style="padding:8px" id="mtr"></div>
+ <div class="row" style="gap:8px;margin-top:10px"><button class="btn sm" id="hr" style="flex:1;background:#FF5A5A;color:#fff">Red lead</button><button class="btn sm alt" id="hb" style="flex:1">Black lead</button></div>
+ <p class="fine" style="margin:6px 2px 0">Tap a lead, then tap a jack to plug it in. Tap the dial labels to turn it.</p>
+ <button class="btn go" id="go2" style="width:100%;margin-top:10px">Test it</button><div class="msg" id="msg"></div>`);
+ const draw=()=>{$('#mtr').innerHTML=dmm(st);const T=TASKS[ri];$('#pic').textContent=PIC[T.pic];$('#tq').innerHTML=T.t;$('#ti').textContent=ri+1;$('#mi').textContent=miss;
+  $('#hr').className='btn sm'+(hold==='red'?'':' alt');$('#hb').className='btn sm'+(hold==='black'?'':' alt');$('#hr').style.background=hold==='red'?'#FF5A5A':'';$('#hr').style.color=hold==='red'?'#fff':'';$('#hb').style.background=hold==='black'?'#1B1F27':'';$('#hb').style.color=hold==='black'?'#fff':''};
+ $('#hr').onclick=()=>{hold='red';tick();draw()};$('#hb').onclick=()=>{hold='black';tick();draw()};
+ $('#mtr').onclick=e=>{const d=e.target.closest('.dl'),k=e.target.closest('.jk');
+  if(d){st.dial=d.dataset.d;st.lcd='';st.unit='';tick();draw();return}
+  if(k){const jj=k.dataset.j,other=hold==='red'?'black':'red';if(st[other]===jj)st[other]=null;st[hold]=jj;hold=other;st.lcd='';tick();draw()}};
+ $('#go2').onclick=()=>{const T=TASKS[ri],N=T.need,dOk=Array.isArray(N.dial)?N.dial.includes(st.dial):st.dial===N.dial;
+  const live=['outlet','car','bell','aa','amp'].includes(T.pic),acv=['outlet','bell'].includes(T.pic);
+  if(!st.red||!st.black){msgEl('Plug in both leads first.');bad();return}
+  if(st.black!=='com'){miss++;st.lcd='----';draw();msgEl('The <b>black lead always goes in COM</b> (common). It\'s the reference point for every reading.','bad');return}
+  if(st.dial==='off'){msgEl('The meter is off. Turn the dial.');bad();return}
+  if(T.pic!=='amp'&&st.red==='a10'){miss++;st.lcd='';draw();msgEl(live?'<b>BANG.</b> The red lead was in the 10A jack. That jack is a near-dead short, so touching it across voltage blew the meter\'s fuse. For volts and ohms, red goes in <b>VΩ</b>.':'Red is in the 10A jack. For volts and ohms, red goes in <b>VΩ</b>.','bad');return}
+  if(T.pic==='amp'&&st.red!=='a10'){miss++;draw();msgEl('To measure amps, the red lead moves to the <b>10A</b> jack and the meter goes in series with the load. Through VΩ, it can\'t read the current.','bad');return}
+  if(!dOk){miss++;
+   let w='';if(st.dial==='vdc'&&acv){st.lcd='0.02';st.unit='V DC';w='It reads about 0. This is <b>AC</b>, and on the DC setting a live outlet can look dead. That\'s how people get hurt. Use V~.'}
+   else if(st.dial==='vac'&&!acv&&T.pic!=='fuse'&&T.pic!=='amp'){st.lcd='0.0';st.unit='V AC';w='Batteries are <b>DC</b>. On the AC setting it reads nothing useful. Use V⎓.'}
+   else if((st.dial==='ohm'||st.dial==='cont')&&live){st.lcd='Err';st.unit='';w='Never use ohms or continuity on something that\'s powered. The meter supplies its own little voltage for that test, and outside voltage can blow its fuse. Ohms and continuity are for dead parts only.'}
+   else if(T.pic==='fuse'){st.lcd='0.00';st.unit='V';w='A fuse out of the circuit has no voltage to read. To see if it\'s good, check <b>continuity or ohms</b>: a good fuse reads near 0 Ω, a blown one reads OL.'}
+   else{w='Wrong setting for this test.'}
+   draw();msgEl(w,'bad');return}
+  st.lcd=T.lcd;st.unit=T.u;draw();good();
+  const why={outlet:'120 V AC. The outlet is live.',aa:'1.58 V DC. A fresh AA reads about 1.5 to 1.6 V.',fuse:'0.1 Ω. Near zero means the fuse is good. Blown would read OL.',car:'12.6 V DC. A healthy, fully charged battery.',bell:'16 V AC. Doorbell transformers step 120 V down to about 16 V.',amp:'2.03 A. Remember to move the red lead back to VΩ when you\'re done!'}[T.pic];
+  msgEl(why,'ok');$('#go2').disabled=true;
+  setTimeout(()=>{ri++;if(ri>=TASKS.length){result(j,dcStars(miss,0,1,3),'A meter only tells the truth if it\'s set up right. Black lead in COM, always. Red in VΩ for volts and ohms, and in the 10A jack only for current, with the meter in series. V~ is AC (outlets, transformers) and V⎓ is DC (batteries). Ohms and continuity only on dead parts.');return}
+   st={dial:'off',red:st.red==='a10'?null:st.red,black:st.black,lcd:'',unit:''};hold=st.red?'black':'red';$('#go2').disabled=false;msgEl('');draw()},1500)};
+ draw();
+}
+
+/* Job: where to probe */
+function probe(){
+ const j=J('probe');let miss=0,ri=0,pts=[];
+ const TASKS=[
+  {sc:'rec',t:'Is the receptacle live? Probe so you read the circuit voltage.',ok:[['h','n']],r:'120.3'},
+  {sc:'rec',t:'Is the ground actually connected? Prove it with one probe on hot.',ok:[['h','g']],r:'120.1'},
+  {sc:'rec',t:'Check neutral to ground. On a healthy circuit it should read almost nothing.',ok:[['n','g']],r:'0.4'},
+  {sc:'pan',t:'Read the voltage on breaker 1\'s circuit.',ok:[['b1','nb'],['b1','gb']],r:'120.2'},
+  {sc:'pan',t:'Show the new apprentice <b>240 V</b> using two single-pole breakers.',ok:[['b1','b3'],['b1','b4'],['b2','b3'],['b2','b4']],r:'240.6'}];
+ const V={h:{h:0,n:120.3,g:120.1},n:{n:0,g:.4},g:{g:0}};
+ const leg={b1:1,b2:1,b3:2,b4:2,nb:0,gb:0};
+ const rd=(a,b)=>{if(a===b)return 0;const S2=new Set([a,b]);
+  if(S2.has('h')||S2.has('n')||S2.has('g')){const x=V[a]&&V[a][b]!==undefined?V[a][b]:V[b][a];return x}
+  const la=leg[a],lb=leg[b];if(la&&lb)return la===lb?0:240.6;if(la||lb)return 120.2;return .1};
+ shell(j,'Same meter, different questions. Where you put the probes decides what you\'re measuring. Tap where the <b>red</b> probe goes, then the <b>black</b> one.',
+ `<div class="gamehud card"><span>Check <b id="ti">1</b> of ${TASKS.length}</span><span>Mistakes: <b id="mi">0</b></span></div>
+ <div class="qcard card" style="padding:12px 14px"><p class="q" id="tq" style="font-size:17px;margin:0"></p></div>
+ <div class="stage card" style="padding:4px"><svg id="psv" viewBox="0 0 360 260" style="display:block;width:100%"></svg></div>
+ <div class="row" style="gap:8px;margin-top:10px"><button class="btn alt" id="clr" style="flex:1">Lift probes</button></div><div class="msg" id="msg"></div>`);
+ const P={rec:{h:[150,108],n:[204,108],g:[177,156]},pan:{b1:[120,96],b2:[240,96],b3:[120,150],b4:[240,150],nb:[70,226],gb:[290,226]}};
+ const draw=(read)=>{const T=TASKS[ri],sc=T.sc;let h=`<rect width="360" height="260" fill="#E8F7FF"/>`;
+  if(sc==='rec')h+=`<rect x="110" y="20" width="140" height="200" rx="22" fill="#F4F1EA" stroke="${INK}" stroke-width="3.5"/><rect x="128" y="70" width="104" height="112" rx="40" fill="#fff" stroke="${INK}" stroke-width="3"/>
+   <rect x="144" y="92" width="12" height="32" rx="3" fill="#2B2F36"/><rect x="198" y="88" width="12" height="40" rx="3" fill="#2B2F36"/><path d="M168 166v-12a9 9 0 0 1 18 0v12z" fill="#2B2F36"/>
+   <text x="94" y="112" text-anchor="end" font-size="11" font-weight="700" fill="${INK}">short slot</text><text x="266" y="112" font-size="11" font-weight="700" fill="${INK}">long slot</text><text x="177" y="202" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">round hole</text>`;
+  else h+=`<rect x="40" y="20" width="280" height="230" rx="10" fill="#C9D2DE" stroke="${INK}" stroke-width="3.5"/><path d="M180 40v150" stroke="#9AA4B2" stroke-width="10"/>
+   ${[['b1',96],['b2',96],['b3',150],['b4',150]].map(([k,y],i)=>{const x=k==='b1'||k==='b3'?120:240;return `<rect x="${x-46}" y="${y-18}" width="92" height="36" rx="6" fill="#fff" stroke="${INK}" stroke-width="2.5"/><rect x="${x-10}" y="${y-10}" width="20" height="20" rx="3" fill="#3A3F4A"/><text x="${x+(x<180?-26:26)}" y="${y+5}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${k.slice(1)}</text>`}).join('')}
+   <text x="180" y="62" text-anchor="middle" font-size="10" font-weight="700" fill="#5A6270">BUS</text>
+   <rect x="50" y="214" width="60" height="24" rx="4" fill="#E9EDF2" stroke="${INK}" stroke-width="2.5"/><text x="80" y="210" text-anchor="middle" font-size="10" font-weight="700" fill="${INK}">NEUTRAL BAR</text>
+   <rect x="250" y="214" width="80" height="24" rx="4" fill="#9BE3AE" stroke="${INK}" stroke-width="2.5"/><text x="290" y="210" text-anchor="middle" font-size="10" font-weight="700" fill="${INK}">GROUND BAR</text>`;
+  Object.entries(P[sc]).forEach(([k,[x,y]])=>{const i=pts.indexOf(k);h+=`<g class="pp" data-k="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="16" fill="${i===0?'#FF5A5A':i===1?'#1B1F27':'#FFFFFF66'}" stroke="${i>=0?INK:'#2F7FE0'}" stroke-width="${i>=0?3:2.5}" stroke-dasharray="${i>=0?0:'4 3'}"/>${i>=0?`<text x="${x}" y="${y+5}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${i?'−':'+'}</text>`:''}</g>`});
+  h+=`<rect x="262" y="8" width="90" height="34" rx="8" fill="#FFC93C" stroke="${INK}" stroke-width="2.5"/><rect x="268" y="13" width="78" height="24" rx="4" fill="#C8E6B0"/><text x="342" y="31" text-anchor="end" font-size="15" font-weight="700" font-family="monospace" fill="#22381A">${read!==undefined?read+' V':'--- V'}</text>`;
+  $('#psv').innerHTML=h;$('#tq').innerHTML=T.t;$('#ti').textContent=ri+1;$('#mi').textContent=miss};
+ $('#clr').onclick=()=>{pts=[];tick();draw()};
+ $('#psv').onclick=e=>{const g=e.target.closest('.pp');if(!g||pts.length>=2)return;const k=g.dataset.k;if(pts.includes(k))return;pts.push(k);tick();
+  if(pts.length<2){draw();return}
+  const T=TASKS[ri],v=rd(pts[0],pts[1]),vs=v>=100?v.toFixed(1):v.toFixed(1);draw(vs);
+  const hit=T.ok.some(([a,b])=>(a===pts[0]&&b===pts[1])||(a===pts[1]&&b===pts[0]));
+  if(hit){good();msgEl({0:'120 V hot to neutral. The receptacle is live.',1:'120 V hot to ground. The ground path is connected.',2:'Under 2 V neutral to ground. Healthy. A high reading here means a loose or overloaded neutral.',3:'120 V from the breaker terminal to the neutral (or ground) bar.',4:'240 V. Those two breakers are on <b>opposite legs</b> of the bus. Breakers stacked right on top of each other alternate legs.'}[TASKS.indexOf(T)],'ok');
+   setTimeout(()=>{ri++;pts=[];if(ri>=TASKS.length){result(j,dcStars(miss,0,1,3),'Volts are always measured <b>between</b> two points. Hot to neutral is the circuit voltage, hot to ground proves the ground is connected, and neutral to ground should be nearly zero. In a panel, breakers in the same row are on the same leg (0 V between them). Opposite legs give 240 V.');return}msgEl('');draw()},1700);return}
+  miss++;const why=v===0&&T.sc==='pan'&&pts.every(p=>leg[p])?'0 V. Those breakers are on the <b>same leg</b> of the bus, so there\'s no difference between them. Try one from each row.':v<2?`Only ${vs} V. That pair doesn\'t include a hot, so it can\'t show the circuit voltage.`:`That reads ${vs} V, but it isn\'t the measurement this check asks for. Think about which two points answer the question.`;
+  bad();msgEl(why,'bad');setTimeout(()=>{pts=[];draw()},1400)};
+ draw();
+}
+
+/* Job: test and sort parts */
+function readings(){
+ const j=J('readings');let miss=0,done=0;
+ const ALL=[
+  {n:'Cartridge fuse',ic:'🧯',r:'0.1 Ω',good:true,w:'Near 0 Ω: the fuse link is intact.'},{n:'Cartridge fuse',ic:'🧯',r:'OL',good:false,w:'OL (open loop): no path through it. The fuse is blown.'},
+  {n:'Water heater element',ic:'♨️',r:'12.8 Ω',good:true,w:'About 10 to 15 Ω is normal for a 4,500 W, 240 V element.'},{n:'Water heater element',ic:'♨️',r:'OL',good:false,w:'OL: the element is burned open. No heat.'},
+  {n:'Light switch, ON',ic:'🎚️',r:'0.0 Ω',good:true,w:'Closed switch, near 0 Ω. Good.'},{n:'Light switch, ON',ic:'🎚️',r:'OL',good:false,w:'It\'s ON but reads open. The contacts are burned.'},
+  {n:'Extension cord, end to end',ic:'🔌',r:'0.2 Ω',good:true,w:'Each conductor reads near 0 Ω end to end. Good cord.'},{n:'Extension cord, end to end',ic:'🔌',r:'OL',good:false,w:'Open end to end: a conductor is broken inside.'},
+  {n:'Cord, hot to neutral (unplugged)',ic:'🔌',r:'0.0 Ω',good:false,w:'Unplugged, nothing attached, and 0 Ω between hot and neutral? That\'s a <b>dead short</b> in the cord.'},
+  {n:'Motor winding',ic:'⚙️',r:'3.4 Ω',good:true,w:'A few ohms through the winding is normal.'},{n:'Motor winding to its frame',ic:'⚙️',r:'0.0 Ω',good:false,w:'Winding to frame should be OL. 0 Ω means it\'s shorted to ground, and the case could go live.'},
+  {n:'Light bulb filament',ic:'💡',r:'OL',good:false,w:'Open filament. The bulb is burned out.'}];
+ const parts=shuffle(ALL).slice(0,8);let cur=0,tested=false;
+ shell(j,'A bin of parts came back from service calls. <b>Test each one</b> with your meter, then toss it in GOOD or BAD. The meter\'s on ohms and every part is unplugged.',
+ `<div class="gamehud card"><span>Part <b id="ti">1</b> of ${parts.length}</span><span>Mistakes: <b id="mi">0</b></span></div>
+ <div class="stage card" style="padding:12px;text-align:center"><div id="pt" style="font-size:54px;line-height:1"></div><b id="pn" style="display:block;font-size:19px;margin:6px 0 10px"></b>
+ <div class="lcdbox"><b id="rd">--- Ω</b></div>
+ <button class="btn alt" id="tst" style="width:100%;margin-top:10px">🔴⚫ Touch the probes to it</button></div>
+ <div class="row" style="gap:10px;margin-top:10px"><button class="btn big" id="gd" style="flex:1;background:#35C76F">GOOD bin</button><button class="btn big" id="bd" style="flex:1;background:#FF5A5A;color:#fff">BAD bin</button></div><div class="msg" id="msg"></div>`);
+ const draw=()=>{const p=parts[cur];$('#pt').textContent=p.ic;$('#pn').textContent=p.n;$('#rd').textContent=tested?p.r:'--- Ω';$('#ti').textContent=cur+1;$('#mi').textContent=miss;$('#tst').disabled=tested};
+ $('#tst').onclick=()=>{tested=true;tick();$('#rd').classList.add('pop');setTimeout(()=>$('#rd').classList.remove('pop'),300);draw()};
+ const put=g=>{const p=parts[cur];if(!tested){msgEl('Test it before you judge it. Touch the probes to it.');bad();return}
+  if(g!==p.good){miss++;msgEl(`${p.r}: that part is <b>${p.good?'good':'bad'}</b>. ${p.w}`,'bad')}else{good();msgEl(p.w,'ok')}
+  $('#gd').disabled=$('#bd').disabled=true;
+  setTimeout(()=>{cur++;tested=false;$('#gd').disabled=$('#bd').disabled=false;if(cur>=parts.length){result(j,dcStars(miss,0,1,3),'Ohms tell you if there\'s a path. Near 0 Ω means a solid path: good for a fuse, a closed switch or a wire. OL means open, no path: a blown fuse, a burned-out element, a broken wire. But a path where there shouldn\'t be one, like hot to neutral on an unplugged cord or a winding to its frame, is a short.');return}msgEl('');draw()},g!==p.good?2200:1200)};
+ $('#gd').onclick=()=>put(true);$('#bd').onclick=()=>put(false);
+ draw();
+}
+
+/* Job: match the wire */
+function wiresize(){
+ const j=J('wiresize');let miss=0,part=1;
+ const AMP={14:15,12:20,10:30,8:40,6:55},BR=shuffle([15,20,30,40,50]),SP=[14,12,10,8,6];
+ const done={};let sel=null;
+ shell(j,'Stocking the van for a house job. First, match each breaker to the <b>smallest copper NM cable</b> that\'s safe on it. Then land a receptacle\'s wires on the right screws.',
+ `<div id="wz"></div><div class="msg" id="msg"></div>`);
+ const SPC={14:'#FFFFFF',12:'#FFE070',10:'#FF8A3D',8:'#3A3F4A',6:'#3A3F4A'};
+ function p1(){
+  const draw=()=>{$('#wz').innerHTML=`<p class="fine" style="margin:0 2px 8px">Tap a breaker, then a spool. NM cable jackets are color-coded by size: white 14, yellow 12, orange 10, black 8 and 6.</p>
+   <div class="wzg"><div class="col">${BR.map(b=>`<button class="brk card${sel===b?' on':''}${done[b]?' ok':''}" data-b="${b}"><span class="bh"></span><b>${b} A</b>${done[b]?`<small>${done[b]} AWG ✓</small>`:''}</button>`).join('')}</div>
+   <div class="col">${SP.map(w=>`<button class="spl card" data-w="${w}"><span class="sp" style="background:${SPC[w]};${w>=8?'color:#fff':''}">${w}</span><b>${w} AWG</b><small>good to ${AMP[w]} A</small></button>`).join('')}</div></div>`;
+   app.querySelectorAll('.brk').forEach(b=>b.onclick=()=>{if(done[+b.dataset.b])return;sel=+b.dataset.b;tick();draw()});
+   app.querySelectorAll('.spl').forEach(s=>s.onclick=()=>{if(!sel){msgEl('Tap a breaker first.');return}const w=+s.dataset.w,need=SP.find(x=>AMP[x]>=sel);
+    if(AMP[w]<sel){miss++;msgEl(`<b>${w} AWG on a ${sel} A breaker overheats.</b> It's only good to ${AMP[w]} A, so the wire cooks before the breaker trips. The breaker protects the <b>wire</b>.`,'bad');sel=null;draw();return}
+    if(w!==need){miss++;msgEl(`${w} AWG works, but it's oversized and costs a lot more. ${need} AWG is the smallest that's safe on ${sel} A.`,'bad');sel=null;draw();return}
+    done[sel]=w;good();msgEl(`${sel} A gets ${w} AWG.`,'ok');sel=null;draw();
+    if(Object.keys(done).length===BR.length)setTimeout(p2,1300)})};
+  draw()}
+ function p2(){part=2;const W=[['blk','Black','#1B1F27'],['wht','White','#F4F6F8'],['bar','Bare copper','#C87533']],SC={brass:'blk',silver:'wht',green:'bar'};const on={};let hw=null;
+  const draw=()=>{$('#wz').innerHTML=`<div class="qcard card" style="padding:12px 14px"><h3 style="margin:0">Land the receptacle</h3><p style="margin:4px 0 0">Tap a wire, then the screw it belongs on.</p></div>
+   <div class="stage card" style="padding:4px"><svg id="rsv" viewBox="0 0 360 230" style="display:block;width:100%"><rect width="360" height="230" fill="#E8F7FF"/>
+   <rect x="130" y="16" width="100" height="196" rx="16" fill="#F4F1EA" stroke="${INK}" stroke-width="3.5"/><rect x="150" y="50" width="60" height="58" rx="22" fill="#fff" stroke="${INK}" stroke-width="2.5"/><rect x="150" y="122" width="60" height="58" rx="22" fill="#fff" stroke="${INK}" stroke-width="2.5"/>
+   ${[['brass',236,90,'#E2A72E','BRASS'],['silver',124,90,'#D8DEE6','SILVER'],['green',180,204,'#35C76F','GREEN']].map(([k,x,y,c,t])=>`<g class="scr" data-s="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="13" fill="${c}" stroke="${INK}" stroke-width="3"/><path d="M${x-6} ${y}h12" stroke="${INK}" stroke-width="2.5"/><text x="${k==='brass'?x+18:k==='silver'?x-18:x+20}" y="${y+4}" text-anchor="${k==='brass'?'start':k==='silver'?'end':'start'}" font-size="11" font-weight="700" fill="${INK}">${t}</text>${on[k]?`<path d="M${x} ${y} L${k==='brass'?330:k==='silver'?30:180} ${k==='green'?226:y+70}" stroke="${W.find(w=>w[0]===on[k])[2]}" stroke-width="7" stroke-linecap="round"/><path d="M${x} ${y} L${k==='brass'?330:k==='silver'?30:180} ${k==='green'?226:y+70}" stroke="${INK}" stroke-width="1.5" stroke-dasharray="0" opacity=".25"/>`:''}</g>`).join('')}</svg></div>
+   <div class="row" style="gap:8px;margin-top:10px">${W.map(([k,t,c])=>`<button class="btn sm${hw===k?'':' alt'}" data-w="${k}" style="flex:1" ${Object.values(on).includes(k)?'disabled':''}><span class="wdot" style="background:${c}"></span>${t}</button>`).join('')}</div>`;
+   app.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{hw=b.dataset.w;tick();draw()});
+   app.querySelectorAll('.scr').forEach(g=>g.onclick=()=>{if(!hw){msgEl('Tap a wire first.');return}const s=g.dataset.s;if(on[s]){msgEl('That screw already has a wire.');return}
+    if(SC[s]!==hw){miss++;const t=hw==='wht'&&s==='brass'||hw==='blk'&&s==='silver'?'<b>Reversed polarity.</b> Hot on the silver screw means the big slot and the lamp shell are live, even with the lamp switched off. Black goes on <b>brass</b>, white on <b>silver</b>.':s==='green'||hw==='bar'?'The green screw is only for the bare or green ground. Ground never carries current unless something goes wrong.':'Wrong screw.';msgEl(t,'bad');hw=null;draw();return}
+    on[s]=hw;hw=null;good();draw();if(Object.keys(on).length===3){msgEl('Black to brass, white to silver, bare to green. Textbook.','ok');setTimeout(()=>result(j,dcStars(miss,0,1,3),'Wire size is all about heat. A wire carrying more current than it\'s rated for heats up. The breaker\'s job is to trip before that happens, so the breaker size is matched to the wire: 14 AWG on 15 A, 12 on 20 A, 10 on 30 A. And colors matter: black is hot (brass screw), white is neutral (silver screw), bare or green is ground (green screw).'),1300)}})};
+  msgEl('');draw()}
+ p1();
+}
+
 /* ---------- CHANCES, LOCKOUT, STUDY GUIDE ---------- */
 let curJob=null,strikes=0,attemptOver=false,JLOG=[];
 const strikeMax=y=>y<=2?5:4;
@@ -2776,7 +2967,7 @@ function coach(html){const k=fxKind(html);breakFx(k);
  c.querySelector('.cx').onclick=kill;const tm=setTimeout(kill,10000);c._t=tm}
 const coachOff=()=>{const c=$('#coach');if(c){clearTimeout(c._t);c.remove()}};
 
-const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush,dcsite,dcphase,dcgear,dcsync,dcbatt,dcbus,dcground,datacenter};
+const JOBF={dial,probe,readings,wiresize,install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush,dcsite,dcphase,dcgear,dcsync,dcbatt,dcbus,dcground,datacenter};
 const JSRC={};
 for(const k in JOBF){const f=JOBF[k];JSRC[k]=f;JOBF[k]=(...a)=>{const j=J(k);if(j&&j.yr<6&&lockLeft(k)){curJob=null;return lockedScreen(j)}curJob=j&&j.yr<6?j:null;strikes=0;attemptOver=false;JLOG=[];return f(...a)}}
 title();
