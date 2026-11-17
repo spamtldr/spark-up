@@ -121,7 +121,24 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .lockbar,.tipbar{display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:10px;font-size:15px}.lockbar{background:#FFE1E1;cursor:pointer}.tipbar{background:#E6F4FF;display:flex;gap:8px;align-items:center;justify-content:space-between}
 .bigcode{font:700 26px 'Courier New',monospace;text-align:center;background:#FFF3C4;border:3px solid var(--ink);border-radius:12px;padding:10px;letter-spacing:1px}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
-.dcj{background:#2B2F36;color:#fff}.tbar{height:16px;border:3px solid var(--ink);border-radius:10px;background:#fff;overflow:hidden;margin-top:4px}#tfill{height:100%;width:100%;background:#35C76F;transition:width .2s linear}.dcpulse{animation:dcp .9s infinite alternate}@keyframes dcp{to{opacity:.4}}.dcj small{color:#D8DEE6}
+.dcj{background:#2B2F36;color:#fff}
+.coach{position:fixed;left:50%;transform:translateX(-50%);top:10px;width:calc(100% - 24px);max-width:520px;z-index:26;padding:12px 44px 16px 14px;background:#FFF8E7;animation:cin .25s ease-out;overflow:hidden}
+.coach.out{animation:cout .22s ease-in forwards}.coach.k-arc{background:#E8F1FF}.coach.k-smoke{background:#EEF0F3}.coach.k-hot{background:#FFE9DE}.coach.k-trip{background:#FFF1D6}
+.coach .ch{display:flex;align-items:center;gap:8px;font-size:18px;margin-bottom:4px}.coach .ci{font-size:24px}.coach .sk{margin-left:auto;font-size:13px;font-weight:700;background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:2px 8px;white-space:nowrap}.coach .sk.out{background:#FF5A5A;color:#fff}.coach .cb{font-size:16px;line-height:1.4}
+.coach .cx{position:absolute;top:6px;right:6px;width:36px;height:36px;border:none;background:none;font-size:28px;line-height:1;color:var(--ink);cursor:pointer}
+.coach .cbar{position:absolute;left:0;right:0;bottom:0;height:5px;background:#0001}.coach .cbar i{display:block;height:100%;background:var(--ink);animation:cbar 10s linear forwards}
+@keyframes cin{from{opacity:0;transform:translate(-50%,-14px)}}@keyframes cout{to{opacity:0;transform:translate(-50%,-14px)}}@keyframes cbar{from{width:100%}to{width:0}}
+.flash{position:absolute;inset:0;background:radial-gradient(circle,#fff 0,#BFE3FF 45%,#7FB8FF00 80%);animation:fl .45s ease-out forwards}@keyframes fl{0%{opacity:1}100%{opacity:0}}
+.spk{position:absolute;left:50%;top:45%;width:16px;height:4px;border-radius:3px;background:#FFE070;box-shadow:0 0 8px #FFF3A0;animation:spk .65s ease-out forwards}@keyframes spk{to{translate:var(--x) var(--y);opacity:0}}
+.smk{position:absolute;bottom:20%;width:70px;height:70px;border-radius:50%;background:#6B7280aa;filter:blur(3px);opacity:0;animation:smk 2s ease-out forwards}@keyframes smk{0%{opacity:.9;transform:translateY(0) scale(.4)}100%{opacity:0;transform:translateY(-320px) scale(2.4)}}
+.hotv{position:absolute;inset:0;background:radial-gradient(circle,#FF5A2000 40%,#FF5A20aa 100%);animation:hv 1.5s ease-in-out forwards}@keyframes hv{0%,100%{opacity:0}30%,60%{opacity:1}}
+.tripb{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%) rotate(-8deg);font:700 44px Fredoka,sans-serif;color:#C0392B;border:6px solid #C0392B;border-radius:14px;padding:4px 18px;background:#fffd;animation:tb 1.1s ease-out forwards}@keyframes tb{0%{transform:translate(-50%,-50%) rotate(-8deg) scale(2);opacity:0}15%{transform:translate(-50%,-50%) rotate(-8deg) scale(1);opacity:1}80%{opacity:1}100%{opacity:0}}
+.shk{animation:shk .42s}@keyframes shk{20%{transform:translateX(-7px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(3px)}}
+.chn{background:#FFF1D6;border:3px solid var(--ink);border-radius:14px;padding:8px 12px;margin:0 0 10px;font-size:15.5px;text-align:left}.chn.bad2{background:#FFE0E0}
+.pips{display:inline-flex;gap:4px;vertical-align:middle;margin-left:6px}.pips i{width:12px;height:12px;border-radius:50%;border:2.5px solid var(--ink);background:#fff}.pips i.on{background:var(--grn)}
+.tg.lkd{background:#3A3F4A;color:#fff}.tg.wrn{background:#FFC93C}
+.lockc{padding:16px;text-align:center;background:#EEF0F3}.lkt{font-size:40px;font-weight:700}
+.flips{display:grid;gap:10px}.flip{text-align:left;padding:14px;font:inherit;color:var(--ink);min-height:84px;cursor:pointer}.flip .fa{display:none}.flip.up .fq{display:none}.flip.up .fa{display:block}.flip.up{background:#DDF7E6}.flip .fq{font-weight:600}.tbar{height:16px;border:3px solid var(--ink);border-radius:10px;background:#fff;overflow:hidden;margin-top:4px}#tfill{height:100%;width:100%;background:#35C76F;transition:width .2s linear}.dcpulse{animation:dcp .9s infinite alternate}@keyframes dcp{to{opacity:.4}}.dcj small{color:#D8DEE6}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
 .fine{text-align:center;font-size:13px;color:var(--ink);margin-top:18px}
@@ -199,7 +216,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.17-1';
+const VER='2026.11.17-3';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -396,12 +413,12 @@ function title(){
 }
 
 function board(){
- stop();onHall=false;
+ stop();onHall=false;coachOff();curJob=null;
  const ce=ceYear(),daily=dailyId(),dDone=S.dailyDone===dayKey();
  const yr=S.view=Math.max(1,Math.min(S.view||ce||S.year,S.year,YMAX));
  const js=jobsOf(yr),left=js.filter(j=>!(S.stars[j.id]>0)).length,passed=S.exams[yr],blocked=!!(ce&&yr>ce);
  const more=(PLAN[yr]||0)-js.length;
- const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?(S.year>=7?'Master electrician.':'You\'re a Journeyman! Next up: the Master project.'):'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
+ const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?(S.year>=7?'Master electrician.':'You\'re a Journeyman! The Master job is coming soon.'):'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
  const canPrev=yr>1,canNext=yr<Math.min(S.year,YMAX);
  const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
  const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
@@ -410,10 +427,10 @@ function board(){
  const lockBox=S.name&&!S.user&&fbState==='online'?`<button class="lockbar card" id="lkb">🔒 <b>Lock in your card.</b> Set a username + PIN so you never lose your progress.</button>`:'';
  const tipBox=ios&&!S.a2hs?`<div class="tipbar card"><span>📲 Tip: tap <b>Share → Add to Home Screen</b>. It plays like an app and keeps your progress safer.</span><button class="link" id="tipx" style="margin:0;min-height:32px">Got it</button></div>`:'';
  app.innerHTML=hud()+nav('jobs')+lockBox+tipBox+ceBox+`<div class="yrsel"><button class="arw" id="yp" ${canPrev?'':'disabled'} aria-label="Previous year">&lsaquo;</button><h2 class="sec">Year ${yr} jobs${passed?' <span class="ok">✓</span>':''}</h2><button class="arw" id="yn" ${canNext?'':'disabled'} aria-label="Next year">&rsaquo;</button></div>
- ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
+ ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${lockLeft(j.id)?`<span class="tg lkd">🔒 ${Math.ceil(lockLeft(j.id)/60000)}m</span>`:''}${!lockLeft(j.id)&&failsOf(j.id)?`<span class="tg wrn">${chancesFor(j.yr)-failsOf(j.id)} left</span>`:''}${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>${yr===5?'Journeyman exam':'Year '+yr+' exam'}${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
- ${yr===5&&passed?`<button class="exam card dcj${blocked?' locked':''}" id="dcb">${IC.server}<div><b>Master project: Data center${S.year>=7?' ✓':''}</b><small>${S.year>=7?`You're a Master electrician. Replay any stage for cash.`:`${DCJ.filter(dcDone).length}/8 stages built. Power a whole data center to become a Master electrician.`}</small></div></button>`:''}
+ ${yr===5&&passed?`<div class="exam card dcj" style="cursor:default">${IC.server}<div><b>Master job</b><small>Coming soon. Keep stacking cash and stars.</small></div></div>`:''}
  <div class="msg" id="bmsg"></div>
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
  bindHud();bindNav();
@@ -423,29 +440,31 @@ function board(){
  $('#yp').onclick=()=>{if(!canPrev)return;S.view=yr-1;saveLocal();tick();board()};$('#yn').onclick=()=>{if(!canNext)return;S.view=yr+1;saveLocal();tick();board()};
  const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
  app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
- const dcb=$('#dcb');if(dcb)dcb.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();dcBoard()};
  $('#exam').onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}if(left&&!passed){bm(`Finish all ${js.length} Year ${yr} jobs first. ${left} to go.`);return}tick();exam(yr)};
 }
 
 function shell(j,order,body){
- onHall=false;
+ onHall=false;coachOff();
  app.innerHTML=`<div class="top"><button class="btn alt sm" id="back">&larr; ${j.yr===6?'Site map':'Job board'}</button><span class="tag" style="--c:${j.color}">${j.kind}</span><button class="btn alt sm" id="rst" aria-label="Restart this job">↻ Restart</button></div><div class="order card"><b>Work order</b><p>${order}</p></div>${body}`;
  $('#back').onclick=()=>{tick();j.yr===6?dcBoard():board()};
  $('#rst').onclick=()=>{stop();tick();JOBF[j.id]()};
 }
 
 function result(j,stars,lesson,extra){
+ if(attemptOver)return;attemptOver=true;curJob=null;
  stop();
  const dId=dailyId(),wasCE=ceYear();
  const prevSt=S.stars[j.id]||0;if(stars>prevSt)S.stars[j.id]=stars;
- let pay=stars?Math.round(j.pay*stars/3):0,bonus='';
+ const mul=j.yr<6?payMul(j.id):1;
+ let pay=stars?Math.round(j.pay*stars/3*mul):0,bonus=stars&&mul<1?`<p style="margin:0 0 4px;font-weight:600">Callback job: paid ${Math.round(mul*100)}%</p>`:'';
+ const chn=chanceAfter(j,stars);
  if(stars&&j.id===dId&&S.dailyDone!==dayKey()){pay*=2;S.dailyDone=dayKey();bonus='<p style="margin:0 0 4px;font-weight:600">Job of the day: double pay!</p>'}
- S.cash+=pay;S.earned=(S.earned||0)+pay;if(stars)S.xp+=j.xp;save();
+ S.cash+=pay;S.earned=(S.earned||0)+pay;if(stars)S.xp+=j.xp;save();coachOff();
  if(wasCE&&!ceYear()){bonus+='<p style="margin:0 0 4px;font-weight:600">Continued education complete. Back to work!</p>';post(`${S.name} finished continued education.`)}
  if(stars){good();confetti()}else bad();
  syncMe();if(stars===0)failPost(j,j.id==='emerg'?'let the party go dark':'struck out');else if(stars===1){S.fp=S.fp||{};if(!S.fp[j.id]){S.fp[j.id]=1;saveLocal();failPost(j,'barely scraped by (1 star)')}}if(stars===3&&prevSt<3)post(`${S.name} nailed the ${j.kind.toLowerCase()}: ${j.title.replace(/"/g,'')} (3 stars)`);
  const o=document.createElement('div');o.className='modal';
- o.innerHTML=`<div class="res card"><h2>${stars?'Job done!':'Not this time'}</h2>${starRow(stars,1)}${bonus}${extra||''}<div class="earn">${stars?'+'+money(pay):'$0'}</div><div class="why"><b>Why it matters</b><p>${lesson}</p></div><div class="row"><button class="btn alt" id="again">Replay</button><button class="btn" id="tb">${j.yr===6?'Site map':'Job board'}</button></div></div>`;
+ o.innerHTML=`<div class="res card"><h2>${stars?'Job done!':'Not this time'}</h2>${starRow(stars,1)}${bonus}${extra||''}${chn}<div class="earn">${stars?'+'+money(pay):'$0'}</div><div class="why"><b>Why it matters</b><p>${lesson}</p></div><div class="row"><button class="btn alt" id="again">Replay</button><button class="btn" id="tb">${j.yr===6?'Site map':'Job board'}</button></div></div>`;
  document.body.appendChild(o);
  o.querySelector('#again').onclick=()=>{o.remove();tick();JOBF[j.id]()};
  o.querySelector('#tb').onclick=()=>{o.remove();tick();j.yr===6?dcBoard():board()};
@@ -1056,7 +1075,7 @@ function subpanel(){
 }
 
 /* ================= YEAR 3 ================= */
-const msgEl=(t,c)=>{const m=$('#msg');if(!m)return;m.className='msg'+(c?' '+c:'');m.innerHTML=t};
+const msgEl=(t,c)=>{const m=$('#msg');if(!m)return;m.className='msg'+(c?' '+c:'');m.innerHTML=t;if(c==='bad'&&t)coach(t)};
 const frac=x=>{const w=Math.floor(x+1e-9),r=Math.round((x-w)*16);const f={0:'',1:'1/16',2:'1/8',3:'3/16',4:'1/4',6:'3/8',8:'1/2',10:'5/8',12:'3/4',14:'7/8',5:'5/16',7:'7/16',9:'9/16',11:'11/16',13:'13/16',15:'15/16'}[r];return (w?w:'')+(w&&f?' ':'')+(f||(w?'':'0'))+' in.'};
 
 /* ---------- Y3: CONDUIT BENDER (offset) ---------- */
@@ -2614,7 +2633,80 @@ function datacenter(){
  setTimeout(()=>{msgEl('Normal operation: both utilities, mains closed, tie open. Here comes the first failure…');setTimeout(startE,2200)},300);
 }
 
+
+/* ---------- CHANCES, LOCKOUT, STUDY GUIDE ---------- */
+let curJob=null,strikes=0,attemptOver=false;
+const strikeMax=y=>y<=2?5:4;
+const benign=t=>/^place everything|already has a jumper|won't fit there|pick a piece/i.test(t.replace(/<[^>]+>/g,'').trim());
+const LOCKMS=30*60*1000;
+const chancesFor=y=>y<=2?3:y===3?2:1;
+const lockLeft=id=>{const t=(S.lock||{})[id];return t&&t>Date.now()?t-Date.now():0};
+const failsOf=id=>(S.fails||{})[id]||0;
+const cutOf=id=>(S.cut||{})[id]||0;
+const payMul=id=>Math.max(.25,1-.25*cutOf(id));
+const fixFee=j=>Math.round(j.pay/2);
+const mmss=ms=>{const s=Math.ceil(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+function chanceAfter(j,stars){ // updates counters; returns html for the result card
+ if(j.yr>5)return '';
+ S.fails=S.fails||{};S.cut=S.cut||{};S.lock=S.lock||{};
+ const N=chancesFor(j.yr);
+ if(stars>0){S.cut[j.id]=0;return ''}
+ S.fails[j.id]=failsOf(j.id)+1;S.cut[j.id]=cutOf(j.id)+1;
+ const left=N-S.fails[j.id];
+ if(left<=0){S.lock[j.id]=Date.now()+LOCKMS;S.fails[j.id]=0;S.cut[j.id]=0;
+  return `<div class="chn bad2"><b>🔒 Out of chances.</b> The foreman pulled you off this job for 30 minutes. Study up while you wait, or pay ${money(fixFee(j))} to fix it now.</div>`}
+ return `<div class="chn"><b>${left} chance${left>1?'s':''} left</b> ${pips(N,left)}<br>The customer called you back. Next time this job pays ${Math.round(payMul(j.id)*100)}%.</div>`;
+}
+const pips=(n,left)=>`<span class="pips">${[...Array(n)].map((_,i)=>`<i class="${i<left?'on':''}"></i>`).join('')}</span>`;
+function lessonOf(id){const f=JSRC[id];if(!f)return '';const src=f.toString();let best='';let at=0;
+ while((at=src.indexOf('result(j,',at))>=0){let i=at+9,dep=0,arg=1,st=-1,q=null;
+  for(;i<src.length;i++){const c=src[i];if(q){if(c==='\\'){i++;continue}if(c===q){q=null;if(arg===2&&dep===0){const lit=src.slice(st,i+1);if(!lit.includes('${'))try{const v=Function('return '+lit)();if(v.length>best.length)best=v}catch(e){}break}}continue}
+   if(c==="'"||c==='"'||c==='`'){q=c;if(arg===2&&dep===0)st=i;continue}if('([{'.includes(c))dep++;else if(')]}'.includes(c)){if(dep===0)break;dep--}else if(c===','&&dep===0){arg++;if(arg>2)break}}
+  at+=9}return best}
+function studyCards(id){const out=[];for(const y in QB)for(const e of QB[y])if(e[4]===id)out.push(e);return out}
+function lockedScreen(j){
+ const les=lessonOf(j.id);
+ const fee=fixFee(j),cards=studyCards(j.id);
+ shell(j,`You're out of chances on <b>${j.title}</b>. The foreman wants you to study before you go back. Wait it out, or pay to fix the job now.`,
+ `<div class="lockc card"><div class="lkt">🔒 <b id="lkt">${mmss(lockLeft(j.id))}</b></div><small>until you can try again</small>
+ <button class="btn" id="fix" style="width:100%;margin-top:10px" ${S.cash<fee?'disabled':''}>Pay ${money(fee)} to fix it now</button>${S.cash<fee?`<small style="display:block;margin-top:6px">You have ${money(S.cash)}.</small>`:''}</div>
+ <h2 class="sec" style="font-size:21px;margin:16px 2px 8px">Study guide</h2>
+ ${les?`<div class="card" style="padding:12px 14px;margin-bottom:10px"><b>The big idea</b><p style="margin:4px 0 0">${les}</p></div>`:''}
+ ${cards.length?`<p class="fine" style="margin:0 2px 8px">Tap a card to flip it.</p><div class="flips">${cards.map((e,i)=>`<button class="flip card" data-i="${i}"><span class="fq">${e[0]}</span><span class="fa"><b>${e[1][e[2]]}</b><br>${e[3]}</span></button>`).join('')}</div>`:''}
+ ${!les&&!cards.length?'<p class="fine">Think back to what went wrong. The tip cards during the job tell you what to watch for.</p>':''}`);
+ app.querySelectorAll('.flip').forEach(b=>b.onclick=()=>{b.classList.toggle('up');tick()});
+ $('#fix').onclick=()=>{if(S.cash<fee)return;S.cash-=fee;delete S.lock[j.id];save();good();JOBF[j.id]()};
+ timers.push(setInterval(()=>{const l=lockLeft(j.id);if(!l){stop();good();JOBF[j.id]();return}const e=$('#lkt');if(e)e.textContent=mmss(l)},1000));
+}
+
+/* ---------- TIP CARD + BREAK EFFECTS ---------- */
+function fxKind(t){t=t.replace(/<[^>]+>/g,' ').toLowerCase();
+ if(/dead short|short circuit|shorted|\bbang\b|\bboom\b|arc flash|\barcs?\b|arcing|sparks?\b|blew|blown|blow apart|explod/.test(t))return 'arc';
+ if(/smok|burn(ed|s|ing)? (up|out)|fried|cooked|backwards|stall/.test(t))return 'smoke';
+ if(/overheat|melt|too hot|heats? (up|the)|glow/.test(t))return 'hot';
+ if(/\btrip/.test(t))return 'trip';
+ return ''}
+const FXT={arc:['⚡','That would arc!'],smoke:['💨','Something\'s cooking'],hot:['🔥','Overheating'],trip:['🔌','Breaker trips'],'':['💡','Quick tip']};
+function breakFx(k){const fx=$('#fx');if(!fx||!k)return;
+ if(k==='arc'){const f=document.createElement('div');f.className='flash';fx.appendChild(f);setTimeout(()=>f.remove(),500);
+  for(let i=0;i<26;i++){const s=document.createElement('i');s.className='spk';const a=Math.random()*Math.PI*2,d=90+Math.random()*170;s.style.setProperty('--x',Math.cos(a)*d+'px');s.style.setProperty('--y',Math.sin(a)*d+'px');s.style.transform=`rotate(${a}rad)`;fx.appendChild(s);setTimeout(()=>s.remove(),700)}
+  shake()}
+ if(k==='smoke'){for(let i=0;i<9;i++){const s=document.createElement('i');s.className='smk';s.style.left=(35+Math.random()*30)+'%';s.style.animationDelay=(i*.12)+'s';fx.appendChild(s);setTimeout(()=>s.remove(),2400)}}
+ if(k==='hot'){const f=document.createElement('div');f.className='hotv';fx.appendChild(f);setTimeout(()=>f.remove(),1600)}
+ if(k==='trip'){const f=document.createElement('div');f.className='tripb';f.textContent='TRIPPED';fx.appendChild(f);setTimeout(()=>f.remove(),1100);shake()}}
+function shake(){app.classList.remove('shk');void app.offsetWidth;app.classList.add('shk');setTimeout(()=>app.classList.remove('shk'),450)}
+function coach(html){const k=fxKind(html);breakFx(k);
+ let sk='';if(curJob&&!attemptOver&&!benign(html)){strikes++;const mx=strikeMax(curJob.yr);sk=`<span class="sk">Mistake ${strikes} of ${mx}</span>`;
+  if(strikes>=mx){const j=curJob;curJob=null;sk=`<span class="sk out">Struck out</span>`;setTimeout(()=>{if(attemptOver)return;const les=lessonOf(j.id);result(j,0,les||'Slow down and read each tip card. They tell you exactly what went wrong and what to do instead.','<p style="margin:0 0 8px;font-weight:700">Too many mistakes. The inspector shut the job down.</p>')},1500)}}
+ let c=$('#coach');if(c)c.remove();c=document.createElement('div');c.id='coach';c.className='coach card k-'+(k||'tip');
+ c.innerHTML=`<button class="cx" aria-label="Close">×</button><div class="ch"><span class="ci">${FXT[k][0]}</span><b>${FXT[k][1]}</b>${sk}</div><div class="cb">${html}</div><div class="cbar"><i></i></div>`;
+ document.body.appendChild(c);const kill=()=>{c.classList.add('out');setTimeout(()=>c.remove(),220)};
+ c.querySelector('.cx').onclick=kill;const tm=setTimeout(kill,10000);c._t=tm}
+const coachOff=()=>{const c=$('#coach');if(c){clearTimeout(c._t);c.remove()}};
+
 const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush,dcsite,dcphase,dcgear,dcsync,dcbatt,dcbus,dcground,datacenter};
+const JSRC={};
+for(const k in JOBF){const f=JOBF[k];JSRC[k]=f;JOBF[k]=(...a)=>{const j=J(k);if(j&&j.yr<6&&lockLeft(k)){curJob=null;return lockedScreen(j)}curJob=j&&j.yr<6?j:null;strikes=0;attemptOver=false;return f(...a)}}
 title();
 initFB();
 function checkUpdate(){try{fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/const VER='([^']+)'/);if(m&&m[1]!==VER&&!document.getElementById('upd')){const b=document.createElement('button');b.id='upd';b.className='updbar';b.textContent='New version of Spark Up! Tap to update';b.onclick=()=>{location.replace(location.pathname+'?v='+m[1])};document.body.appendChild(b)}}).catch(()=>{})}catch(e){}}
