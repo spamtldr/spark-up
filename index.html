@@ -50,7 +50,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .tabs{display:flex;gap:8px;margin-bottom:12px}.tab{flex:1;border:3px solid var(--ink);border-radius:12px;background:#fff;min-height:44px;font-weight:600;font-size:15px;box-shadow:0 3px 0 var(--ink)}.tab.on{background:var(--yel)}.tab:disabled{opacity:.5;box-shadow:none}
 .roster{display:grid;gap:8px}
 .mem{display:flex;align-items:center;gap:10px;padding:8px 10px;box-shadow:0 3px 0 var(--ink)}
-.mem.me{background:#FFF3C4}
+.mem.me.cs-plain{background:#FFF3C4}
 .pos{font-weight:700;width:22px;text-align:center;flex:none}
 .av{width:42px;height:42px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-weight:700;flex:none}
 .mi{flex:1}.mi b{display:block;font-weight:600;line-height:1.2;overflow-wrap:anywhere}.mi em{font-style:normal;font-size:12px;background:var(--ink);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:2px}.mi small{font-size:14px;opacity:.75}
@@ -71,6 +71,34 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .err{margin:0 0 10px;font-size:14px;color:#C0392B;min-height:20px}
 .seg.on{background:var(--yel)}
 .cash{cursor:pointer;font-family:inherit}
+.cats{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}.cats .tab{flex:none;padding:0 12px}
+.si.locked>svg,.si.locked>.sw{opacity:.85}
+.sw{display:grid;place-items:center;width:84px;height:52px;border:3px solid var(--ink);border-radius:12px;font-size:20px}
+.cs-plain{background:#fff}
+.cs-blueprint{background-color:#1F5FAE;background-image:linear-gradient(#ffffff26 1px,transparent 1px),linear-gradient(90deg,#ffffff26 1px,transparent 1px);background-size:14px 14px;color:#fff}
+.cs-hazard{background:#fff;border-image:repeating-linear-gradient(45deg,#1B2A41 0 10px,#FFC93C 10px 20px) 6;border-width:6px;border-style:solid}
+.cs-plate{background-color:#C9CFD6;background-image:radial-gradient(ellipse 4px 1.5px at 25% 25%,#ffffff99 99%,transparent),radial-gradient(ellipse 1.5px 4px at 75% 75%,#ffffff99 99%,transparent);background-size:16px 16px}
+.cs-neon{background:#151A33;color:#fff;box-shadow:0 0 0 3px #FF6FB5 inset,0 0 14px #FF6FB5,0 5px 0 var(--ink)}
+.cs-goldcard{background:linear-gradient(135deg,#B8801A,#FFE48A 45%,#C99528)}
+.mem.cs-blueprint small,.mem.cs-neon small{color:#E6F0FF;opacity:1}.mem.cs-blueprint .earn2,.mem.cs-neon .earn2{color:#7BFFB0}
+.mem{cursor:pointer;text-align:left;width:100%;font:inherit;color:var(--ink)}
+.mem.cs-blueprint,.mem.cs-neon,.pband.cs-blueprint,.pband.cs-neon{color:#fff}
+.pband{border:3px solid var(--ink);border-radius:14px;padding:10px;margin-bottom:12px}
+.cpick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}.cp{border:3px solid var(--ink);border-radius:12px;background:#fff;padding:6px;display:grid;place-items:center;gap:2px;min-height:96px}.cp.on{background:#FFF3C4}.cp small{font-size:13px;font-weight:600}
+.dots7{display:flex;gap:3px}.dots7 i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--ink)}
+.news{padding:4px 12px}.nt{display:flex;justify-content:space-between;gap:10px}.nt small{white-space:nowrap;opacity:.7;font-size:13px}
+.nw{display:block;padding:10px 0;border-bottom:2px dashed #D3D9E0}.nw:last-child{border:0}
+.rx{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}.rb{border:2px solid var(--ink);border-radius:999px;background:#fff;min-height:34px;min-width:44px;padding:2px 10px;font-size:15px}.rb b{font-weight:700;font-size:13px}.rb.on{background:var(--yel)}
+.cmts{margin-top:8px;background:#F4F7FA;border-radius:10px;padding:8px 10px}.cmts p{margin:0 0 6px;font-size:15px;overflow-wrap:anywhere}.cmts b{font-weight:600}
+.cin{display:flex;gap:6px}.cin input{flex:1;font:500 16px Fredoka,system-ui,sans-serif;padding:8px 10px;border:3px solid var(--ink);border-radius:10px;min-height:44px}
+.mem:active{transform:translateY(2px)}
+.prof{text-align:center}.prof h2{margin:0;font-size:28px;overflow-wrap:anywhere}.prof .pr{margin:2px 0 12px;font-size:15px}
+.prof.cs-blueprint .pstats div,.prof.cs-neon .pstats div{color:var(--ink)}
+.pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.pstats div{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px}.pstats small{display:block;font-size:13px;opacity:.75}.pstats strong{font-size:18px;font-weight:700}
+.prow{display:flex;justify-content:center;gap:16px;margin-bottom:10px}.prow div{background:#fff;border:3px solid var(--ink);border-radius:12px;padding:6px 8px;color:var(--ink)}.prow small{display:block;font-size:13px}
+.ptools{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px}
+.pt{display:grid;place-items:center;border-radius:8px}.pt.no{opacity:.18;filter:grayscale(1)}.pt.fav{background:#FFF3C4;box-shadow:0 0 0 2px var(--ink)}
+.prof .fine{color:inherit}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -181,6 +209,10 @@ chain:`<svg viewBox="0 0 48 48"><path d="M6 14h18v20h18" fill="none" stroke="${I
 insp:`<svg viewBox="0 0 48 48"><circle cx="20" cy="20" r="14" fill="#fff" stroke="${INK}" stroke-width="3.5"/><path d="M30 30l12 12" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M13 20l5 5 9-10" fill="none" stroke="#35C76F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 bulb:`<svg viewBox="0 0 48 48"><circle cx="24" cy="19" r="14" fill="#FFE070" stroke="${INK}" stroke-width="3"/><path d="M19 19l5 6 5-6" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><rect x="17" y="32" width="14" height="11" rx="3" fill="#B4BCC6" stroke="${INK}" stroke-width="3"/></svg>`,
 lock:`<svg viewBox="0 0 48 48"><path d="M15 21v-6a9 9 0 0 1 18 0v6" fill="none" stroke="${INK}" stroke-width="4"/><rect x="9" y="20" width="30" height="24" rx="5" fill="#FF5A5A" stroke="${INK}" stroke-width="3"/><circle cx="24" cy="30" r="3.5" fill="${INK}"/><path d="M24 33v5" stroke="${INK}" stroke-width="3" stroke-linecap="round"/></svg>`,
+box:`<svg viewBox="0 0 48 48"><rect x="8" y="8" width="32" height="32" rx="6" fill="#9FD8F5" stroke="${INK}" stroke-width="3"/><circle cx="24" cy="24" r="7" fill="#fff" stroke="${INK}" stroke-width="3"/><path d="M2 18h6M40 30h6" stroke="${INK}" stroke-width="5" stroke-linecap="round"/></svg>`,
+staple:`<svg viewBox="0 0 48 48"><rect x="4" y="4" width="10" height="40" fill="#E3BF7E" stroke="${INK}" stroke-width="3"/><rect x="34" y="4" width="10" height="40" fill="#E3BF7E" stroke="${INK}" stroke-width="3"/><path d="M2 26h44" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M2 26h44" stroke="#F4F1EA" stroke-width="3"/><path d="M5 18v12h8V18M35 18v12h8V18" fill="none" stroke="${INK}" stroke-width="3"/></svg>`,
+heater:`<svg viewBox="0 0 48 48"><rect x="10" y="6" width="28" height="38" rx="9" fill="#fff" stroke="${INK}" stroke-width="3"/><path d="M17 26c3-4 0-6 4-9 0 4 4 4 3 8 3-2 4 0 3 3a6 6 0 0 1-10-2z" fill="#FF8A3D" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/></svg>`,
+panel:`<svg viewBox="0 0 48 48"><rect x="8" y="4" width="32" height="40" rx="4" fill="#A7B1BD" stroke="${INK}" stroke-width="3"/><rect x="21" y="10" width="6" height="22" fill="#E8B64C" stroke="${INK}" stroke-width="2"/><path d="M13 14h6M13 20h6M13 26h6M29 14h6M29 20h6M29 26h6" stroke="${INK}" stroke-width="3"/><rect x="13" y="36" width="9" height="4" fill="#fff" stroke="${INK}" stroke-width="1.5"/><rect x="26" y="36" width="9" height="4" fill="#3DBE5B" stroke="${INK}" stroke-width="1.5"/></svg>`,
 snd:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#FFC93C" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`,
 off:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#E3E7EC" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9l5 6M21 9l-5 6" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`
 };
@@ -196,21 +228,57 @@ const JOBS=[
  {id:'install2',yr:2,kind:'Install job',title:'Wire a 3-way switch',pay:140,xp:60,icon:'sw',color:'#FFC93C'},
  {id:'service2',yr:2,kind:'Service call',title:'"Some of my outlets quit!"',pay:160,xp:70,icon:'chain',color:'#7FD8FF'},
  {id:'layout2',yr:2,kind:'Layout job',title:'Bathroom remodel circuit',pay:140,xp:60,icon:'grid',color:'#8EE59B'},
- {id:'inspect2',yr:2,kind:'Inspection rush',title:'Safe or hazard?',pay:140,xp:60,icon:'insp',color:'#C9B6FF'}];
+ {id:'inspect2',yr:2,kind:'Inspection rush',title:'Safe or hazard?',pay:140,xp:60,icon:'insp',color:'#C9B6FF'},
+ {id:'roughin',yr:2,kind:'Rough-in job',title:'Staple the rough-in',pay:150,xp:60,icon:'staple',color:'#F2D8A7'},
+ {id:'subpanel',yr:2,kind:'Panel job',title:'Garage subpanel',pay:170,xp:70,icon:'panel',color:'#B8E1FF'}];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
 const stop=()=>{timers.forEach(clearInterval);timers=[]};
 
-const HATS={yellow:['Safety yellow','#FFC93C',0],orange:['Blaze orange','#FF8A3D',150],blue:['Sky blue','#4FA8FF',300],lime:['Lime','#7BE07B',450],white:['Foreman white','#FFFFFF',600],red:['Fire red','#FF5A5A',1000],black:['Midnight','#3A3F4A',1500],gold:['Solid gold','#E2A72E',5000]};
-const TRUCKS={pickup:['Pickup truck',1500],van:['Work van',3000],bucket:['Bucket truck',8000]};
-const GEAR={belt:['Leather tool belt',400]};
-const hatSvg=(k,st)=>{const c=(HATS[k]||HATS.yellow)[1];return IC.hat.split('#FFC93C').join(c).replace('<svg',`<svg style="${st||''}"`)};
+const HATS={yellow:['Safety yellow','#FFC93C',0],orange:['Blaze orange','#FF8A3D',150],blue:['Sky blue','#4FA8FF',300],lime:['Lime','#7BE07B',450],white:['Foreman white','#FFFFFF',600],red:['Fire red','#FF5A5A',1000],black:['Midnight','#3A3F4A',1500],pink:['Hot pink','#FF6FB5',2000],camo:['Camo','#7E8F4E',3000,'camo'],hivis:['Hi-vis reflective','#C6F03C',4500,'hivis'],carbon:['Carbon fiber','#2B2F36',6500,'carbon'],flames:['Hot rod flames','#2B2F36',9000,'flames'],bolt:['Lightning bolt','#2F7FE0',12000,'bolt'],chrome:['Chrome','#D8DEE6',25000,'chrome'],gold:['Solid gold','#E2A72E',50000,'gold'],diamond:['Diamond','#BFF4FF',150000,'diamond']};
+const CARDS={plain:['Plain',0],blueprint:['Blueprint',2500],hazard:['Hazard stripes',4000],plate:['Diamond plate',7000],neon:['Neon sign',15000],goldcard:['Gold leaf',60000]};
+const TRUCKS={pickup:['Pickup truck',1500],van:['Work van',3500],box:['Box truck',8000],lifted:['Lifted 4x4',18000],bucket:['Bucket truck',30000]};
+const BELTS={canvas:['Canvas pouch',250],belt:['Leather tool belt',400],rig:['Suspender rig',3000],goldbelt:['Gold buckle rig',20000]};
+const TOOLS={screwdriver:['Screwdriver set',150],pliers:['Lineman pliers',200],strippers:['Wire strippers',250],tester:['Voltage tester',300],labeler:['Label maker',450],fishtape:['Fish tape',600],multimeter:['Multimeter',900],clamp:['Clamp meter',1400],bender:['Conduit bender',2000],impact:['Impact driver',3000],megger:['Insulation tester',10000],thermal:['Thermal camera',20000],goldpliers:['Golden pliers',75000]};
+const DOME='M6 34c0-11 8-20 18-20s18 9 18 20z';
+const HDEFS=`<defs><clipPath id="hdc"><path d="${DOME}"/></clipPath><linearGradient id="hgc" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9AA5B1"/><stop offset=".45" stop-color="#FFFFFF"/><stop offset="1" stop-color="#7D8896"/></linearGradient><linearGradient id="hgg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B8801A"/><stop offset=".45" stop-color="#FFE48A"/><stop offset="1" stop-color="#B8801A"/></linearGradient><linearGradient id="hgd" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8FE3FF"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#9FB8FF"/></linearGradient></defs>`;
+function hatSvg(k,st){const h=HATS[k]||HATS.yellow,p=h[3]||'';
+ const fill=p==='chrome'?'url(#hgc)':p==='gold'?'url(#hgg)':p==='diamond'?'url(#hgd)':h[1];
+ const ov={camo:`<g clip-path="url(#hdc)"><ellipse cx="14" cy="24" rx="6" ry="3.5" fill="#4E5B2E"/><ellipse cx="30" cy="20" rx="7" ry="3" fill="#A58B57"/><ellipse cx="34" cy="30" rx="6" ry="3" fill="#4E5B2E"/><ellipse cx="20" cy="31" rx="5" ry="2.5" fill="#A58B57"/></g>`,
+  hivis:`<g clip-path="url(#hdc)"><rect x="0" y="25" width="48" height="5" fill="#E3E7EC"/></g>`,
+  carbon:`<g clip-path="url(#hdc)" stroke="#4A505B" stroke-width="2">${[0,6,12,18,24,30,36,42].map(x=>`<path d="M${x} 14l10 20M${x+10} 14l-10 20"/>`).join('')}</g>`,
+  flames:`<g clip-path="url(#hdc)"><path d="M4 34c4-6 3-10 7-13 0 5 3 6 5 3 1-5 4-7 7-8-1 5 2 7 4 5 2-4 5-5 8-5-2 4 0 7 3 6 2-2 4-2 6-1v13z" fill="#FF8A3D" stroke="${INK}" stroke-width="1.5"/><path d="M8 34c2-3 3-6 5-7 0 3 2 4 4 2 1-3 3-4 5-5 0 3 1 4 3 3 2-2 4-3 6-3-1 3 1 5 3 4 1-1 3-1 4 0v6z" fill="#FFC93C"/></g>`,
+  bolt:`<path d="M27 15l-8 11h5l-3 8 9-12h-5l3-7z" fill="#FFC93C" stroke="${INK}" stroke-width="1.8" stroke-linejoin="round"/>`,
+  chrome:`<path d="M12 22c3-4 7-6 11-6" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+  gold:`<path d="M12 22c3-4 7-6 11-6" stroke="#FFF6C4" stroke-width="3" fill="none" stroke-linecap="round"/>`,
+  diamond:`<g stroke="#5BB8FF" stroke-width="1.2" fill="none" clip-path="url(#hdc)"><path d="M6 34L24 14 42 34M15 24h18M24 14v20"/></g><path d="M36 10l1.5 3.5L41 15l-3.5 1.5L36 20l-1.5-3.5L31 15l3.5-1.5z" fill="#fff" stroke="${INK}" stroke-width="1.2"/>`}[p]||'';
+ return `<svg viewBox="0 0 48 48" style="${st||''}">${HDEFS}<path d="${DOME}" fill="${fill}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>${ov}<path d="${DOME}" fill="none" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M20 14.5V10h8v4.5" fill="${fill}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><rect x="3" y="33" width="42" height="7" rx="3.5" fill="${fill}" stroke="${INK}" stroke-width="3"/>${p==='hivis'?'<rect x="5" y="35" width="38" height="3" fill="#E3E7EC"/>':''}<path d="M24 15v18" stroke="${INK}" stroke-width="2.5"/></svg>`}
+const WH=`<circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/>`;
 function truckSvg(k,st){const s=st?` style="${st}"`:'';
- if(k==='pickup')return `<svg viewBox="0 0 64 40"${s}><path d="M4 20h22l6-10h14l6 10h8v12H4z" fill="#FF8A3D" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M35 13h9l4 7H32z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/></svg>`;
- if(k==='van')return `<svg viewBox="0 0 64 40"${s}><path d="M4 6h40l10 10h6v16H4z" fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M45 9l7 8h-7z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M10 18h26" stroke="#FFC93C" stroke-width="5"/><circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/></svg>`;
- if(k==='bucket')return `<svg viewBox="0 0 64 40"${s}><path d="M14 22L40 4" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M14 22L40 4" stroke="#B4BCC6" stroke-width="2.5" stroke-linecap="round"/><rect x="38" y="0" width="12" height="9" rx="2" fill="#FFC93C" stroke="${INK}" stroke-width="2.5"/><path d="M4 20h36v-8h12l8 8v12H4z" fill="#FFC93C" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/></svg>`;
- return ''}
-const beltSvg=st=>`<svg viewBox="0 0 64 40"${st?` style="${st}"`:''}><rect x="2" y="12" width="60" height="9" rx="3" fill="#9A5B2C" stroke="${INK}" stroke-width="3"/><rect x="27" y="10" width="11" height="13" rx="2" fill="#E2A72E" stroke="${INK}" stroke-width="2.5"/><path d="M8 21h14v14a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z" fill="#B87333" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M44 21h12v11h-12z" fill="#B87333" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M48 21V6" stroke="${INK}" stroke-width="3" stroke-linecap="round"/></svg>`;
+ const b={pickup:`<path d="M4 20h22l6-10h14l6 10h8v12H4z" fill="#FF8A3D" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M35 13h9l4 7H32z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/>${WH}`,
+  van:`<path d="M4 6h40l10 10h6v16H4z" fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M45 9l7 8h-7z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M10 18h26" stroke="#FFC93C" stroke-width="5"/>${WH}`,
+  box:`<rect x="3" y="3" width="38" height="27" rx="2" fill="#F4F1EA" stroke="${INK}" stroke-width="3"/><path d="M9 12h26M9 18l6-8 4 8 4-8 4 8" stroke="#2F7FE0" stroke-width="3" fill="none" stroke-linejoin="round"/><path d="M41 12h12l7 9v11H41z" fill="#2F7FE0" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M45 15h7l4 6H45z" fill="#BFE8FF" stroke="${INK}" stroke-width="2"/>${WH}`,
+  lifted:`<path d="M4 16h22l6-10h14l6 10h8v10H4z" fill="#FF5A5A" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M35 9h9l4 7H32z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M30 4h16" stroke="#FFC93C" stroke-width="3" stroke-linecap="round"/><circle cx="16" cy="31" r="8" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="31" r="8" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="16" cy="31" r="3" fill="#B4BCC6"/><circle cx="48" cy="31" r="3" fill="#B4BCC6"/>`,
+  bucket:`<path d="M14 22L40 4" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M14 22L40 4" stroke="#B4BCC6" stroke-width="2.5" stroke-linecap="round"/><rect x="38" y="0" width="12" height="9" rx="2" fill="#FFC93C" stroke="${INK}" stroke-width="2.5"/><path d="M4 20h36v-8h12l8 8v12H4z" fill="#FFC93C" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/>${WH}`}[k];
+ return b?`<svg viewBox="0 0 64 40"${s}>${b}</svg>`:''}
+function beltSvg(k,st){const s=st?` style="${st}"`:'';const c={canvas:['#C9B98E','#B4A16E','#B4BCC6'],belt:['#9A5B2C','#B87333','#E2A72E'],rig:['#3A3F4A','#B87333','#B4BCC6'],goldbelt:['#3A3F4A','#9A5B2C','#FFD84D']}[k];if(!c)return '';
+ return `<svg viewBox="0 0 64 40"${s}>${k==='rig'||k==='goldbelt'?`<path d="M14 12L20 0M50 12L44 0" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M14 12L20 0M50 12L44 0" stroke="#FF5A5A" stroke-width="3" stroke-linecap="round"/>`:''}<rect x="2" y="12" width="60" height="9" rx="3" fill="${c[0]}" stroke="${INK}" stroke-width="3"/><rect x="27" y="10" width="11" height="13" rx="2" fill="${c[2]}" stroke="${INK}" stroke-width="2.5"/><path d="M8 21h14v14a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z" fill="${c[1]}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M44 21h12v11h-12z" fill="${c[1]}" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M48 21V6" stroke="${INK}" stroke-width="3" stroke-linecap="round"/></svg>`}
+function toolSvg(k,st){const s=st?` style="${st}"`:'';const I=INK;
+ const b={screwdriver:`<path d="M6 34l14-14" stroke="${I}" stroke-width="4" stroke-linecap="round"/><rect x="18" y="6" width="9" height="20" rx="4" transform="rotate(45 22 16)" fill="#FF5A5A" stroke="${I}" stroke-width="3"/>`,
+  pliers:`<path d="M8 6l12 16M20 6L8 22" stroke="${I}" stroke-width="5" stroke-linecap="round"/><path d="M20 22l4 14M8 22l-2 14" stroke="${I}" stroke-width="7" stroke-linecap="round"/><path d="M20 22l4 14M8 22l-2 14" stroke="#2F7FE0" stroke-width="4" stroke-linecap="round"/>`,
+  strippers:`<path d="M10 4l8 18M24 4l-6 18" stroke="${I}" stroke-width="5" stroke-linecap="round"/><path d="M18 22l-6 14M18 22l8 14" stroke="${I}" stroke-width="7" stroke-linecap="round"/><path d="M18 22l-6 14M18 22l8 14" stroke="#FFC93C" stroke-width="4" stroke-linecap="round"/>`,
+  tester:`<rect x="12" y="2" width="12" height="34" rx="6" fill="#FFC93C" stroke="${I}" stroke-width="3"/><path d="M15 6h6" stroke="#FF5A5A" stroke-width="4" stroke-linecap="round"/>`,
+  labeler:`<rect x="6" y="6" width="26" height="28" rx="5" fill="#2F7FE0" stroke="${I}" stroke-width="3"/><rect x="10" y="10" width="18" height="7" rx="2" fill="#C8E6B0" stroke="${I}" stroke-width="2"/><path d="M12 24h4M20 24h4M12 29h12" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>`,
+  fishtape:`<circle cx="18" cy="20" r="14" fill="#FFC93C" stroke="${I}" stroke-width="3"/><circle cx="18" cy="20" r="6" fill="#fff" stroke="${I}" stroke-width="3"/><path d="M30 26l6 10" stroke="${I}" stroke-width="3" stroke-linecap="round"/>`,
+  multimeter:`<rect x="7" y="2" width="22" height="34" rx="5" fill="#FFC93C" stroke="${I}" stroke-width="3"/><rect x="11" y="6" width="14" height="9" rx="2" fill="#C8E6B0" stroke="${I}" stroke-width="2"/><circle cx="18" cy="25" r="5" fill="#fff" stroke="${I}" stroke-width="2.5"/>`,
+  clamp:`<path d="M10 16a8 8 0 0 1 16 0" fill="none" stroke="${I}" stroke-width="5"/><path d="M10 16a8 8 0 0 1 16 0" fill="none" stroke="#FF5A5A" stroke-width="2.5"/><rect x="8" y="16" width="20" height="22" rx="4" fill="#FFC93C" stroke="${I}" stroke-width="3"/><rect x="12" y="20" width="12" height="7" rx="2" fill="#C8E6B0" stroke="${I}" stroke-width="2"/>`,
+  bender:`<path d="M4 36L30 8" stroke="${I}" stroke-width="5" stroke-linecap="round"/><path d="M24 4a10 10 0 1 1 6 16l-4-6z" fill="#7BE07B" stroke="${I}" stroke-width="3" stroke-linejoin="round"/>`,
+  impact:`<path d="M6 10h18l4 4v6H6z" fill="#FF8A3D" stroke="${I}" stroke-width="3" stroke-linejoin="round"/><path d="M28 16h6" stroke="${I}" stroke-width="3"/><path d="M12 20h8l-2 16h-6z" fill="#3A3F4A" stroke="${I}" stroke-width="3" stroke-linejoin="round"/>`,
+  megger:`<rect x="3" y="6" width="30" height="28" rx="4" fill="#FF5A5A" stroke="${I}" stroke-width="3"/><rect x="8" y="10" width="20" height="10" rx="2" fill="#C8E6B0" stroke="${I}" stroke-width="2"/><path d="M10 28h4M22 28h4" stroke="${I}" stroke-width="3" stroke-linecap="round"/>`,
+  thermal:`<rect x="4" y="4" width="28" height="18" rx="4" fill="#3A3F4A" stroke="${I}" stroke-width="3"/><rect x="8" y="8" width="20" height="10" rx="2" fill="#FF8A3D"/><circle cx="18" cy="13" r="3" fill="#FFE070"/><path d="M14 22h8l-2 14h-4z" fill="#3A3F4A" stroke="${I}" stroke-width="3" stroke-linejoin="round"/>`,
+  goldpliers:`<path d="M8 6l12 16M20 6L8 22" stroke="${I}" stroke-width="5" stroke-linecap="round"/><path d="M20 22l4 14M8 22l-2 14" stroke="${I}" stroke-width="7" stroke-linecap="round"/><path d="M20 22l4 14M8 22l-2 14" stroke="#FFD84D" stroke-width="4" stroke-linecap="round"/><path d="M30 6l1.5 3 3 1.5-3 1.5L30 15l-1.5-3-3-1.5 3-1.5z" fill="#FFF6C4" stroke="${I}" stroke-width="1"/>`}[k];
+ return b?`<svg viewBox="0 0 36 40"${s}>${b}</svg>`:''}
+const toolCount=()=>Object.keys(TOOLS).filter(k=>S.owned['tool_'+k]).length;
 const money=n=>'$'+Math.round(n||0).toLocaleString('en-US');
 const jobsOf=y=>JOBS.filter(j=>j.yr===y);
 const doneAll=y=>jobsOf(y).every(j=>S.stars[j.id]>0);
@@ -273,7 +341,7 @@ function result(j,stars,lesson,extra){
  S.cash+=pay;S.earned=(S.earned||0)+pay;if(stars)S.xp+=j.xp;save();
  if(wasCE&&!ceYear()){bonus+='<p style="margin:0 0 4px;font-weight:600">Continued education complete. Back to work!</p>';post(`${S.name} finished continued education.`)}
  if(stars){good();confetti()}else bad();
- syncMe();if(stars===3&&prevSt<3)post(`${S.name} nailed the ${j.kind.toLowerCase()}: ${j.title.replace(/"/g,'')} (3 stars)`);
+ syncMe();if(stars===0)failPost(j,j.id==='emerg'?'let the party go dark':'struck out');else if(stars===1){S.fp=S.fp||{};if(!S.fp[j.id]){S.fp[j.id]=1;saveLocal();failPost(j,'barely scraped by (1 star)')}}if(stars===3&&prevSt<3)post(`${S.name} nailed the ${j.kind.toLowerCase()}: ${j.title.replace(/"/g,'')} (3 stars)`);
  const o=document.createElement('div');o.className='modal';
  o.innerHTML=`<div class="res card"><h2>${stars?'Job done!':'Not this time'}</h2>${starRow(stars,1)}${bonus}${extra||''}<div class="earn">${stars?'+'+money(pay):'$0'}</div><div class="why"><b>Why it matters</b><p>${lesson}</p></div><div class="row"><button class="btn alt" id="again">Replay</button><button class="btn" id="tb">Job board</button></div></div>`;
  document.body.appendChild(o);
@@ -336,7 +404,7 @@ function install(){
    m.className='msg ok';m.textContent=gf?'Power on. You press TEST, it trips. Press RESET, power comes back. Perfect.':'Power on. The plug-in tester shows correct wiring.';
    setTimeout(()=>result(j,Math.max(1,(hint?2:3)-(tries-1)),gf?'A GFCI has LINE terminals for the power coming from the panel and LOAD terminals for protecting outlets further down the line. The feed always goes on LINE. Black still goes to brass, white to silver, bare to green. Wire it backwards and most GFCIs won\'t reset, which is your clue.':'Black (hot) goes to the brass screw, white (neutral) to the silver screw, and bare or green (ground) to the green screw. Polarity matters: the wide slot is the neutral, so the threaded shell of a lamp socket stays safe instead of being live.'),1100);return}
   m.className='msg bad';
-  if(b==='green'){zap();sparksAt(T.green.x,T.green.y);badgeAt('BREAKER TRIPPED','#FFC9C9');m.innerHTML='<b>Bang!</b> The hot wire is on the green screw. That screw bonds to the strap and the grounded metal box, so hot went straight to ground: a dead short. The breaker tripped. Fix it and try again.'}
+  if(b==='green'){zap();if(!st.sh){st.sh=1;failPost(j,'caused a dead short 💥')}sparksAt(T.green.x,T.green.y);badgeAt('BREAKER TRIPPED','#FFC9C9');m.innerHTML='<b>Bang!</b> The hot wire is on the green screw. That screw bonds to the strap and the grounded metal box, so hot went straight to ground: a dead short. The breaker tripped. Fix it and try again.'}
   else if(g!=='green'){zap();sparksAt(T[g].x,T[g].y);badgeAt('WIRING FAULT','#FFC9C9');m.innerHTML='<b>Wiring fault.</b> The bare ground is on a screw that carries normal current. The ground should only carry current during a fault, so it can safely trip the breaker. Never use it as a hot or a neutral.'}
   else if(gf&&(LOADS.includes(b)||LOADS.includes(w))){bad();badgeAt('WON\'T RESET','#FFC9C9');m.innerHTML='<b>No power, and it won\'t reset.</b> Power from the panel is on the LOAD side. LOAD is only for feeding other outlets you want protected. The feed must land on LINE.'}
   else{bad();badgeAt('HOT/NEU REVERSED','#FFC9C9');m.innerHTML='<b>It works, but it\'s wrong.</b> Hot is on the silver screw, so the wide slot is now hot. A lamp plugged in here would have a live socket shell. That\'s reversed polarity: a shock hazard.'}
@@ -377,7 +445,7 @@ function install2(){
  $('#flip').onclick=()=>{
   tries++;const m=$('#msg');$('#fxg').innerHTML='';$('#tst').innerHTML='';
   const onGreen=['red','blk','leg'].find(k=>st.map[k]==='green');
-  if(onGreen){zap();sparksAt(T.green.x,T.green.y);badgeAt('BREAKER TRIPPED','#FFC9C9');m.className='msg bad';m.innerHTML='<b>Bang!</b> A wire that carries current is on the green ground screw. As soon as power went down that wire, it shorted to the grounded box and the breaker tripped. The breaker is back OFF.';return}
+  if(onGreen){zap();if(!st.sh){st.sh=1;failPost(j,'caused a dead short 💥')}sparksAt(T.green.x,T.green.y);badgeAt('BREAKER TRIPPED','#FFC9C9');m.className='msg bad';m.innerHTML='<b>Bang!</b> A wire that carries current is on the green ground screw. As soon as power went down that wire, it shorted to the grounded box and the breaker tripped. The breaker is back OFF.';return}
   if(st.map.bare!=='green'){zap();sparksAt(T[st.map.bare].x,T[st.map.bare].y);badgeAt('WIRING FAULT','#FFC9C9');m.className='msg bad';m.innerHTML='<b>Wiring fault.</b> The bare ground is on a current-carrying screw. Ground goes on green, every time. The breaker is back OFF.';return}
   st.done=true;draw();a=0;b=0;seen=new Set(['00']);lastOn=lit();m.className='msg ok';m.textContent='Breaker ON. Now flip the switches and try all 4 combos.';test();
   $('#tst').scrollIntoView({behavior:'smooth',block:'nearest'})};
@@ -680,6 +748,104 @@ function lockout(){
  }
 }
 
+/* ---------- YEAR 2: BOX FILL ---------- */
+function boxfill(){
+ const j=J('boxfill'),aw=Math.random()<.5?14:12,per=aw===14?2:2.25,dev=Math.random()<.5?'receptacle':'switch';
+ const cab=shuffle([[2,2],[2,3],[3,2],[1,3]])[0]; // [count, insulated per cable]
+ const nC=cab[0],ins=cab[1],insul=nC*ins,N=insul+1+2,need=N*per;
+ const BX=[['Single-gang plastic, 18.0 cu in',18],['4 in. square, 1½ in. deep, 21.0 cu in',21],['Deep single-gang plastic, 22.5 cu in',22.5],['4 in. square, 2⅛ in. deep, 30.3 cu in',30.3],['Two-gang plastic, 32.0 cu in',32]];
+ const ok=BX.findIndex(b=>b[1]>=need);
+ const f2=n=>(Math.round(n*100)/100).toFixed(2);
+ const cl=`${aw}/${ins} with ground`;
+ const pic=`<svg viewBox="0 0 360 170" style="display:block;width:100%"><rect x="110" y="20" width="140" height="130" rx="14" fill="#9FD8F5" stroke="${INK}" stroke-width="4"/><rect x="152" y="42" width="56" height="86" rx="12" fill="#FFF8E7" stroke="${INK}" stroke-width="3.5"/><text x="180" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${dev==='receptacle'?'RECEP':'SWITCH'}</text>
+ ${Array.from({length:nC},(_,i)=>{const y=40+i*(90/Math.max(1,nC-1||1));const x2=i%2?250:110,x1=i%2?345:15;return `<path d="M${x1} ${nC===1?85:y}H${x2}" stroke="${INK}" stroke-width="12" stroke-linecap="round"/><path d="M${x1} ${nC===1?85:y}H${x2}" stroke="#F4F1EA" stroke-width="7" stroke-linecap="round"/>`}).join('')}
+ <text x="180" y="166" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">${nC} cable${nC>1?'s':''} of ${cl}</text></svg>`;
+ const opts=[...new Set([N,N-1,N-2,N+nC-1,N+1])].slice(0,4);
+ steps(j,`New ${dev} box, ${aw} AWG copper. ${nC} cable${nC>1?'s':''} of ${cl} come in, and the ${dev} goes on a yoke. No internal clamps. The inspector will check your box fill.`,[
+  {html:pic,q:'How many conductors does this box count as for box fill?',a:opts.map(n=>n+' conductors'),c:0,e:`Each insulated wire coming in counts 1 (${insul}). All the grounds together count 1. The ${dev} counts 2. Total: ${insul} + 1 + 2 = ${N}. Internal clamps would add 1 more, and pigtails that stay in the box don't count.`},
+  {q:`Each ${aw} AWG conductor counts ${aw===14?'2.00':'2.25'} cubic inches. How much box volume do you need?`,a:[f2(need),f2(N*(aw===14?2.25:2)),f2((N-1)*per),f2((N+2)*per)].map(v=>v+' cu in'),c:0,e:`${N} × ${aw===14?'2.00':'2.25'} = ${f2(need)} cubic inches. 14 AWG is 2.00 cu in per conductor, and 12 AWG is 2.25.`},
+  {q:`You need at least ${f2(need)} cu in. Which is the smallest box that passes?`,a:[BX[ok][0],...BX.filter((_,i)=>i!==ok).map(b=>b[0])],c:0,e:`The ${BX[ok][0].split(',')[0].toLowerCase()} holds ${BX[ok][1]} cu in, enough for ${f2(need)}. ${ok>0?'Anything smaller fails. ':''}Box volume is stamped inside the box.`}
+ ],miss=>result(j,miss===0?3:miss<=2?2:1,'Box fill keeps wires from getting crammed and overheating. Count each insulated wire coming in as 1, all the grounds together as 1, each device as 2, and internal clamps as 1. Multiply by 2.00 cu in for 14 AWG or 2.25 for 12 AWG, then pick a box at least that big.'));
+}
+
+/* ---------- YEAR 2: ROUGH-IN STAPLES ---------- */
+function roughin(){
+ const j=J('roughin'),L=(9+Math.floor(Math.random()*7))*12;let st=[],tries=0;
+ const X=p=>20+p/L*320;
+ let need=1,pos=12;while(pos<L-12){pos+=54;need++}
+ shell(j,`Rough-in inspection tomorrow. A ${L/12} ft run of NM cable goes between two boxes. Tap the cable to add staples (tap one again to remove it), then call the inspector.`,
+ `<div class="gamehud card"><span>Staples: <b id="nst">0</b></span><span>Run: ${L/12} ft</span></div>
+ <div class="stage card"><svg id="rw" viewBox="0 0 360 150" style="display:block;width:100%;touch-action:manipulation" aria-label="Wall with a cable run between two boxes"></svg></div>
+ <p class="hint">Rule of thumb: staple within 12 in. of each box, then at least every 4½ ft.</p>
+ <button class="btn go" id="insp" style="width:100%">Call the inspector</button><div class="msg" id="msg"></div>`);
+ let bad1=null;
+ function draw(){let h=`<rect x="0" y="10" width="360" height="110" fill="#F2D8A7"/>`;
+  for(let x=0;x<=L;x+=16)h+=`<rect x="${X(x)-4}" y="10" width="8" height="110" fill="#E3BF7E" stroke="#B88B45" stroke-width="1"/>`;
+  if(bad1)h+=`<rect x="${X(bad1[0])}" y="56" width="${X(bad1[1])-X(bad1[0])}" height="28" fill="#FF5A5A" opacity=".45"/>`;
+  h+=`<path d="M${X(0)} 70H${X(L)}" stroke="${INK}" stroke-width="10" stroke-linecap="round"/><path d="M${X(0)} 70H${X(L)}" stroke="#F4F1EA" stroke-width="6" stroke-linecap="round"/>`;
+  h+=`<rect x="4" y="48" width="22" height="44" rx="4" fill="#9FD8F5" stroke="${INK}" stroke-width="3"/><rect x="334" y="48" width="22" height="44" rx="4" fill="#9FD8F5" stroke="${INK}" stroke-width="3"/>`;
+  st.forEach(p=>{h+=`<path d="M${X(p)-6} 60v14h12V60" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/><path d="M${X(p)-6} 60v14h12V60" fill="none" stroke="#B4BCC6" stroke-width="2" stroke-linejoin="round"/>`});
+  for(let f=0;f<=L/12;f+=2)h+=`<text x="${X(f*12)}" y="140" text-anchor="middle" font-size="13" font-weight="600" fill="${INK}">${f}'</text>`;
+  h+=`<rect x="0" y="0" width="360" height="150" fill="transparent" id="hit"/>`;
+  $('#rw').innerHTML=h;$('#nst').textContent=st.length}
+ $('#rw').addEventListener('click',e=>{const r=$('#rw').getBoundingClientRect(),x=(e.clientX-r.left)/r.width*360;let p=Math.round(((x-20)/320*L)/6)*6;p=Math.max(3,Math.min(L-3,p));
+  const near=st.findIndex(q=>Math.abs(q-p)<=6);if(near>=0)st.splice(near,1);else st.push(p);st.sort((a,b)=>a-b);bad1=null;tick();draw()});
+ $('#insp').onclick=()=>{tries++;const m=$('#msg');const pts=[0,...st,L];let err=null;
+  if(!st.length)err=[0,L,'No staples at all. NM cable has to be secured.'];
+  else if(st[0]>12)err=[0,st[0],`The first staple is ${st[0]} in. from the box. It has to be within 12 in.`];
+  else if(L-st[st.length-1]>12)err=[st[st.length-1],L,`The last staple is ${L-st[st.length-1]} in. from the box. It has to be within 12 in.`];
+  else for(let i=1;i<st.length;i++)if(st[i]-st[i-1]>54){err=[st[i-1],st[i],`There's ${st[i]-st[i-1]} in. between two staples. The max is 54 in. (4½ ft).`];break}
+  if(err){bad1=[err[0],err[1]];draw();bad();m.className='msg bad';m.innerHTML='<b>Red tag.</b> '+err[2];return}
+  good();m.className='msg ok';m.innerHTML=`<b>Passed!</b> ${st.length} staples (the fewest that work here is ${need}).`;$('#insp').disabled=true;
+  const stars=tries===1&&st.length<=need+1?3:tries<=2?2:1;
+  setTimeout(()=>steps(j,'The inspector has one more question while he\'s here.',[{h:'Inspector',q:'You bored a hole for the cable, and its edge is only 1 in. from the face of the stud. What does it need?',a:['A steel nail plate over it','Nothing, it\'s inside the wall','Electrical tape','A bigger hole'],c:0,e:'When the hole\'s edge is closer than 1¼ in. to the face of the stud, cover it with a steel plate at least 1/16 in. thick, so drywall screws and nails can\'t hit the cable.'}],m2=>result(j,Math.max(1,stars-m2),'NM cable gets secured within 12 in. of every box and at least every 4½ ft along the run. Keep holes 1¼ in. back from the face of the stud, or add a steel nail plate. Inspectors check this before the drywall goes up, so get it right the first time.')),1200)};
+ draw();
+}
+
+/* ---------- YEAR 2: 240 V WATER HEATER ---------- */
+function heater240(){
+ const j=J('heater240'),W=[3500,4500,5500][Math.floor(Math.random()*3)],I=W/240,M=I*1.25,small=M<=20;
+ const plate=`<svg viewBox="0 0 360 140" style="display:block;width:100%"><rect x="20" y="10" width="110" height="122" rx="18" fill="#fff" stroke="${INK}" stroke-width="4"/><rect x="40" y="2" width="16" height="14" rx="3" fill="#B4BCC6" stroke="${INK}" stroke-width="3"/><rect x="94" y="2" width="16" height="14" rx="3" fill="#B4BCC6" stroke="${INK}" stroke-width="3"/><rect x="150" y="26" width="190" height="90" rx="8" fill="#E3E7EC" stroke="${INK}" stroke-width="3"/><text x="245" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="${INK}">WATER HEATER</text><text x="245" y="76" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">${W.toLocaleString('en-US')} W elements</text><text x="245" y="100" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">240 V, single-phase</text></svg>`;
+ const setups=small?['20 A breaker, 12 AWG copper','15 A breaker, 14 AWG copper','20 A breaker, 14 AWG copper','30 A breaker, 12 AWG copper']:['30 A breaker, 10 AWG copper','20 A breaker, 12 AWG copper','30 A breaker, 12 AWG copper','40 A breaker, 12 AWG copper'];
+ steps(j,'New 50-gallon electric water heater in a basement. Read the nameplate, size the circuit, and wire it at the panel.',[
+  {html:plate,q:'How many amps does it draw at 240 V?',a:[fmt1(I)+' A',fmt1(W/120)+' A',fmt1(I/2)+' A',fmt1(W/208*1.5)+' A'],c:0,e:`Amps = watts ÷ volts. ${W.toLocaleString('en-US')} ÷ 240 = ${fmt1(I)} A.`},
+  {html:plate,q:'A water heater like this is sized at 125% of its nameplate. What\'s the minimum circuit rating?',a:[fmt1(M)+' A',fmt1(I)+' A',fmt1(I*.8)+' A',fmt1(I*2)+' A'],c:0,e:`Storage water heaters (120 gal or less) count as continuous loads, so the circuit must be at least 125%: ${fmt1(I)} × 1.25 = ${fmt1(M)} A.`},
+  {q:`You need at least ${fmt1(M)} A. Which setup meets code?`,a:setups,c:0,e:small?`${fmt1(M)} A fits on a 20 A breaker, and 20 A needs 12 AWG copper.`:`${fmt1(M)} A is over 20 A, so go to 30 A, and 30 A needs 10 AWG copper. 12 AWG tops out at 20 A.`},
+  {q:'How do you get 240 V at the panel?',a:['A 2-pole breaker that connects to both hot legs','Two single-pole breakers on the same leg','A single-pole breaker with a bigger wire','A GFCI breaker'],c:0,e:'A 2-pole breaker grabs both hot legs (buses), and the voltage between them is 240 V. Its handles are tied so both legs shut off together.'},
+  {q:'This heater needs only two hots and a ground, but your 10/2 cable has black, white and bare. What do you do with the white?',a:['Use it as the second hot and re-mark it with black or red tape at both ends','Leave it unhooked','Use it as the ground','Land it on the neutral bar'],c:0,e:'In a cable, a white wire can be used as a hot if you re-mark it with tape (black or red) at every place it\'s visible, so nobody mistakes it for a neutral.'}
+ ],miss=>result(j,miss===0?3:miss<=2?2:1,'240 V loads use a 2-pole breaker across both hot legs. Size water heater circuits at 125% of the nameplate, then match the wire to the breaker: 12 AWG for 20 A, 10 AWG for 30 A. A white wire used as a hot must be re-marked.'));
+}
+
+/* ---------- YEAR 2: GARAGE SUBPANEL ---------- */
+function subpanel(){
+ const j=J('subpanel');
+ const W={blk:{c:'#262626',x:108,n:'Black (hot)'},red:{c:'#E23B3B',x:148,n:'Red (hot)'},wht:{c:'#F7F7F7',x:212,n:'White (neutral)'},bare:{c:'#D0843F',x:252,n:'Bare (ground)'}};
+ const pos=shuffle([108,148,212,252]);Object.keys(W).forEach((k,i)=>W[k].x=pos[i]);
+ const T={l1:{x:150,y:70,c:'#B4BCC6',n:'L1'},l2:{x:210,y:70,c:'#B4BCC6',n:'L2'},nb:{x:112,y:250,c:'#D5DAE1',n:'Neutral bar'},gb:{x:248,y:250,c:'#3DBE5B',n:'Ground bar'}};
+ const st={sel:null,map:{},done:false};let tries=0,hint=false,bond=true;
+ shell(j,'Attached garage subpanel, fed from the main panel with a 4-wire feeder: two hots, a neutral and a ground. Land the feeder, check the bonding screw, then energize.',
+ `<div class="stage card"><svg id="rc" viewBox="0 0 360 380" aria-label="Subpanel with main lugs, a neutral bar and a ground bar">
+ <rect x="68" y="8" width="224" height="326" rx="10" fill="#A7B1BD" stroke="${INK}" stroke-width="4"/><rect x="82" y="22" width="196" height="298" rx="6" fill="#8592A1"/>
+ <rect x="160" y="96" width="14" height="130" rx="3" fill="#E8B64C" stroke="${INK}" stroke-width="3"/><rect x="186" y="96" width="14" height="130" rx="3" fill="#E8B64C" stroke="${INK}" stroke-width="3"/>
+ <rect x="90" y="236" width="70" height="18" rx="4" fill="#D5DAE1" stroke="${INK}" stroke-width="3"/><rect x="200" y="236" width="70" height="18" rx="4" fill="#9BE3AE" stroke="${INK}" stroke-width="3"/>
+ <g id="bond"></g>
+ <rect x="102" y="334" width="156" height="34" rx="14" fill="#F4F1EA" stroke="${INK}" stroke-width="3"/><text x="180" y="356" font-size="13" font-weight="600" fill="${INK}" text-anchor="middle">4-wire feeder from main</text>${FXG}</svg></div>
+ <button class="btn alt" id="bt" style="width:100%;margin-bottom:12px"></button>${WIREUI}`);
+ const draw=wiring(W,T,st);
+ function db(){$('#bond').innerHTML=bond?`<circle cx="125" cy="275" r="10" fill="#3DBE5B" stroke="${INK}" stroke-width="3"/><path d="M119 275h12" stroke="${INK}" stroke-width="2.5"/><text x="140" y="280" font-size="13" font-weight="700" fill="#fff">bond screw</text>`:'';$('#bt').textContent=bond?'Bonding screw: INSTALLED (tap to remove)':'Bonding screw: REMOVED (tap to install)'}
+ $('#bt').onclick=()=>{if(st.done)return;bond=!bond;tick();db()};db();
+ $('#hint').onclick=()=>{hint=true;tick();const m=$('#msg');m.className='msg ok';m.innerHTML='<b>Hint:</b> Hots on the lugs, neutral on the neutral bar, ground on the ground bar. In a subpanel, neutral and ground stay separate.'};
+ $('#flip').onclick=()=>{tries++;const m=$('#msg'),mp=st.map;$('#fxg').innerHTML='';m.className='msg bad';
+  const hotBad=['blk','red'].find(k=>mp[k]==='nb'||mp[k]==='gb');
+  if(hotBad){zap();if(!st.sh){st.sh=1;failPost(j,'caused a dead short 💥')}sparksAt(T[mp[hotBad]].x,T[mp[hotBad]].y);badgeAt('MAIN BREAKER TRIPPED','#FFC9C9');m.innerHTML='<b>Bang!</b> A hot conductor is on a bar. That\'s a dead short, and the feeder breaker in the main panel tripped.';return}
+  if(['wht','bare'].some(k=>mp[k]==='l1'||mp[k]==='l2')){zap();if(!st.sh){st.sh=1;failPost(j,'caused a dead short 💥')}sparksAt(150,70);badgeAt('MAIN BREAKER TRIPPED','#FFC9C9');m.innerHTML='<b>Bang!</b> The neutral or ground is on a hot lug. Only the black and red go on L1 and L2.';return}
+  if(mp.wht!=='nb'||mp.bare!=='gb'){bad();badgeAt('INSPECTOR: FAIL','#FFC9C9');m.innerHTML='<b>Neutral and ground are swapped.</b> Normal current would ride the ground wire, and the ground can\'t do its job in a fault. White goes on the neutral bar, bare on the ground bar.';return}
+  if(bond){bad();badgeAt('INSPECTOR: FAIL','#FFC9C9');m.innerHTML='<b>Remove the bonding screw.</b> It ties the neutral bar to the metal can. In a subpanel, that puts normal neutral current on the grounds and the metal. Neutral and ground are bonded only at the service (main panel).';return}
+  st.done=true;draw();$('#fxg').innerHTML=`<rect x="160" y="96" width="40" height="130" fill="#FFE070" opacity=".5" class="pulse"/>`;badgeAt('PASSED: ENERGIZED','#BFF0CF');good();m.className='msg ok';m.textContent='Inspector signs off. The garage has power.';
+  setTimeout(()=>result(j,Math.max(1,(hint?2:3)-(tries-1)),'A subpanel gets a 4-wire feeder: two hots on the lugs, the neutral on an isolated neutral bar, and the ground on a ground bar bonded to the can. Remove the bonding screw. Neutral and ground are tied together only once, at the service. Anywhere else, normal current ends up on the grounds and metal parts.'),1200)};
+ draw();
+}
+
 /* ---------- EXAM (every question is taught in a job) ---------- */
 const QB1=[
  ['A 120 V circuit has 10 Ω of resistance. How many amps flow?',['12 A','1,200 A','0.08 A','130 A'],0,'Ohm\'s law: I = V ÷ R. 120 ÷ 10 = 12 A.','bench'],
@@ -719,6 +885,16 @@ const QB2=[
  ['10 AWG copper building wire is normally protected at&hellip;',['30 A','20 A','40 A','15 A'],0,'14 AWG goes with 15 A, 12 AWG with 20 A, and 10 AWG with 30 A.','lockout'],
  ['In box fill, each 12 AWG conductor counts as&hellip;',['2.25 cu in','2.00 cu in','2.50 cu in','3.00 cu in'],0,'12 AWG is 2.25 cubic inches per conductor, and 14 AWG is 2.00.','boxfill'],
  ['NM cable must be secured within how far of most boxes?',['12 in.','24 in.','36 in.','6 ft'],0,'NM cable must be secured within 12 in. of the box, and then at least every 4½ ft.','roughin'],
+ ['In box fill, a receptacle or switch on its yoke counts as&hellip;',['2 conductors','1 conductor','None','4 conductors'],0,'Each device yoke counts as 2 conductors, based on the largest wire connected to it.','boxfill'],
+ ['In box fill, all the equipment grounds together count as&hellip;',['1 conductor','1 each','None','2 each'],0,'All the equipment grounding conductors together count as just 1.','boxfill'],
+ ['In box fill, each 14 AWG conductor counts as&hellip;',['2.00 cu in','2.25 cu in','1.50 cu in','3.00 cu in'],0,'14 AWG is 2.00 cubic inches, and 12 AWG is 2.25.','boxfill'],
+ ['NM cable runs must be secured at least every&hellip;',['4½ ft','10 ft','2 ft','8 ft'],0,'Secure NM cable within 12 in. of each box and then at least every 4½ ft.','roughin'],
+ ['A hole for a cable is closer than 1¼ in. to the face of the stud. You need&hellip;',['A steel nail plate','Electrical tape','A bigger hole','Nothing'],0,'A steel plate at least 1/16 in. thick keeps nails and screws out of the cable.','roughin'],
+ ['How many watts can a 240 V, 20 A circuit deliver?',['4,800 W','2,400 W','1,200 W','9,600 W'],0,'Watts = volts × amps. 240 × 20 = 4,800 W.','heater240'],
+ ['A storage water heater circuit is sized at what percent of the nameplate?',['125%','100%','80%','150%'],0,'Storage water heaters count as continuous loads, so the circuit must be at least 125% of the nameplate.','heater240'],
+ ['Using a white wire in a cable as a hot conductor requires&hellip;',['Re-marking it with tape at every visible point','Nothing','Using it only on 120 V','A GFCI breaker'],0,'Re-mark it with black or red tape so nobody mistakes it for a neutral.','heater240'],
+ ['In a subpanel, the bonding screw should be&hellip;',['Removed','Installed','Painted green','Replaced with a bigger one'],0,'Neutral and ground are bonded only at the service. In a subpanel, the neutral bar stays isolated.','subpanel'],
+ ['A subpanel feeder needs&hellip;',['4 wires: two hots, a neutral and a ground','3 wires: two hots and a neutral','2 hots only','1 hot and a ground'],0,'Two hots, an isolated neutral and a separate equipment ground.','subpanel'],
  ['A 240 V water heater is fed from a&hellip;',['2-pole breaker','Single-pole breaker','GFCI receptacle','3-way switch'],0,'A 2-pole breaker grabs both hot legs, and 240 V is the voltage between them.','heater240'],
  ['Where are neutral and ground bonded together?',['Only at the service (main panel)','In every subpanel','At every receptacle','Nowhere'],0,'They\'re bonded only at the service. In a subpanel, neutrals and grounds stay on separate bars.','subpanel']];
 const MATCH2=[['3-way switch','Controls a light from 2 places'],['4-way switch','Goes between two 3-ways'],['Traveler','Wire between 3-way switches'],['Backstab','Push-in hole that can work loose'],['Pigtail','Short jumper, one wire per screw']];
@@ -753,7 +929,7 @@ function exam(yr){
   function finish(){const mp=Math.max(0,5-mist),tot=right+mp,pass=tot>=PASS;let bonusTxt='';
    if(pass&&!S.exams[yr]){S.exams[yr]=1;S.year=Math.max(S.year,yr+1);const bn=200*yr;S.cash+=bn;S.earned=(S.earned||0)+bn;bonusTxt=`You earned a ${money(bn)} bonus. `;if(yr<YMAX)S.view=yr+1;post(`${S.name} passed the Year ${yr} exam and is now a ${RANK[yr+1]}!`)}
    save();syncMe();
-   if(pass){good();confetti()}else bad();
+   if(pass){good();confetti()}else{bad();post(`${S.name} failed the Year ${yr} exam (${tot}/${TOT}). Back to the books!`)}
    const o=document.createElement('div');o.className='modal';
    o.innerHTML=`<div class="res card"><h2>${pass?'You passed!':'Not yet'}</h2><div class="earn" style="color:${pass?'#1E8C4C':'#C0392B'}">${tot} / ${TOT}</div><p style="margin:0 0 10px">Quiz: ${right}/${N} &middot; Match-up: ${mp}/5. You need ${PASS} to pass.</p><div class="why"><b>${pass?'Promoted to '+RANK[yr+1]:'Study up and try again'}</b><p>${pass?bonusTxt+(yr<YMAX?`Year ${yr+1} jobs are unlocked on the job board.`:`Year ${yr+1} jobs are coming in the next update.`):'Every question comes from a job you\'ve done. Replay the ones it pointed you to, then try again. You get a new mix of questions each time.'}</p></div><button class="btn" id="tb" style="width:100%">Job board</button></div>`;
    document.body.appendChild(o);o.querySelector('#tb').onclick=()=>{o.remove();tick();board()}}
@@ -785,8 +961,8 @@ async function initFB(){
   fbState='online';
   await ensureId();
   const F=fb.F;
-  F.onSnapshot(F.query(F.collection(fb.db,'members'),F.limit(500)),snap=>{MEM=snap.docs.map(d=>Object.assign({id:d.id},d.data()));if(onHall)hall()},()=>{});
-  F.onSnapshot(F.query(F.collection(fb.db,'news'),F.orderBy('at','desc'),F.limit(20)),snap=>{NEWS=snap.docs.map(d=>d.data());if(onHall)hall()},()=>{});
+  F.onSnapshot(F.query(F.collection(fb.db,'members'),F.limit(500)),snap=>{MEM=snap.docs.map(d=>Object.assign({id:d.id},d.data()));hallRefresh()},()=>{});
+  F.onSnapshot(F.query(F.collection(fb.db,'news'),F.orderBy('at','desc'),F.limit(20)),snap=>{NEWS=snap.docs.map(d=>Object.assign({id:d.id},d.data()));watchSocial();hallRefresh()},()=>{});
   syncMe();backup();
   if(S.name&&!S.joinPosted){S.joinPosted=1;saveLocal();post(`${S.name} joined the hall. Welcome!`)}
  }catch(e){fb=null;fbState='offline';if(onHall)hall()}
@@ -800,7 +976,7 @@ function queueBackup(){if(!fb||!S.code)return;clearTimeout(bkT);bkT=setTimeout(b
 function backup(){if(!fb||!S.code||!S.pid)return;const F=fb.F,d=Object.assign({},S);delete d.ownerUid;
  F.setDoc(F.doc(fb.db,'saves',S.code),{pid:S.pid,data:JSON.stringify(d),updated:F.serverTimestamp()}).catch(()=>{})}
 function syncMe(){if(!fb||!S.name||!S.pid)return;const F=fb.F;
- const d={name:S.name,year:Math.min(10,S.year),stars:Math.min(1000,totalStars()),earned:Math.min(1e8,Math.round(S.earned||0)),ce:!!ceYear(),look:{hat:S.look.hat||'yellow',truck:S.look.truck||'',belt:S.look.belt||''},updated:F.serverTimestamp()};
+ const d={name:S.name,year:Math.min(10,S.year),stars:Math.min(1000,totalStars()),earned:Math.min(1e8,Math.round(S.earned||0)),ce:!!ceYear(),look:myLook(),updated:F.serverTimestamp()};
  if(!S.joinedSync)d.joined=F.serverTimestamp();
  F.setDoc(F.doc(fb.db,'members',S.pid),d,{merge:true}).then(()=>{if(!S.joinedSync){S.joinedSync=1;saveLocal()}}).catch(()=>{})}
 function post(text){if(!fb||!S.name)return;const F=fb.F;
@@ -848,44 +1024,111 @@ function signup(edit){
  if(!edit)setTimeout(()=>inp.focus(),50);
 }
 
+/* ---------- HALL NEWS: reactions + comments ---------- */
+const EMO={zap:'⚡',lol:'😂',clap:'👏',skull:'💀'};
+let REACT=[],CMTS=[],unsubRC=[],rcKey='',openPost=null,hallPending=false;
+function watchSocial(){if(!fb)return;const ids=NEWS.map(n=>n.id).slice(0,30),key=ids.join(',');if(key===rcKey)return;rcKey=key;
+ unsubRC.forEach(u=>{try{u()}catch(e){}});unsubRC=[];REACT=[];CMTS=[];if(!ids.length)return;const F=fb.F;
+ unsubRC.push(F.onSnapshot(F.query(F.collection(fb.db,'reacts'),F.where('post','in',ids)),s=>{REACT=s.docs.map(d=>d.data());hallRefresh()},()=>{}));
+ unsubRC.push(F.onSnapshot(F.query(F.collection(fb.db,'comments'),F.where('post','in',ids)),s=>{CMTS=s.docs.map(d=>Object.assign({id:d.id},d.data()));hallRefresh()},()=>{}));}
+function hallRefresh(){if(!onHall)return;const a=document.activeElement;if(a&&a.id==='cmt'){hallPending=true;return}hall()}
+function react(post,e){if(!fb||!S.pid){bad();return}const F=fb.F,ref=F.doc(fb.db,'reacts',post+'_'+S.pid),mine=REACT.find(r=>r.post===post&&r.pid===S.pid);
+ tick();if(mine&&mine.e===e)F.deleteDoc(ref).catch(()=>{});else F.setDoc(ref,{post,pid:S.pid,e}).catch(()=>{})}
+function comment(post,text){if(!fb||!S.pid||!S.name)return Promise.reject();const F=fb.F;
+ return F.addDoc(F.collection(fb.db,'comments'),{post,pid:S.pid,name:S.name,text:String(text).slice(0,140),at:F.serverTimestamp()})}
+function newsHtml(){
+ if(!NEWS.length)return `<p style="margin:12px">${fbState==='online'?'No news yet. Go earn some cash!':'News shows up when the hall is online.'}</p>`;
+ return NEWS.map(n=>{const rs=REACT.filter(r=>r.post===n.id),mine=rs.find(r=>r.pid===S.pid),cs=CMTS.filter(c=>c.post===n.id).sort((a,b)=>(a.at&&a.at.toMillis?a.at.toMillis():9e15)-(b.at&&b.at.toMillis?b.at.toMillis():9e15)),open=openPost===n.id;
+  return `<div class="nw"><div class="nt"><span>${esc(n.text)}</span><small>${ago(n.at)}</small></div>
+  <div class="rx">${Object.keys(EMO).map(e=>{const c=rs.filter(r=>r.e===e).length;return `<button class="rb${mine&&mine.e===e?' on':''}" data-p="${n.id}" data-e="${e}" aria-label="React ${e}">${EMO[e]}${c?` <b>${c}</b>`:''}</button>`}).join('')}<button class="rb cm${open?' on':''}" data-c="${n.id}">💬${cs.length?` <b>${cs.length}</b>`:''}</button></div>
+  ${open?`<div class="cmts">${cs.map(c=>`<p><b>${esc(c.name)}</b> ${esc(c.text)}</p>`).join('')||'<p style="opacity:.6">No comments yet. Say something.</p>'}
+  <div class="cin"><input id="cmt" maxlength="140" placeholder="Add a comment" autocomplete="off"><button class="btn sm" id="csend">Send</button></div></div>`:''}</div>`}).join('')}
+function bindNews(){
+ app.querySelectorAll('.rb[data-e]').forEach(b=>b.onclick=()=>react(b.dataset.p,b.dataset.e));
+ app.querySelectorAll('.rb[data-c]').forEach(b=>b.onclick=()=>{openPost=openPost===b.dataset.c?null:b.dataset.c;tick();hall();if(openPost){const i=$('#cmt');if(i)i.focus()}});
+ const i=$('#cmt'),s=$('#csend');if(!i)return;
+ i.onblur=()=>{setTimeout(()=>{if(hallPending&&document.activeElement!==i){hallPending=false;hall()}},300)};
+ const send=()=>{const v=i.value.replace(/\s+/g,' ').trim();if(!v)return;s.disabled=true;
+  comment(openPost,v).then(()=>{good();i.value='';hallPending=false;hall()}).catch(()=>{bad();s.disabled=false})};
+ s.onclick=send;i.onkeydown=e=>{if(e.key==='Enter')send()};
+}
+function failPost(j,why){if(!S.name)return;post(`${S.name} ${why} on ${j.title.replace(/"/g,'')}`)}
+
+/* ---------- SHOP ---------- */
+const COLORS=['orange','blue','lime','white','red','black','pink'],COLORHAT=['Color hard hat',750];
+const ownsColor=()=>!!S.owned.hat_color||COLORS.some(c=>S.owned['hat_'+c]);
+const SHOPCATS=[['hat','Hard hats'],['card','Hall cards'],['truck','Trucks'],['belt','Belts'],['tool','Tools']];
+function gearIcon(kind,key,st){return kind==='hat'?hatSvg(key,st):kind==='truck'?truckSvg(key,st):kind==='belt'?beltSvg(key,st):kind==='tool'?toolSvg(key,st):`<span class="sw cs-${key}"${st?` style="${st}"`:''}><b>Aa</b></span>`}
+function shop(){
+ stop();onHall=false;
+ const cat=S.shopTab||'hat',TB={hat:HATS,card:CARDS,truck:TRUCKS,belt:BELTS,tool:TOOLS}[cat];
+ const price=(k,v)=>cat==='hat'?v[2]:v[1];
+ const owns=(k,p)=>p===0||(k==='color'?ownsColor():!!S.owned[cat+'_'+k]);
+ const item=(k,v)=>{const p=price(k,v),own=owns(k,p),eq=k==='color'?COLORS.includes(S.look.hat):S.look[cat]===k;
+  const label=cat==='tool'?(eq?'Favorite ★':own?'Make favorite':money(p)):eq?(cat==='hat'||cat==='card'?'Using':'Using: tap to remove'):own?'Use':money(p);
+  return `<div class="si card${eq?' eq':''}${own?'':' locked'}">${k==='color'?hatSvg(COLORS.includes(S.look.hat)?S.look.hat:'orange')+'<span class="dots7">'+COLORS.map(c=>`<i style="background:${HATS[c][1]}"></i>`).join('')+'</span>':gearIcon(cat,k)}<b>${v[0]}</b><button class="btn${own?' alt':''}" data-k="${k}" data-p="${p}">${label}</button></div>`};
+ let list=Object.entries(TB).sort((a,b)=>price(...a)-price(...b));
+ if(cat==='hat')list=list.filter(([k])=>!COLORS.includes(k)),list.splice(1,0,['color',[COLORHAT[0],'',COLORHAT[1]]]);
+ app.innerHTML=hud()+nav('shop')+`<h2 class="sec">Supply house</h2>
+ <div class="card" style="padding:10px 12px;margin-bottom:10px;background:#FFF8E7">Gear shows on your Union Hall card and profile. Spending never lowers your career earnings.${cat==='tool'?` You own <b>${toolCount()} of ${Object.keys(TOOLS).length}</b> tools. Your favorite shows on your card.`:''}</div>
+ <div class="cats">${SHOPCATS.map(c=>`<button class="tab${c[0]===cat?' on':''}" data-c="${c[0]}">${c[1]}</button>`).join('')}</div>
+ <div class="shop">${list.map(([k,v])=>item(k,v)).join('')}</div><div class="msg" id="smsg"></div>`;
+ bindHud();bindNav();
+ app.querySelectorAll('.cats .tab').forEach(b=>b.onclick=()=>{S.shopTab=b.dataset.c;saveLocal();tick();shop()});
+ app.querySelectorAll('.si .btn').forEach(b=>b.onclick=()=>{const k=b.dataset.k,p=+b.dataset.p,id=cat+'_'+k,m=$('#smsg');
+  if(k==='color'){if(!ownsColor()){if(S.cash<p){bad();m.className='msg bad';m.textContent=`You need ${money(p-S.cash)} more. Back to work!`;m.scrollIntoView({behavior:'smooth',block:'nearest'});return}S.cash-=p;S.owned.hat_color=1;save();good();confetti()}pickColor();return}
+  if(p>0&&!S.owned[id]){if(S.cash<p){bad();m.className='msg bad';m.textContent=`You need ${money(p-S.cash)} more. Back to work!`;m.scrollIntoView({behavior:'smooth',block:'nearest'});return}
+   S.cash-=p;S.owned[id]=1;S.look[cat]=k;save();syncMe();good();confetti();if(p>=5000)post(`${S.name} picked up the ${TB[k][0].toLowerCase()}.`.slice(0,120));shop();return}
+  S.look[cat]=(S.look[cat]===k&&cat!=='hat'&&cat!=='card')?'':k;save();syncMe();tick();shop()});
+}
+
+function pickColor(){
+ const o=document.createElement('div');o.className='modal';
+ o.innerHTML=`<div class="res card"><h2 style="font-size:24px">Pick your color</h2><div class="cpick">${COLORS.map(c=>`<button class="cp${S.look.hat===c?' on':''}" data-c="${c}">${hatSvg(c,'width:56px;height:56px')}<small>${HATS[c][0]}</small></button>`).join('')}</div><button class="btn alt" id="cpx" style="width:100%">Done</button></div>`;
+ document.body.appendChild(o);tick();
+ o.querySelectorAll('.cp').forEach(b=>b.onclick=()=>{S.look.hat=b.dataset.c;save();syncMe();tick();o.remove();shop()});
+ o.querySelector('#cpx').onclick=()=>{o.remove();shop()};o.onclick=e=>{if(e.target===o){o.remove();shop()}};
+}
+/* ---------- MEMBER PROFILE ---------- */
+function cleanLook(lk){lk=lk&&typeof lk==='object'?lk:{};
+ return{hat:HATS[lk.hat]?lk.hat:'yellow',card:CARDS[lk.card]?lk.card:'plain',truck:TRUCKS[lk.truck]?lk.truck:'',belt:BELTS[lk.belt]?lk.belt:'',tool:TOOLS[lk.tool]?lk.tool:'',tools:Array.isArray(lk.tools)?lk.tools.filter(t=>TOOLS[t]):[]}}
+function profile(m,mine){
+ const lk=cleanLook(m.look),y=Math.max(1,Math.min(7,parseInt(m.year)||1));
+ const since=m.joined&&m.joined.toDate?m.joined.toDate().toLocaleDateString('en-US',{month:'short',year:'numeric'}):'';
+ const o=document.createElement('div');o.className='modal';
+ o.innerHTML=`<div class="res card prof"><div class="pband cs-${lk.card}">${hatSvg(lk.hat,'width:96px;height:96px')}<h2>${esc(m.name)}</h2>
+ <p class="pr">${RANK[y]}${m.ce?' <span class="cebadge">CE due</span>':''}${since?` &middot; Member since ${since}`:''}</p></div>
+ <div class="pstats"><div><small>Career earnings</small><strong>${money(+m.earned||0)}</strong></div><div><small>Stars</small><strong>${Math.max(0,parseInt(m.stars)||0)}</strong></div><div><small>Tools</small><strong>${lk.tools.length}/${Object.keys(TOOLS).length}</strong></div></div>
+ ${lk.truck||lk.belt?`<div class="prow">${lk.truck?`<div>${truckSvg(lk.truck,'width:96px;height:60px')}<small>${TRUCKS[lk.truck][0]}</small></div>`:''}${lk.belt?`<div>${beltSvg(lk.belt,'width:96px;height:60px')}<small>${BELTS[lk.belt][0]}</small></div>`:''}</div>`:''}
+ <div class="ptools">${Object.keys(TOOLS).map(t=>`<span class="pt${lk.tools.includes(t)?'':' no'}${lk.tool===t?' fav':''}" title="${TOOLS[t][0]}">${toolSvg(t,'width:34px;height:38px')}</span>`).join('')}</div>
+ <p class="fine" style="margin:6px 0 12px">${lk.tool?'Favorite tool: '+TOOLS[lk.tool][0]:lk.tools.length?'':'No tools yet.'}</p>
+ <div class="row">${mine?'<button class="btn alt" id="pshop">Shop</button>':''}<button class="btn" id="pclose">Close</button></div></div>`;
+ document.body.appendChild(o);tick();
+ o.onclick=e=>{if(e.target===o)o.remove()};
+ o.querySelector('#pclose').onclick=()=>{o.remove();tick()};
+ const ps=o.querySelector('#pshop');if(ps)ps.onclick=()=>{o.remove();tick();shop()};
+}
 function hall(){
  stop();onHall=true;
- const me=S.pid;let mem=MEM.slice();
- if(S.name&&!mem.find(m=>m.id===me))mem.push({id:me||'me',name:S.name,year:S.year,earned:S.earned,look:S.look,ce:!!ceYear()});
- mem=mem.map(m=>m.id===me?Object.assign({},m,{name:S.name,year:S.year,earned:S.earned,look:S.look,ce:!!ceYear()}):m);
+ const me=S.pid,mineLive={name:S.name,year:S.year,earned:S.earned,stars:totalStars(),look:myLook(),ce:!!ceYear()};
+ let mem=MEM.slice();
+ if(S.name&&!mem.find(m=>m.id===me))mem.push(Object.assign({id:me||'me'},mineLive));
+ mem=mem.map(m=>m.id===me?Object.assign({},m,mineLive):m);
  mem.sort((a,b)=>(+b.earned||0)-(+a.earned||0)||(+b.year||1)-(+a.year||1)||String(a.name).localeCompare(String(b.name)));
  const status=fbState==='online'?'':fbState==='connecting'?'<div class="msg">Connecting to the hall&hellip;</div>':'<div class="msg bad">The hall is offline right now. You can keep playing. Your card updates when you\'re back online.</div>';
  app.innerHTML=hud()+nav('hall')+`<h2 class="sec">${LOCAL}</h2>${status}
- <div class="card" style="padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#FFF8E7"><span><b style="font-weight:600">${mem.length}</b> member${mem.length===1?'':'s'}, ranked by career earnings</span><button class="btn alt sm" id="ed">Edit name</button></div>
- <div class="roster">${mem.map((m,i)=>{const y=Math.max(1,Math.min(7,parseInt(m.year)||1)),mine=m.id===me||m.id==='me',lk=m.look&&typeof m.look==='object'?m.look:{};
-  const hk=HATS[lk.hat]?lk.hat:'yellow',tk=TRUCKS[lk.truck]?lk.truck:'',bt=lk.belt==='belt';
-  return `<div class="mem card${mine?' me':''}"><span class="pos">${i+1}</span>${hatSvg(hk,'width:44px;height:44px;flex:none')}<div class="mi"><b>${esc(m.name)}${mine?' <em>You</em>':''}</b><small>${RANK[y]}${m.ce?' <span class="cebadge">CE due</span>':''}</small>${tk||bt?`<span class="gear">${tk?truckSvg(tk,'height:20px;width:32px'):''}${bt?beltSvg('height:20px;width:32px'):''}</span>`:''}</div><span class="earn2">${money(+m.earned||0)}</span></div>`}).join('')}</div>
+ <div class="card" style="padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#FFF8E7"><span><b style="font-weight:600">${mem.length}</b> member${mem.length===1?'':'s'}, ranked by career earnings. Tap a card to see their gear.</span><button class="btn alt sm" id="ed">Edit name</button></div>
+ <div class="roster">${mem.map((m,i)=>{const y=Math.max(1,Math.min(7,parseInt(m.year)||1)),mine=m.id===me||m.id==='me',lk=cleanLook(m.look),has=m.earned!==undefined&&m.earned!==null;
+  return `<button class="mem card cs-${lk.card}${mine?' me':''}" data-i="${i}"><span class="pos">${i+1}</span>${hatSvg(lk.hat,'width:44px;height:44px;flex:none')}<span class="mi"><b>${esc(m.name)}${mine?' <em>You</em>':''}</b><small>${RANK[y]}${m.ce?' <span class="cebadge">CE due</span>':''}</small>${lk.truck||lk.belt||lk.tool?`<span class="gear">${lk.truck?truckSvg(lk.truck,'height:20px;width:32px'):''}${lk.belt?beltSvg(lk.belt,'height:20px;width:32px'):''}${lk.tool?toolSvg(lk.tool,'height:20px;width:18px'):''}</span>`:''}</span><span class="earn2">${has?money(+m.earned||0):'<small style="font-weight:500;font-size:13px">syncing&hellip;</small>'}</span></button>`}).join('')}</div>
  ${S.code?`<div class="card codebox"><div><b>Your hall code</b><small>Keep it somewhere safe. It moves your card and progress to a new phone.</small></div><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button></div>`:''}
  <h2 class="sec" style="font-size:22px;margin-top:18px">Hall news</h2>
- <div class="card news">${NEWS.length?NEWS.map(n=>`<div class="nw"><span>${esc(n.text)}</span><small>${ago(n.at)}</small></div>`).join(''):`<p style="margin:12px">${fbState==='online'?'No news yet. Go earn some cash!':'News shows up when the hall is online.'}</p>`}</div>`;
- bindHud();bindNav();$('#ed').onclick=()=>{tick();onHall=false;signup(true)};
+ <div class="card news">${newsHtml()}</div>`;
+ bindHud();bindNav();bindNews();$('#ed').onclick=()=>{tick();onHall=false;signup(true)};
+ app.querySelectorAll('.mem').forEach(b=>b.onclick=()=>{const m=mem[+b.dataset.i];profile(m,m.id===me||m.id==='me')});
  const cc=$('#cc');if(cc)cc.onclick=()=>{try{navigator.clipboard.writeText(fmtCode(S.code)).then(()=>{cc.textContent='Copied!';setTimeout(()=>{cc.textContent=fmtCode(S.code)},1500)}).catch(()=>{})}catch(e){}};
 }
-
-/* ---------- SHOP ---------- */
-function shop(){
- stop();onHall=false;
- const item=(kind,key,name,price,svg)=>{const own=price===0||S.owned[kind+'_'+key],eq=S.look[kind]===key;
-  return `<div class="si card${eq?' eq':''}">${svg}<b>${name}</b><button class="btn${own?' alt':''}" data-k="${kind}" data-v="${key}" data-p="${price}">${eq?(kind==='hat'?'Wearing':'Using: tap to remove'):own?'Use':money(price)}</button></div>`};
- app.innerHTML=hud()+nav('shop')+`<h2 class="sec">Supply house</h2>
- <div class="card" style="padding:10px 12px;margin-bottom:6px;background:#FFF8E7">Spend your cash on gear that shows on your Union Hall card. Spending never lowers your career earnings.</div>
- <h3 class="sh">Hard hats</h3><div class="shop">${Object.entries(HATS).map(([k,h])=>item('hat',k,h[0],h[2],hatSvg(k))).join('')}</div>
- <h3 class="sh">Work trucks</h3><div class="shop">${Object.entries(TRUCKS).map(([k,t])=>item('truck',k,t[0],t[1],truckSvg(k))).join('')}</div>
- <h3 class="sh">Gear</h3><div class="shop">${item('belt','belt',GEAR.belt[0],GEAR.belt[1],beltSvg())}</div>
- <div class="msg" id="smsg"></div>`;
- bindHud();bindNav();
- app.querySelectorAll('.si .btn').forEach(b=>b.onclick=()=>{const k=b.dataset.k,v=b.dataset.v,p=+b.dataset.p,id=k+'_'+v,m=$('#smsg');
-  if(p>0&&!S.owned[id]){if(S.cash<p){bad();m.className='msg bad';m.textContent=`You need ${money(p-S.cash)} more. Get back to work!`;return}
-   S.cash-=p;S.owned[id]=1;S.look[k]=v;save();syncMe();good();confetti();shop();return}
-  S.look[k]=(S.look[k]===v&&k!=='hat')?'':v;save();syncMe();tick();shop()});
-}
-
-const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2};
+function myLook(){return{hat:S.look.hat||'yellow',card:S.look.card||'plain',truck:S.look.truck||'',belt:S.look.belt||'',tool:S.look.tool||'',tools:Object.keys(TOOLS).filter(k=>S.owned['tool_'+k])}}
+const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel};
 title();
 initFB();
 }

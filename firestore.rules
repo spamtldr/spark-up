@@ -75,5 +75,36 @@ service cloud.firestore {
         && request.resource.data.at == request.time;
       allow update, delete: if false;
     }
+
+    // Reactions on hall news: one per player per post.
+    match /reacts/{rid} {
+      allow read: if true;
+      allow create, update: if ownsPlayer(request.resource.data.pid)
+        && rid == request.resource.data.post + '_' + request.resource.data.pid
+        && request.resource.data.keys().hasOnly(['post', 'pid', 'e'])
+        && request.resource.data.post is string && request.resource.data.post.size() <= 40
+        && request.resource.data.e in ['zap', 'lol', 'clap', 'skull', 'fire', 'heart', 'wow', 'sad'];
+      allow delete: if ownsPlayer(resource.data.pid);
+    }
+
+    // Comments on hall news.
+    match /comments/{cid} {
+      allow read: if true;
+      allow create: if ownsPlayer(request.resource.data.pid)
+        && request.resource.data.keys().hasOnly(['post', 'pid', 'name', 'text', 'at'])
+        && request.resource.data.post is string && request.resource.data.post.size() <= 40
+        && request.resource.data.name is string && request.resource.data.name.size() <= 24
+        && request.resource.data.text is string
+        && request.resource.data.text.size() >= 1 && request.resource.data.text.size() <= 140
+        && request.resource.data.at == request.time;
+      allow update: if false;
+      allow delete: if ownsPlayer(resource.data.pid);
+    }
+
+    // Room to grow: per-player extras (achievements, settings) without new rules.
+    match /extras/{pid}/{doc} {
+      allow read: if true;
+      allow write: if ownsPlayer(pid) && request.resource.data.size() <= 30;
+    }
   }
 }
