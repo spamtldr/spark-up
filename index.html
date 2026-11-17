@@ -18,8 +18,8 @@ LAYOUT: one 480px column, HUD on top, cards stacked, big tap targets.
 *{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
 html,body{margin:0}
 body{font:17px/1.45 Fredoka,"Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:var(--sky);min-height:100vh;overflow-x:clip}
-body::before{content:"";position:fixed;inset:auto 0 0 0;height:90px;background:#6FD08C;border-top:4px solid var(--ink);z-index:-1}
-#app{max-width:480px;margin:0 auto;padding:12px 12px 110px}
+
+#app{max-width:480px;margin:0 auto;padding:12px 12px 100px}
 .card{background:#fff;border:3px solid var(--ink);border-radius:18px;box-shadow:0 5px 0 var(--ink)}
 button{font:inherit;color:inherit;cursor:pointer}
 .btn{font-weight:600;font-size:18px;border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);padding:10px 16px;min-height:50px;background:var(--yel);color:var(--ink);transition:transform .06s}
@@ -99,6 +99,16 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .ptools{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;background:#fff;border:3px solid var(--ink);border-radius:12px;padding:8px}
 .pt{display:grid;place-items:center;border-radius:8px}.pt.no{opacity:.18;filter:grayscale(1)}.pt.fav{background:#FFF3C4;box-shadow:0 0 0 2px var(--ink)}
 .prof .fine{color:inherit}
+.bnav{position:fixed;left:0;right:0;bottom:0;z-index:15;display:flex;justify-content:center;gap:6px;padding:6px 10px 10px;background:#fff;border-top:3px solid var(--ink)}
+.bnav button{flex:1;max-width:140px;border:0;background:none;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:4px 0;font-weight:600;font-size:14px;min-height:52px}
+.bnav button svg{width:28px;height:28px}.bnav button.on{background:var(--yel);box-shadow:0 0 0 2.5px var(--ink) inset}
+.meb{display:flex;align-items:center;gap:8px;flex:1;border:0;background:none;padding:0;text-align:left}.meb>svg{width:42px;height:42px;flex:none}.meb small{display:block;font-size:13px;opacity:.7;line-height:1}.meb b{font-weight:600;font-size:16px;line-height:1.15}
+.yrsel{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 8px}.yrsel .sec{margin:0;text-align:center;flex:1}.yrsel .ok{color:#7BFFB0}
+.arw{width:44px;height:44px;border:3px solid var(--ink);border-radius:50%;background:#fff;font-size:28px;font-weight:700;line-height:1;padding:0 0 4px;box-shadow:0 3px 0 var(--ink)}.arw:disabled{opacity:.3;box-shadow:none}
+.dailybar{display:block;width:100%;text-align:left;border:2.5px solid var(--ink);border-radius:12px;background:#FFF3C4;padding:7px 10px;margin-bottom:12px;font-size:14px;cursor:pointer}.dailybar b{font-weight:700}
+.sub{margin:-4px 4px 12px;font-size:14px;font-weight:500}
+.rc,.rp,.radd{border:2px solid var(--ink);border-radius:999px;background:#fff;min-height:34px;padding:2px 10px;font-size:15px}.rc.on{background:var(--yel)}.radd{opacity:.7;font-size:14px}.rp{min-width:44px}
+.mine{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}.mine .codebox{grid-column:1/-1;margin:0;text-align:left;background:#F4F7FA;border:2.5px solid var(--ink);border-radius:12px}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -286,9 +296,12 @@ function ceYear(){for(let y=1;y<S.year&&y<=YMAX;y++)if(S.exams[y]&&!doneAll(y))r
 const dayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
 function dailyId(){const ce=ceYear(),top=ce||Math.min(S.year,YMAX);const pool=JOBS.filter(j=>j.yr<=top);if(!pool.length)return null;let h=7;for(const c of dayKey())h=(h*31+c.charCodeAt(0))>>>0;return pool[h%pool.length].id}
 
-function hud(){const ce=ceYear();return `<div class="hud card"><div class="rank">${hatSvg(S.look.hat)}<div><small>Rank${ce?' &middot; <span class="cebadge">CE due</span>':''}</small><b>${RANK[S.year]}</b></div></div><button class="cash" id="cashb" aria-label="Open the shop">${money(S.cash)}</button><button class="mute" id="mute" aria-label="Sound ${S.mute?'off':'on'}">${S.mute?IC.off:IC.snd}</button></div>`}
-function bindHud(){const m=$('#mute');if(m)m.onclick=()=>{S.mute=!S.mute;save();m.innerHTML=S.mute?IC.off:IC.snd;tick()};const c=$('#cashb');if(c)c.onclick=()=>{tick();shop()}}
-function nav(which){return `<div class="tabs" style="margin-bottom:10px">${[['jobs','Job board','nj'],['hall','Union Hall','nh'],['shop','Shop','ns']].map(t=>`<button class="tab${which===t[0]?' on':''}" id="${t[2]}">${t[1]}</button>`).join('')}</div>`}
+function hud(){const ce=ceYear();return `<div class="hud card"><button class="meb" id="meb" aria-label="My profile">${hatSvg(S.look.hat)}<span><small>Rank${ce?' &middot; <span class="cebadge">CE due</span>':''}</small><b>${RANK[S.year]}</b></span></button><button class="cash" id="cashb" aria-label="Open the shop">${money(S.cash)}</button></div>`}
+function bindHud(){const c=$('#cashb');if(c)c.onclick=()=>{tick();shop()};const m=$('#meb');if(m)m.onclick=()=>{tick();profile(Object.assign({id:S.pid||'me'},{name:S.name,year:S.year,earned:S.earned,stars:totalStars(),look:myLook(),ce:!!ceYear()}),true)}}
+const NAVI={jobs:`<svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="19" rx="3" fill="#C98A4B" stroke="${INK}" stroke-width="2"/><rect x="7" y="6" width="10" height="13" rx="1" fill="#fff" stroke="${INK}" stroke-width="1.6"/><path d="M9 10h6M9 13h6M9 16h4" stroke="${INK}" stroke-width="1.6" stroke-linecap="round"/></svg>`,
+ hall:`<svg viewBox="0 0 24 24"><path d="M3 10l9-6 9 6z" fill="#FF8A3D" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M5 10v9M9.5 10v9M14.5 10v9M19 10v9" stroke="${INK}" stroke-width="2.2"/><rect x="3" y="19" width="18" height="3" rx="1" fill="#E3E7EC" stroke="${INK}" stroke-width="2"/></svg>`,
+ shop:`<svg viewBox="0 0 24 24"><path d="M4 9h16l-1.5 12h-13z" fill="#35C76F" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M8 9V7a4 4 0 0 1 8 0v2" fill="none" stroke="${INK}" stroke-width="2"/></svg>`};
+function nav(which){return `<nav class="bnav">${[['jobs','Jobs','nj'],['hall','Hall','nh'],['shop','Shop','ns']].map(t=>`<button class="${which===t[0]?'on':''}" id="${t[2]}">${NAVI[t[0]]}<span>${t[1]}</span></button>`).join('')}</nav>`}
 function bindNav(){$('#nj').onclick=()=>{tick();board()};$('#nh').onclick=()=>{tick();hall()};$('#ns').onclick=()=>{tick();shop()}}
 
 function title(){
@@ -306,13 +319,12 @@ function board(){
  const js=jobsOf(yr),left=js.filter(j=>!(S.stars[j.id]>0)).length,passed=S.exams[yr],blocked=!!(ce&&yr>ce);
  const more=(PLAN[yr]||0)-js.length;
  const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`Passed! Year ${yr+1} jobs are coming soon. Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
- const tabs=[];for(let y=1;y<=YMAX+1;y++)tabs.push(y>YMAX?`<button class="tab" disabled>Year ${y} soon</button>`:`<button class="tab${y===yr?' on':''}" data-y="${y}" ${y>S.year?'disabled':''}>Year ${y}${S.exams[y]?' ✓':''}</button>`);
+ const canPrev=yr>1,canNext=yr<Math.min(S.year,YMAX);
  const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
  const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
  const dj=daily&&!dDone?J(daily):null;
- app.innerHTML=hud()+nav('jobs')+ceBox+`<div class="tabs">${tabs.join('')}</div>
- ${dj?`<div class="dailybar card" id="dj"><b>Job of the day:</b> ${dj.title.replace(/"/g,'')} pays double. <span>Year ${dj.yr}</span></div>`:''}
- <h2 class="sec">Year ${yr} job board</h2><div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
+ app.innerHTML=hud()+nav('jobs')+ceBox+`<div class="yrsel"><button class="arw" id="yp" ${canPrev?'':'disabled'} aria-label="Previous year">&lsaquo;</button><h2 class="sec">Year ${yr} jobs${passed?' <span class="ok">✓</span>':''}</h2><button class="arw" id="yn" ${canNext?'':'disabled'} aria-label="Next year">&rsaquo;</button></div>
+ ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>Year ${yr} exam${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
  <div class="msg" id="bmsg"></div>
@@ -320,7 +332,7 @@ function board(){
  bindHud();bindNav();
  const g=$('#goce');if(g)g.onclick=()=>{S.view=ce;save();tick();board()};
  const dd=$('#dj');if(dd)dd.onclick=()=>{tick();S.view=dj.yr;save();JOBF[dj.id]()};
- app.querySelectorAll('.tab[data-y]').forEach(b=>b.onclick=()=>{S.view=+b.dataset.y;save();tick();board()});
+ $('#yp').onclick=()=>{if(!canPrev)return;S.view=yr-1;saveLocal();tick();board()};$('#yn').onclick=()=>{if(!canNext)return;S.view=yr+1;saveLocal();tick();board()};
  const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
  app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
  $('#exam').onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}if(left&&!passed){bm(`Finish all ${js.length} Year ${yr} jobs first. ${left} to go.`);return}tick();exam(yr)};
@@ -1014,9 +1026,9 @@ function signup(edit){
   if(!/^[A-Za-zÀ-ÿ' .\-]+$/.test(v)){$('#ne').textContent='Letters only, please. Spaces, periods, dashes and apostrophes are OK.';return}
   const first=!S.name;S.name=v;save();good();syncMe();
   if(first&&fb&&!S.joinPosted){S.joinPosted=1;saveLocal();post(`${v} joined the hall. Welcome!`)}
-  edit?hall():board()};
+  board()};
  $('#join').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
- const cx=$('#cx');if(cx)cx.onclick=()=>{tick();hall()};
+ const cx=$('#cx');if(cx)cx.onclick=()=>{tick();board()};
  const rl=$('#rsl');if(rl){rl.onclick=()=>{tick();$('#rsb').style.display='block';rl.style.display='none';$('#rcx').focus()};
   $('#rcx').oninput=()=>{$('#re').textContent=''};
   $('#rsg').onclick=async()=>{const b=$('#rsg');b.disabled=true;b.textContent='Checking…';
@@ -1026,31 +1038,22 @@ function signup(edit){
 
 /* ---------- HALL NEWS: reactions + comments ---------- */
 const EMO={zap:'⚡',lol:'😂',clap:'👏',skull:'💀'};
-let REACT=[],CMTS=[],unsubRC=[],rcKey='',openPost=null,hallPending=false;
+let REACT=[],unsubRC=[],rcKey='',openPost=null;
 function watchSocial(){if(!fb)return;const ids=NEWS.map(n=>n.id).slice(0,30),key=ids.join(',');if(key===rcKey)return;rcKey=key;
- unsubRC.forEach(u=>{try{u()}catch(e){}});unsubRC=[];REACT=[];CMTS=[];if(!ids.length)return;const F=fb.F;
- unsubRC.push(F.onSnapshot(F.query(F.collection(fb.db,'reacts'),F.where('post','in',ids)),s=>{REACT=s.docs.map(d=>d.data());hallRefresh()},()=>{}));
- unsubRC.push(F.onSnapshot(F.query(F.collection(fb.db,'comments'),F.where('post','in',ids)),s=>{CMTS=s.docs.map(d=>Object.assign({id:d.id},d.data()));hallRefresh()},()=>{}));}
-function hallRefresh(){if(!onHall)return;const a=document.activeElement;if(a&&a.id==='cmt'){hallPending=true;return}hall()}
+ unsubRC.forEach(u=>{try{u()}catch(e){}});unsubRC=[];REACT=[];if(!ids.length)return;const F=fb.F;
+ unsubRC.push(F.onSnapshot(F.query(F.collection(fb.db,'reacts'),F.where('post','in',ids)),s=>{REACT=s.docs.map(d=>d.data());hallRefresh()},()=>{}));}
+function hallRefresh(){if(onHall)hall()}
 function react(post,e){if(!fb||!S.pid){bad();return}const F=fb.F,ref=F.doc(fb.db,'reacts',post+'_'+S.pid),mine=REACT.find(r=>r.post===post&&r.pid===S.pid);
  tick();if(mine&&mine.e===e)F.deleteDoc(ref).catch(()=>{});else F.setDoc(ref,{post,pid:S.pid,e}).catch(()=>{})}
-function comment(post,text){if(!fb||!S.pid||!S.name)return Promise.reject();const F=fb.F;
- return F.addDoc(F.collection(fb.db,'comments'),{post,pid:S.pid,name:S.name,text:String(text).slice(0,140),at:F.serverTimestamp()})}
 function newsHtml(){
  if(!NEWS.length)return `<p style="margin:12px">${fbState==='online'?'No news yet. Go earn some cash!':'News shows up when the hall is online.'}</p>`;
- return NEWS.map(n=>{const rs=REACT.filter(r=>r.post===n.id),mine=rs.find(r=>r.pid===S.pid),cs=CMTS.filter(c=>c.post===n.id).sort((a,b)=>(a.at&&a.at.toMillis?a.at.toMillis():9e15)-(b.at&&b.at.toMillis?b.at.toMillis():9e15)),open=openPost===n.id;
+ return NEWS.map(n=>{const rs=REACT.filter(r=>r.post===n.id),mine=rs.find(r=>r.pid===S.pid),open=openPost===n.id;
+  const chips=Object.keys(EMO).map(e=>{const c=rs.filter(r=>r.e===e).length;return c?`<button class="rc${mine&&mine.e===e?' on':''}" data-p="${n.id}" data-e="${e}">${EMO[e]} ${c}</button>`:''}).join('');
   return `<div class="nw"><div class="nt"><span>${esc(n.text)}</span><small>${ago(n.at)}</small></div>
-  <div class="rx">${Object.keys(EMO).map(e=>{const c=rs.filter(r=>r.e===e).length;return `<button class="rb${mine&&mine.e===e?' on':''}" data-p="${n.id}" data-e="${e}" aria-label="React ${e}">${EMO[e]}${c?` <b>${c}</b>`:''}</button>`}).join('')}<button class="rb cm${open?' on':''}" data-c="${n.id}">💬${cs.length?` <b>${cs.length}</b>`:''}</button></div>
-  ${open?`<div class="cmts">${cs.map(c=>`<p><b>${esc(c.name)}</b> ${esc(c.text)}</p>`).join('')||'<p style="opacity:.6">No comments yet. Say something.</p>'}
-  <div class="cin"><input id="cmt" maxlength="140" placeholder="Add a comment" autocomplete="off"><button class="btn sm" id="csend">Send</button></div></div>`:''}</div>`}).join('')}
+  <div class="rx">${chips}${open?Object.keys(EMO).map(e=>`<button class="rp" data-p="${n.id}" data-e="${e}" aria-label="React ${e}">${EMO[e]}</button>`).join(''):`<button class="radd" data-o="${n.id}" aria-label="Add a reaction">☺+</button>`}</div></div>`}).join('')}
 function bindNews(){
- app.querySelectorAll('.rb[data-e]').forEach(b=>b.onclick=()=>react(b.dataset.p,b.dataset.e));
- app.querySelectorAll('.rb[data-c]').forEach(b=>b.onclick=()=>{openPost=openPost===b.dataset.c?null:b.dataset.c;tick();hall();if(openPost){const i=$('#cmt');if(i)i.focus()}});
- const i=$('#cmt'),s=$('#csend');if(!i)return;
- i.onblur=()=>{setTimeout(()=>{if(hallPending&&document.activeElement!==i){hallPending=false;hall()}},300)};
- const send=()=>{const v=i.value.replace(/\s+/g,' ').trim();if(!v)return;s.disabled=true;
-  comment(openPost,v).then(()=>{good();i.value='';hallPending=false;hall()}).catch(()=>{bad();s.disabled=false})};
- s.onclick=send;i.onkeydown=e=>{if(e.key==='Enter')send()};
+ app.querySelectorAll('[data-e]').forEach(b=>b.onclick=()=>{openPost=null;react(b.dataset.p,b.dataset.e)});
+ app.querySelectorAll('.radd').forEach(b=>b.onclick=()=>{openPost=b.dataset.o;tick();hall()});
 }
 function failPost(j,why){if(!S.name)return;post(`${S.name} ${why} on ${j.title.replace(/"/g,'')}`)}
 
@@ -1102,11 +1105,14 @@ function profile(m,mine){
  ${lk.truck||lk.belt?`<div class="prow">${lk.truck?`<div>${truckSvg(lk.truck,'width:96px;height:60px')}<small>${TRUCKS[lk.truck][0]}</small></div>`:''}${lk.belt?`<div>${beltSvg(lk.belt,'width:96px;height:60px')}<small>${BELTS[lk.belt][0]}</small></div>`:''}</div>`:''}
  <div class="ptools">${Object.keys(TOOLS).map(t=>`<span class="pt${lk.tools.includes(t)?'':' no'}${lk.tool===t?' fav':''}" title="${TOOLS[t][0]}">${toolSvg(t,'width:34px;height:38px')}</span>`).join('')}</div>
  <p class="fine" style="margin:6px 0 12px">${lk.tool?'Favorite tool: '+TOOLS[lk.tool][0]:lk.tools.length?'':'No tools yet.'}</p>
- <div class="row">${mine?'<button class="btn alt" id="pshop">Shop</button>':''}<button class="btn" id="pclose">Close</button></div></div>`;
+ ${mine?`<div class="mine"><button class="btn alt sm" id="psnd">Sound: ${S.mute?'off':'on'}</button><button class="btn alt sm" id="pname">Edit name</button>${S.code?`<div class="codebox"><b>Your hall code</b><small>Keep it safe. It moves your card and progress to a new phone.</small><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button></div>`:''}</div>`:''}
+ <button class="btn" id="pclose" style="width:100%">Close</button></div>`;
  document.body.appendChild(o);tick();
  o.onclick=e=>{if(e.target===o)o.remove()};
  o.querySelector('#pclose').onclick=()=>{o.remove();tick()};
- const ps=o.querySelector('#pshop');if(ps)ps.onclick=()=>{o.remove();tick();shop()};
+ const sn=o.querySelector('#psnd');if(sn)sn.onclick=()=>{S.mute=!S.mute;saveLocal();sn.textContent='Sound: '+(S.mute?'off':'on');tick()};
+ const pn=o.querySelector('#pname');if(pn)pn.onclick=()=>{o.remove();tick();onHall=false;signup(true)};
+ const cc=o.querySelector('#cc');if(cc)cc.onclick=()=>{try{navigator.clipboard.writeText(fmtCode(S.code)).then(()=>{cc.textContent='Copied!';setTimeout(()=>{cc.textContent=fmtCode(S.code)},1500)}).catch(()=>{})}catch(e){}};
 }
 function hall(){
  stop();onHall=true;
@@ -1117,15 +1123,15 @@ function hall(){
  mem.sort((a,b)=>(+b.earned||0)-(+a.earned||0)||(+b.year||1)-(+a.year||1)||String(a.name).localeCompare(String(b.name)));
  const status=fbState==='online'?'':fbState==='connecting'?'<div class="msg">Connecting to the hall&hellip;</div>':'<div class="msg bad">The hall is offline right now. You can keep playing. Your card updates when you\'re back online.</div>';
  app.innerHTML=hud()+nav('hall')+`<h2 class="sec">${LOCAL}</h2>${status}
- <div class="card" style="padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#FFF8E7"><span><b style="font-weight:600">${mem.length}</b> member${mem.length===1?'':'s'}, ranked by career earnings. Tap a card to see their gear.</span><button class="btn alt sm" id="ed">Edit name</button></div>
+ <p class="sub">${mem.length} member${mem.length===1?'':'s'} &middot; ranked by career earnings &middot; tap a card</p>
  <div class="roster">${mem.map((m,i)=>{const y=Math.max(1,Math.min(7,parseInt(m.year)||1)),mine=m.id===me||m.id==='me',lk=cleanLook(m.look),has=m.earned!==undefined&&m.earned!==null;
   return `<button class="mem card cs-${lk.card}${mine?' me':''}" data-i="${i}"><span class="pos">${i+1}</span>${hatSvg(lk.hat,'width:44px;height:44px;flex:none')}<span class="mi"><b>${esc(m.name)}${mine?' <em>You</em>':''}</b><small>${RANK[y]}${m.ce?' <span class="cebadge">CE due</span>':''}</small>${lk.truck||lk.belt||lk.tool?`<span class="gear">${lk.truck?truckSvg(lk.truck,'height:20px;width:32px'):''}${lk.belt?beltSvg(lk.belt,'height:20px;width:32px'):''}${lk.tool?toolSvg(lk.tool,'height:20px;width:18px'):''}</span>`:''}</span><span class="earn2">${has?money(+m.earned||0):'<small style="font-weight:500;font-size:13px">syncing&hellip;</small>'}</span></button>`}).join('')}</div>
- ${S.code?`<div class="card codebox"><div><b>Your hall code</b><small>Keep it somewhere safe. It moves your card and progress to a new phone.</small></div><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button></div>`:''}
+
  <h2 class="sec" style="font-size:22px;margin-top:18px">Hall news</h2>
  <div class="card news">${newsHtml()}</div>`;
- bindHud();bindNav();bindNews();$('#ed').onclick=()=>{tick();onHall=false;signup(true)};
+ bindHud();bindNav();bindNews();
  app.querySelectorAll('.mem').forEach(b=>b.onclick=()=>{const m=mem[+b.dataset.i];profile(m,m.id===me||m.id==='me')});
- const cc=$('#cc');if(cc)cc.onclick=()=>{try{navigator.clipboard.writeText(fmtCode(S.code)).then(()=>{cc.textContent='Copied!';setTimeout(()=>{cc.textContent=fmtCode(S.code)},1500)}).catch(()=>{})}catch(e){}};
+
 }
 function myLook(){return{hat:S.look.hat||'yellow',card:S.look.card||'plain',truck:S.look.truck||'',belt:S.look.belt||'',tool:S.look.tool||'',tools:Object.keys(TOOLS).filter(k=>S.owned['tool_'+k])}}
 const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel};
