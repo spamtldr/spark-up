@@ -116,6 +116,8 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.bulge{animation:none}}
 .toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:40;background:var(--ink);color:#fff;font-weight:600;font-size:15px;padding:10px 14px;border-radius:12px;max-width:92vw;text-align:center}
 .phs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:12px}.ph{display:flex;flex-direction:column;align-items:stretch;gap:4px;padding:8px;min-height:130px;background:#fff;text-align:center}.ph b{font-weight:700}.ph .amp{font-weight:700;font-size:20px}.ld2{font-size:13px;background:#F4F7FA;border:2px solid var(--ink);border-radius:8px;padding:2px 4px}
+.updbar{position:fixed;left:50%;transform:translateX(-50%);bottom:84px;z-index:35;background:var(--grn);color:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);font:700 16px Fredoka,system-ui,sans-serif;padding:10px 16px;-webkit-text-stroke:.3px var(--ink)}
+.vers{font-size:12px;opacity:.6;text-align:center;margin-top:6px}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -194,6 +196,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
+const VER='2026.11.16-6';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -375,7 +378,7 @@ function board(){
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>Year ${yr} exam${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
  <div class="msg" id="bmsg"></div>
- <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p>`;
+ <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
  bindHud();bindNav();
  const g=$('#goce');if(g)g.onclick=()=>{S.view=ce;save();tick();board()};
  const dd=$('#dj');if(dd)dd.onclick=()=>{tick();S.view=dj.yr;save();JOBF[dj.id]()};
@@ -1814,6 +1817,8 @@ function myLook(){return{hat:S.look.hat||'yellow',card:S.look.card||'plain',truc
 const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight};
 title();
 initFB();
+function checkUpdate(){try{fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/const VER='([^']+)'/);if(m&&m[1]!==VER&&!document.getElementById('upd')){const b=document.createElement('button');b.id='upd';b.className='updbar';b.textContent='New version of Spark Up! Tap to update';b.onclick=()=>{location.replace(location.pathname+'?v='+m[1])};document.body.appendChild(b)}}).catch(()=>{})}catch(e){}}
+setTimeout(checkUpdate,3000);setInterval(checkUpdate,300000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')checkUpdate()});
 }
 </script>
 </body>
