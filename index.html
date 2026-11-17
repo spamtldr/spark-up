@@ -121,6 +121,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .lockbar,.tipbar{display:block;width:100%;text-align:left;padding:10px 12px;margin-bottom:10px;font-size:15px}.lockbar{background:#FFE1E1;cursor:pointer}.tipbar{background:#E6F4FF;display:flex;gap:8px;align-items:center;justify-content:space-between}
 .bigcode{font:700 26px 'Courier New',monospace;text-align:center;background:#FFF3C4;border:3px solid var(--ink);border-radius:12px;padding:10px;letter-spacing:1px}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
+.dcj{background:#2B2F36;color:#fff}.dcj small{color:#D8DEE6}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
 .fine{text-align:center;font-size:13px;color:var(--ink);margin-top:18px}
@@ -198,7 +199,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.16-9';
+const VER='2026.11.16-10';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -247,6 +248,7 @@ gen:`<svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="24" rx="5" f
 drop:`<svg viewBox="0 0 48 48"><path d="M24 4C16 18 10 24 10 31a14 14 0 0 0 28 0c0-7-6-13-14-27z" fill="#4FA8FF" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M17 31a7 7 0 0 0 6 7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`,
 pool:`<svg viewBox="0 0 48 48"><rect x="4" y="12" width="40" height="28" rx="6" fill="#7FD8FF" stroke="${INK}" stroke-width="3"/><path d="M8 26c4-3 8 3 12 0s8 3 12 0 8 3 8 0" fill="none" stroke="#fff" stroke-width="3"/><path d="M34 4v16M40 4v16M34 8h6M34 14h6" stroke="${INK}" stroke-width="3"/></svg>`,
 exit:`<svg viewBox="0 0 48 48"><rect x="4" y="12" width="40" height="24" rx="4" fill="#FF5A5A" stroke="${INK}" stroke-width="3"/><text x="24" y="29" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">EXIT</text></svg>`,
+server:`<svg viewBox="0 0 48 48"><rect x="10" y="3" width="28" height="42" rx="5" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><rect x="14" y="8" width="20" height="7" rx="2" fill="#5A6270"/><rect x="14" y="19" width="20" height="7" rx="2" fill="#5A6270"/><rect x="14" y="30" width="20" height="7" rx="2" fill="#5A6270"/><circle cx="30" cy="11.5" r="1.8" fill="#35C76F"/><circle cx="30" cy="22.5" r="1.8" fill="#35C76F"/><circle cx="30" cy="33.5" r="1.8" fill="#FFC93C"/></svg>`,
 sun:`<svg viewBox="0 0 48 48"><circle cx="16" cy="14" r="8" fill="#FFC93C" stroke="${INK}" stroke-width="3"/><path d="M10 44l6-20h28l-6 20z" fill="#2F7FE0" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M20 34h22M24 24l-4 20M33 24l-4 20" stroke="#BFE8FF" stroke-width="2"/></svg>`,
 snd:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#FFC93C" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`,
 off:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#E3E7EC" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9l5 6M21 9l-5 6" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`
@@ -313,7 +315,8 @@ const JOBS=[
  {id:'lowv',yr:5,kind:'Smart home job',title:'Low-voltage separation',pay:700,xp:175,icon:'meter',color:'#8EE59B'},
  {id:'aic',yr:5,kind:'Commercial job',title:'Fault current check',pay:850,xp:212,icon:'bolt',color:'#FFE9A6'},
  {id:'clearance',yr:5,kind:'Service job',title:'Service drop clearance',pay:750,xp:187,icon:'house',color:'#7FD8FF'},
- {id:'rush',yr:5,kind:'Exam prep',title:'Journeyman rush',pay:1000,xp:250,icon:'clip',color:'#FFC93C'}];
+ {id:'rush',yr:5,kind:'Exam prep',title:'Journeyman rush',pay:1000,xp:250,icon:'clip',color:'#FFC93C'},
+ {id:'datacenter',yr:6,kind:'Master job',title:'Data center power build',pay:3000,xp:500,icon:'server',color:'#9CCBFF'}];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
 const stop=()=>{timers.forEach(clearInterval);timers=[]};
@@ -391,7 +394,7 @@ function board(){
  const yr=S.view=Math.max(1,Math.min(S.view||ce||S.year,S.year,YMAX));
  const js=jobsOf(yr),left=js.filter(j=>!(S.stars[j.id]>0)).length,passed=S.exams[yr],blocked=!!(ce&&yr>ce);
  const more=(PLAN[yr]||0)-js.length;
- const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?'You\'re a Journeyman! The data center job is coming soon.':'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
+ const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?(S.year>=7?'Master electrician.':'You\'re a Journeyman! One job left: the data center.'):'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
  const canPrev=yr>1,canNext=yr<Math.min(S.year,YMAX);
  const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
  const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
@@ -403,6 +406,7 @@ function board(){
  ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>${yr===5?'Journeyman exam':'Year '+yr+' exam'}${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
+ ${yr===5&&passed?`<button class="exam card dcj${blocked?' locked':''}" id="dcb">${IC.server}<div><b>Final job: Data center power build${S.year>=7?' ✓':''}</b><small>${S.year>=7?`You're a Master electrician. Replay it for ${money(J('datacenter').pay)}.`:`Power a data center from the utility to the server racks. Finish it to become a Master electrician.`}</small></div></button>`:''}
  <div class="msg" id="bmsg"></div>
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
  bindHud();bindNav();
@@ -412,6 +416,7 @@ function board(){
  $('#yp').onclick=()=>{if(!canPrev)return;S.view=yr-1;saveLocal();tick();board()};$('#yn').onclick=()=>{if(!canNext)return;S.view=yr+1;saveLocal();tick();board()};
  const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
  app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
+ const dcb=$('#dcb');if(dcb)dcb.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();datacenter()};
  $('#exam').onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}if(left&&!passed){bm(`Finish all ${js.length} Year ${yr} jobs first. ${left} to go.`);return}tick();exam(yr)};
 }
 
@@ -2120,7 +2125,80 @@ function hall(){
 
 }
 function myLook(){return{hat:S.look.hat||'yellow',card:S.look.card||'plain',truck:S.look.truck||'',belt:S.look.belt||'',tool:S.look.tool||'',tools:Object.keys(TOOLS).filter(k=>S.owned['tool_'+k])}}
-const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush};
+
+/* ---------- MASTER: DATA CENTER POWER BUILD ---------- */
+function datacenter(){
+ const j=J('datacenter'),R=a=>a[Math.floor(Math.random()*a.length)];
+ const IT=R([600,800,1000,1200]),cool=IT/2,tot=IT+cool,kva=Math.round(tot/0.9);
+ const XF=[750,1000,1500,2000,2500],GN=[750,1000,1500,2000],STD=[150,175,200,225,250,300,350,400,450,500,600];
+ const FA=R([160,240,320,400]),need=FA*1.25,brk=STD.find(x=>x>=need),trap=STD.find(x=>x>=FA);
+ const RK=Array.from({length:6},()=>4+Math.floor(Math.random()*5));
+ const NODES=['Utility','Gen','ATS','UPS','PDUs','Racks'];
+ let st=0,miss=0;
+ const strip=(lit,state)=>{const w=56,g=4;let h='';NODES.forEach((n,i)=>{const x=6+i*(w+g);const c=state?state[i]:(i<lit?'#9BE3AE':i===lit?'#FFC93C':'#E3E7EC');
+   h+=`<rect x="${x}" y="8" width="${w}" height="34" rx="7" fill="${c}" stroke="${INK}" stroke-width="2.5"/><text x="${x+w/2}" y="30" text-anchor="middle" font-size="11.5" font-weight="700" fill="${INK}">${n}</text>`;
+   if(i<NODES.length-1)h+=`<path d="M${x+w} 25h${g}" stroke="${INK}" stroke-width="2.5"/>`});
+  return `<div class="stage card" style="padding:6px"><svg id="dcs" viewBox="0 0 366 50" style="display:block;width:100%">${h}</svg></div>`};
+ const head=n=>`<div class="gamehud card"><span>Stage <b>${n}</b> of 6</span><span>Mistakes: <b>${miss}</b></span></div>`;
+ const ORD=['Build the power for a new data center, from the utility all the way to the server racks. Six stages. Servers can never lose power, not even for a blink.'];
+ const go=()=>[s1,s2,s3,s4,s5,s6][st]();
+ const next=()=>{st++;setTimeout(go,1300)};
+ const pickRow=(cls,vals,lab)=>`<div class="row" style="flex-wrap:wrap">${vals.map(v=>`<button class="btn alt ${cls}" data-v="${v}">${lab(v)}</button>`).join('')}</div>`;
+ function s1(){
+  shell(j,ORD[0],head(1)+strip(0)+`<div class="qcard card"><h3>Utility transformer</h3><p class="q" style="font-size:17px">Servers: <b>${IT.toLocaleString('en-US')} kW</b><br>Cooling: <b>${cool.toLocaleString('en-US')} kW</b><br>Power factor: <b>0.9</b></p><p style="margin:6px 0 0">Transformers are rated in kVA, not kW. kVA = kW ÷ power factor.</p></div>
+  <h2 class="sec" style="font-size:19px">Pick the pad-mount transformer</h2>${pickRow('xf',XF,v=>v.toLocaleString('en-US')+' kVA')}<div class="msg" id="msg"></div>`);
+  app.querySelectorAll('.xf').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;
+   if(v<kva){miss++;bad();b.classList.add('wrong');msgEl(`Too small. ${tot.toLocaleString('en-US')} kW total ÷ 0.9 = ${kva.toLocaleString('en-US')} kVA. Don't forget the cooling.`,'bad');return}
+   app.querySelectorAll('.xf').forEach(x=>x.disabled=true);good();b.classList.add('right');
+   msgEl(`${tot.toLocaleString('en-US')} kW ÷ 0.9 = ${kva.toLocaleString('en-US')} kVA, so ${v.toLocaleString('en-US')} kVA works.${v===XF.find(k=>k>=kva)?' Smallest that fits.':' A bit oversized, but it works.'}`,'ok');next()})}
+ function s2(){
+  shell(j,ORD[0],head(2)+strip(1)+`<div class="qcard card"><h3>Backup generator</h3><p class="q" style="font-size:17px">Servers: <b>${IT.toLocaleString('en-US')} kW</b> &middot; Cooling: <b>${cool.toLocaleString('en-US')} kW</b></p><p style="margin:6px 0 0">When the utility goes down, this generator runs the whole building. Pick the size in kW.</p></div>
+  ${pickRow('gn2',GN,v=>v.toLocaleString('en-US')+' kW')}<div class="msg" id="msg"></div>`);
+  app.querySelectorAll('.gn2').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;
+   if(v<tot){miss++;bad();b.classList.add('wrong');msgEl(v>=IT?`That covers the servers, but not the cooling. Without cooling, the servers overheat and shut down in minutes. You need ${tot.toLocaleString('en-US')} kW.`:`Way too small. The building needs ${tot.toLocaleString('en-US')} kW.`,'bad');return}
+   app.querySelectorAll('.gn2').forEach(x=>x.disabled=true);good();b.classList.add('right');msgEl(`${v.toLocaleString('en-US')} kW carries servers and cooling together.`,'ok');next()})}
+ function s3(){
+  shell(j,ORD[0],head(3)+strip(2)+`<div class="msg" id="msg"></div>`);
+  ordering('The utility drops out. Put what happens in order.',['UPS batteries carry the servers instantly. No blink.','Generator gets the start signal','Generator comes up to speed and voltage (about 10 seconds)','ATS transfers the building to the generator','UPS runs on generator power and recharges its batteries','Utility comes back. ATS waits until it\'s stable, then transfers back'],m=>{miss+=m;msgEl('That\'s the sequence. The UPS bridges the gap, so the servers never notice.','ok');next()})}
+ function s4(){
+  const opts=shuffle([trap,brk,STD[STD.indexOf(brk)+1],STD[Math.max(0,STD.indexOf(trap)-1)]].filter((v,i,a)=>a.indexOf(v)===i));
+  shell(j,ORD[0],head(4)+strip(3)+`<div class="qcard card"><h3>UPS output feeder</h3><p class="q" style="font-size:17px">The feeder carries <b>${FA} A</b>, 24 hours a day.</p><p style="margin:6px 0 0">Anything running 3 hours or more is a continuous load. Pick the breaker.</p></div>
+  ${pickRow('fb',opts,v=>v+' A')}<div class="msg" id="msg"></div>`);
+  app.querySelectorAll('.fb').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;
+   if(v<need){miss++;bad();b.classList.add('wrong');msgEl(v>=FA?`Close, but continuous loads get 125%. ${FA} × 1.25 = ${need} A, so ${v} A will nuisance-trip.`:`Too small for ${FA} A.`,'bad');return}
+   if(v>brk){miss++;bad();b.classList.add('wrong');msgEl(`Bigger than it needs to be. ${FA} × 1.25 = ${need} A, and the next standard size up is ${brk} A.`,'bad');return}
+   app.querySelectorAll('.fb').forEach(x=>x.disabled=true);good();b.classList.add('right');msgEl(`${FA} × 1.25 = ${need} A, so the ${brk} A breaker.`,'ok');next()})}
+ function s5(){
+  const cord=RK.map(()=>['','']);
+  shell(j,ORD[0],head(5)+strip(4)+`<div class="qcard card"><h3>Plug in the racks (2N)</h3><p style="margin:4px 0 0">Every server has two power supplies. Feed each rack from <b style="color:#2F7FE0">PDU A</b> and <b style="color:#E0702F">PDU B</b>, so either side can fail and nothing goes dark. Tap a cord to switch it.</p></div>
+  <div class="gamehud card"><span style="color:#2F7FE0">PDU A: <b id="la">0</b> kW</span><span style="color:#E0702F">PDU B: <b id="lb">0</b> kW</span></div><div class="opts" id="rk"></div>
+  <button class="btn go" id="rkd" style="width:100%;margin-top:10px">Energize the racks</button><div class="msg" id="msg"></div>`);
+  const col={'':'#E3E7EC',A:'#9CCBFF',B:'#FFC29A'};
+  const draw=()=>{$('#rk').innerHTML=RK.map((k,i)=>`<div class="card" style="display:flex;align-items:center;gap:8px;padding:8px 10px"><b style="flex:1;font-weight:600">Rack ${i+1} <small style="font-weight:500">${k} kW</small></b>${[0,1].map(p=>`<button class="btn sm" data-r="${i}" data-p="${p}" style="background:${col[cord[i][p]]};min-width:86px">PSU ${p+1}: ${cord[i][p]||'—'}</button>`).join('')}</div>`).join('');
+   let a=0,b=0;RK.forEach((k,i)=>{const n=cord[i].filter(Boolean).length;cord[i].forEach(c=>{if(c==='A')a+=k/n;if(c==='B')b+=k/n})});$('#la').textContent=fmt1(a);$('#lb').textContent=fmt1(b)};
+  $('#rk').onclick=e=>{const b=e.target.closest('[data-r]');if(!b)return;const c=cord[+b.dataset.r];const p=+b.dataset.p;c[p]=c[p]===''?'A':c[p]==='A'?'B':'';tick();draw()};
+  $('#rkd').onclick=()=>{const i=cord.findIndex(c=>!c[0]||!c[1]);
+   if(i>=0){miss++;bad();msgEl(`Rack ${i+1} has a power supply that isn't plugged in. Both cords, every rack.`,'bad');return}
+   const k=cord.findIndex(c=>c[0]===c[1]);
+   if(k>=0){miss++;zap();msgEl(`Rack ${k+1} has both cords on PDU ${cord[k][0]}. If that PDU trips, Rack ${k+1} goes dark. One cord on A, one on B.`,'bad');return}
+   $('#rkd').disabled=true;good();msgEl(`True 2N. Lose either side and the other carries all ${RK.reduce((x,y)=>x+y,0)} kW.`,'ok');next()};
+  draw()}
+ function s6(){
+  shell(j,ORD[0],head(6)+strip(6)+`<div class="qcard card"><h3>Commissioning: pull the plug</h3><p style="margin:4px 0 0">The owner wants proof. Kill utility power with the servers running and watch what happens.</p></div>
+  <div class="card" style="padding:12px 14px;margin-top:12px"><b style="display:inline-block;background:#9BE3AE;border:2.5px solid ${INK};border-radius:10px;padding:4px 10px;font-weight:700">Servers: ONLINE</b><p id="mt" style="margin:8px 0 0">Everything is on utility power.</p></div>
+  <button class="btn big" id="pull" style="width:100%;background:#FF5A5A;color:#fff">Kill the utility</button><div class="msg" id="msg"></div>`);
+  $('#pull').onclick=()=>{$('#pull').disabled=true;zap();const G='#9BE3AE',Y='#FFC93C',X='#FF5A5A',E='#E3E7EC';
+   const seq=[[[X,E,E,Y,G,G],'Utility is gone. UPS batteries pick up the load instantly.'],[[X,Y,E,Y,G,G],'Generator cranking…'],[[X,G,Y,Y,G,G],'Generator at speed and voltage. ATS transferring…'],[[X,G,G,G,G,G],'Running on the generator. UPS recharging.']];
+   seq.forEach((s,i)=>setTimeout(()=>{$('#dcs').outerHTML=strip(0,s[0]).replace(/^<div[^>]*>|<\/div>$/g,'');$('#mt').textContent=s[1];tick()},i*1400));
+   setTimeout(()=>{good();confetti();msgEl('<b>Zero downtime.</b> Not one server blinked.','ok');setTimeout(finish,1500)},seq.length*1400)}}
+ function finish(){
+  const stars=miss===0?3:miss<=3?2:1;let extra='';
+  if(S.year<7){S.year=7;const bn=5000;S.cash+=bn;S.earned=(S.earned||0)+bn;extra=`<p style="margin:0 0 6px;font-weight:700">Promoted to Master electrician! +${money(bn)} bonus.</p>`;post(`${S.name} built a data center and is now a Master electrician!`)}
+  result(j,stars,'Data centers are built for zero downtime. The transformer is sized in kVA for the whole load, cooling included. The generator carries the whole building. The UPS bridges the 10 seconds before the generator takes over. Feeders are sized at 125% because the load never stops. Every rack gets two cords from two separate sources (2N), so any one thing can fail and the servers keep running.',extra)}
+ go();
+}
+
+const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush,datacenter};
 title();
 initFB();
 function checkUpdate(){try{fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/const VER='([^']+)'/);if(m&&m[1]!==VER&&!document.getElementById('upd')){const b=document.createElement('button');b.id='upd';b.className='updbar';b.textContent='New version of Spark Up! Tap to update';b.onclick=()=>{location.replace(location.pathname+'?v='+m[1])};document.body.appendChild(b)}}).catch(()=>{})}catch(e){}}
