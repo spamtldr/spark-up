@@ -196,7 +196,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.16-6';
+const VER='2026.11.16-7';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -1785,12 +1785,14 @@ function profile(m,mine){
  ${lk.truck||lk.belt?`<div class="prow">${lk.truck?`<div>${truckSvg(lk.truck,'width:96px;height:60px')}<small>${TRUCKS[lk.truck][0]}</small></div>`:''}${lk.belt?`<div>${beltSvg(lk.belt,'width:96px;height:60px')}<small>${BELTS[lk.belt][0]}</small></div>`:''}</div>`:''}
  <div class="ptools">${Object.keys(TOOLS).map(t=>`<span class="pt${lk.tools.includes(t)?'':' no'}${lk.tool===t?' fav':''}" title="${TOOLS[t][0]}">${toolSvg(t,'width:34px;height:38px')}</span>`).join('')}</div>
  <p class="fine" style="margin:6px 0 12px">${lk.tool?'Favorite tool: '+TOOLS[lk.tool][0]:lk.tools.length?'':'No tools yet.'}</p>
- ${mine?`<div class="mine"><button class="btn alt sm" id="psnd">Sound: ${S.mute?'off':'on'}</button><button class="btn alt sm" id="pname">Edit name</button>${S.code?`<div class="codebox"><b>Your hall code</b><small>Keep it safe. It moves your card and progress to a new phone.</small><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button></div>`:''}</div>`:''}
+ ${mine?`<div class="mine"><button class="btn alt sm" id="psnd">Sound: ${S.mute?'off':'on'}</button><button class="btn alt sm" id="pname">Edit name</button>${S.code?`<div class="codebox"><b>Your hall code</b><small>Keep it safe. It moves your card and progress to a new phone.</small><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button><button class="link" id="prs" style="margin-top:4px">Have an older hall code? Bring that card back</button></div>`:''}</div>`:''}
  <button class="btn" id="pclose" style="width:100%">Close</button></div>`;
  document.body.appendChild(o);tick();
  o.onclick=e=>{if(e.target===o)o.remove()};
  o.querySelector('#pclose').onclick=()=>{o.remove();tick()};
  const sn=o.querySelector('#psnd');if(sn)sn.onclick=()=>{S.mute=!S.mute;saveLocal();sn.textContent='Sound: '+(S.mute?'off':'on');tick()};
+ const prs=o.querySelector('#prs');if(prs)prs.onclick=()=>{const cb=prs.parentElement;cb.innerHTML=`<b>Bring back an old card</b><small>This replaces this phone's progress with the old card's.</small><input id="rcx2" class="inp" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="ABCD-EFGH-JK"><p id="re2" class="err"></p><button class="btn alt sm" id="rsg2">Bring it back</button>`;
+  o.querySelector('#rsg2').onclick=async()=>{const b=o.querySelector('#rsg2');b.disabled=true;b.textContent='Checking…';try{await restore(o.querySelector('#rcx2').value);good();confetti();o.remove();board()}catch(e){bad();o.querySelector('#re2').textContent=e.message;b.disabled=false;b.textContent='Bring it back'}}};
  const pn=o.querySelector('#pname');if(pn)pn.onclick=()=>{o.remove();tick();onHall=false;signup(true)};
  const cc=o.querySelector('#cc');if(cc)cc.onclick=()=>{try{navigator.clipboard.writeText(fmtCode(S.code)).then(()=>{cc.textContent='Copied!';setTimeout(()=>{cc.textContent=fmtCode(S.code)},1500)}).catch(()=>{})}catch(e){}};
 }
