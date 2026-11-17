@@ -237,7 +237,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.17-6';
+const VER='2026.11.17-7';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -956,7 +956,7 @@ function sortGame(items,bins,title,done){
  $('#sg2').scrollIntoView({behavior:'smooth',block:'start'});
  const hh=()=>{$('#sh').innerHTML=[0,1,2].map(k=>HEART.replace('F',k<3-strikes?'#FF5A5A':'#E3E7EC')).join('')};
  function show(){if(over)return;if(i>=items.length||strikes>=3){over=true;clearTimeout(tm);done(strikes,score);return}
-  const it=items[i],d=Math.max(2200,4200-i*180),el=$('#it');el.innerHTML=it.html;el.style.transition='none';el.style.transform='translateY(0)';void el.offsetWidth;el.style.transition=`transform ${d}ms linear`;el.style.transform='translateY(150px)';
+  const it=items[i],wd=String(it.html).replace(/<[^>]+>/g,' ').trim().split(/\s+/).filter(Boolean).length,base=it.html.includes('<svg')?4200:Math.max(6500,3200+wd*480),d=Math.round(base*Math.max(.82,1-i*.02)),el=$('#it');el.innerHTML=it.html;el.style.transition='none';el.style.transform='translateY(0)';void el.offsetWidth;el.style.transition=`transform ${d}ms linear`;el.style.transform='translateY(150px)';
   clearTimeout(tm);tm=setTimeout(()=>{strikes++;bad();$('#smg').className='msg bad';$('#smg').textContent='Too slow! '+it.why;hh();i++;setTimeout(show,700)},d)}
  app.querySelectorAll('#sg2 .bins .btn').forEach(b=>b.onclick=()=>{if(over||i>=items.length)return;clearTimeout(tm);const it=items[i],m=$('#smg');
   if(b.dataset.b===it.bin){score++;tick();m.className='msg ok';m.textContent=it.why}else{strikes++;bad();m.className='msg bad';m.textContent='Nope. '+it.why;hh()}
