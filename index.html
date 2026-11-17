@@ -114,6 +114,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .bins{display:flex;gap:8px}.bins .btn{flex:1;font-size:17px;min-height:58px}
 .bulge{animation:bul .25s 4 alternate}@keyframes bul{to{transform:scale(1.08,1.04)}}
 @media (prefers-reduced-motion:reduce){.bulge{animation:none}}
+.toast{position:fixed;left:50%;top:14px;transform:translateX(-50%);z-index:40;background:var(--ink);color:#fff;font-weight:600;font-size:15px;padding:10px 14px;border-radius:12px;max-width:92vw;text-align:center}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -1155,8 +1156,11 @@ function watchSocial(){if(!fb)return;const ids=NEWS.map(n=>n.id).slice(0,30),key
  unsubRC.forEach(u=>{try{u()}catch(e){}});unsubRC=[];REACT=[];if(!ids.length)return;const F=fb.F;
  unsubRC.push(F.onSnapshot(F.query(F.collection(fb.db,'reacts'),F.where('post','in',ids)),s=>{REACT=s.docs.map(d=>d.data());hallRefresh()},()=>{}));}
 function hallRefresh(){if(onHall)hall()}
-function react(post,e){if(!fb||!S.pid){bad();return}const F=fb.F,ref=F.doc(fb.db,'reacts',post+'_'+S.pid),mine=REACT.find(r=>r.post===post&&r.pid===S.pid);
- tick();if(mine&&mine.e===e)F.deleteDoc(ref).catch(()=>{});else F.setDoc(ref,{post,pid:S.pid,e}).catch(()=>{})}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),3500)}
+function react(post,e){if(!fb||!S.pid){bad();toast('The hall is offline. Reactions need a connection.');return}
+ const F=fb.F,ref=F.doc(fb.db,'reacts',post+'_'+S.pid),mine=REACT.find(r=>r.post===post&&r.pid===S.pid),prev=REACT.slice(),off=mine&&mine.e===e;
+ REACT=REACT.filter(r=>!(r.post===post&&r.pid===S.pid));if(!off)REACT.push({post,pid:S.pid,e});tick();hall();
+ (off?F.deleteDoc(ref):F.setDoc(ref,{post,pid:S.pid,e})).catch(err=>{REACT=prev;hall();bad();toast(String(err&&err.code||'').includes('permission')?'Reaction blocked: the Firebase rules need updating.':'Couldn\'t save your reaction. Try again.')})}
 function newsHtml(){
  if(!NEWS.length)return `<p style="margin:12px">${fbState==='online'?'No news yet. Go earn some cash!':'News shows up when the hall is online.'}</p>`;
  return NEWS.map(n=>{const rs=REACT.filter(r=>r.post===n.id),mine=rs.find(r=>r.pid===S.pid),open=openPost===n.id;
