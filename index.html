@@ -139,7 +139,11 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .dcj{background:#2B2F36;color:#fff}
 .review{pointer-events:none;padding-bottom:46vh}.rvw{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;width:calc(100% - 20px);max-width:540px;max-height:44vh;overflow:auto;z-index:24;padding:10px 12px;background:#FFF8E7;animation:cin .25s ease-out}
 .rvh{display:flex;align-items:center;justify-content:space-between;position:sticky;top:-10px;background:#FFF8E7;padding:2px 0 6px}.rvh b{font-size:18px}.rvl p{display:flex;gap:6px;margin:6px 0;font-size:15px;line-height:1.35}.rk{color:#1E6B3A}.rk span,.rb span{color:var(--ink)}.rb{color:#C0392B}.rvl summary{font-weight:600;cursor:pointer;margin-top:6px}
-.dmm text,.dmm path{pointer-events:none}#psv text,#rsv text{pointer-events:none}.sideh{color:#fff;text-shadow:0 2px 0 var(--ink);font-size:20px;margin:22px 2px 8px}.sideh small{display:block;font-size:13.5px;font-weight:500;text-shadow:none;opacity:.95}
+.dmm text,.dmm path{pointer-events:none}#psv text,#rsv text{pointer-events:none}.pile{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.cw{display:flex;flex-direction:column;align-items:center;min-width:52px;padding:4px 6px;border:3px solid var(--ink);border-radius:12px;background:var(--c);font:inherit;color:var(--ink);cursor:pointer;box-shadow:0 2px 0 var(--ink)}.cw b{font-size:16px}.cw small{font-size:11px;font-weight:700;background:#fff;border-radius:6px;padding:0 4px}.cw small.short{background:#FFE0E0;color:#C0392B}.cw.on{transform:translateY(-3px);outline:3px solid #2F7FE0}
+.tubes{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}.tube{display:flex;flex-direction:column;gap:4px;padding:8px;font:inherit;color:var(--ink);text-align:left;cursor:pointer}.tube span{display:flex;gap:4px;min-height:28px}.tube i{font-style:normal;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-size:12px;font-weight:700}
+.mbar{position:relative;height:18px;border:2.5px solid var(--ink);border-radius:8px;background:#fff;overflow:hidden;margin:6px 0 4px}.mbar div{height:100%}.mbar i{position:absolute;top:0;bottom:0;border-left:3px dashed var(--ink)}
+.rack{display:flex;flex-direction:column;gap:5px;background:#3A3F4A;border:3px solid var(--ink);border-radius:10px;padding:8px}.shelf{display:flex;align-items:center;gap:8px;padding:6px 10px;border:2.5px solid var(--ink);border-radius:8px;font:inherit;color:var(--ink);cursor:pointer;min-height:40px}.shelf span{font-size:13px;font-weight:600}.shelf b{margin-left:auto;font-size:15px}.shelf i{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--ink)}.shelf.off{opacity:.45}
+.sideh{color:#fff;text-shadow:0 2px 0 var(--ink);font-size:20px;margin:22px 2px 8px}.sideh small{display:block;font-size:13.5px;font-weight:500;text-shadow:none;opacity:.95}
 .lcdbox{display:inline-block;min-width:150px;background:#C8E6B0;border:3px solid var(--ink);border-radius:10px;padding:6px 14px}.lcdbox b{font-family:monospace;font-size:28px;color:#22381A;display:inline-block;transition:transform .15s}.lcdbox b.pop{transform:scale(1.18)}
 .wzg{display:grid;grid-template-columns:1fr 1fr;gap:10px}.wzg .col{display:flex;flex-direction:column;gap:8px}.brk,.spl{display:flex;align-items:center;gap:8px;padding:8px 10px;font:inherit;color:var(--ink);text-align:left;min-height:52px;cursor:pointer}.brk b,.spl b{font-weight:600}.brk small,.spl small{margin-left:auto;font-size:12px}.spl{flex-wrap:wrap}.spl small{margin-left:0;width:100%;opacity:.7}
 .brk .bh{width:14px;height:28px;border-radius:4px;background:#3A3F4A;border:2px solid var(--ink)}.brk.on{background:var(--yel)}.brk.ok{background:#DDF7E6}.sp{width:28px;height:28px;border-radius:50%;border:3px solid var(--ink);display:grid;place-items:center;font-size:12px;font-weight:700}.wdot{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--ink);margin-right:6px;vertical-align:-2px}
@@ -237,7 +241,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.17-7';
+const VER='2026.11.17-8';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -359,14 +363,19 @@ const JOBS=[
  {id:'recept',yr:0,kind:'Punch list',title:'Receptacle check rush',pay:200,xp:46,icon:'plug',color:'#FFC93C'},
  {id:'storm',yr:0,kind:'Emergency call',title:'Storm night restore',pay:240,xp:49,icon:'bolt',color:'#FF9C9C'},
  {id:'dcsite',yr:6,kind:'Master project',title:'Site layout',pay:2000,xp:400,icon:'grid',color:'#BFE8A8'},
- {id:'dcphase',yr:6,kind:'Master project',title:'Land the services',pay:2200,xp:400,icon:'meter',color:'#FFC29A'},
+ {id:'dcphase',yr:6,kind:'Master project',title:'Land the utility services',pay:2200,xp:400,icon:'meter',color:'#FFC29A'},
  {id:'dcgear',yr:6,kind:'Master project',title:'Main-tie-main',pay:2400,xp:400,icon:'panel',color:'#C9D2DE'},
- {id:'dcsync',yr:6,kind:'Master project',title:'Sync the generators',pay:2600,xp:400,icon:'motor',color:'#FFE070'},
- {id:'dcbatt',yr:6,kind:'Master project',title:'UPS batteries',pay:2800,xp:400,icon:'bolt',color:'#D6CCF2'},
- {id:'dcbus',yr:6,kind:'Master project',title:'Busway + racks',pay:3000,xp:400,icon:'server',color:'#9CCBFF'},
- {id:'dcground',yr:6,kind:'Master project',title:'Ground grid',pay:3200,xp:400,icon:'chain',color:'#9BE3AE'},
- {id:'datacenter',yr:6,kind:'Master project',title:'Final test: pull the plug',pay:5000,xp:800,icon:'server',color:'#FF8A8A'}
-];
+ {id:'dcsync',yr:6,kind:'Master project',title:'Sync the gas engines',pay:2600,xp:400,icon:'motor',color:'#FFE070'},
+ {id:'dcpdu',yr:6,kind:'Master project',title:'Size the PDU transformers',pay:2800,xp:400,icon:'bolt',color:'#FFD9A8'},
+ {id:'dcfeed',yr:6,kind:'Master project',title:'Pull the feeders',pay:3000,xp:400,icon:'pipe',color:'#C9D2DE'},
+ {id:'dcbatt',yr:6,kind:'Master project',title:'UPS batteries',pay:3200,xp:400,icon:'bolt',color:'#D6CCF2'},
+ {id:'dcbus',yr:6,kind:'Master project',title:'Busway + tap-off boxes',pay:3400,xp:400,icon:'server',color:'#9CCBFF'},
+ {id:'dcwhip',yr:6,kind:'Master project',title:'Build the whips',pay:3600,xp:400,icon:'plug',color:'#FFC29A'},
+ {id:'dcrack',yr:6,kind:'Master project',title:'Land the GPU rack',pay:3800,xp:400,icon:'server',color:'#B5E3FF'},
+ {id:'dccool',yr:6,kind:'Master project',title:'Keep the coolant flowing',pay:4000,xp:400,icon:'pipe',color:'#9BE3AE'},
+ {id:'dcground',yr:6,kind:'Master project',title:'Ground grid + EPO',pay:4200,xp:400,icon:'chain',color:'#9BE3AE'},
+ {id:'dcpower',yr:6,kind:'Master project',title:'Rack power-up',pay:4400,xp:400,icon:'bolt',color:'#FFE070'},
+ {id:'datacenter',yr:6,kind:'Master project',title:'Final test: pull the plug',pay:6000,xp:900,icon:'server',color:'#FF8A8A'}];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
 const stop=()=>{timers.forEach(clearInterval);timers=[]};
@@ -462,7 +471,7 @@ function board(){
  const yr=S.view=Math.max(1,Math.min(S.view||ce||S.year,S.year,YMAX));
  const js=jobsOf(yr),left=js.filter(j=>!(S.stars[j.id]>0)).length,passed=S.exams[yr],blocked=!!(ce&&yr>ce);
  const more=(PLAN[yr]||0)-js.length;
- const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?(S.year>=7?'Master electrician.':'You\'re a Journeyman! The Master job is coming soon.'):'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
+ const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?(S.year>=7?'Master electrician.':'You\'re a Journeyman! Next up: the Master project.'):'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
  const canPrev=yr>1,canNext=yr<Math.min(S.year,YMAX);
  const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
  const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
@@ -475,7 +484,7 @@ function board(){
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
  <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>${yr===5?'Journeyman exam':'Year '+yr+' exam'}${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
  <h3 class="sideh">Side jobs <small>Optional. Play any time for extra cash.</small></h3><div class="jobs">${jobsOf(0).map(j=>{const isNew=false;return `<button class="job card" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${lockLeft(j.id)?`<span class="tg lkd">🔒 ${Math.ceil(lockLeft(j.id)/60000)}m</span>`:''}${!lockLeft(j.id)&&failsOf(j.id)?`<span class="tg wrn">${chancesFor(j.yr)-failsOf(j.id)} left</span>`:''}${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
- ${yr===5&&passed?`<div class="exam card dcj" style="cursor:default">${IC.server}<div><b>Master job</b><small>Coming soon. Keep stacking cash and stars.</small></div></div>`:''}
+ ${yr===5&&passed?`<button class="exam card dcj${blocked?' locked':''}" id="dcb">${IC.server}<div><b>Master project: AI data center${S.year>=7?' ✓':''}</b><small>${S.year>=7?`You're a Master electrician. Replay any stage for cash.`:`${DCJ.filter(dcDone).length}/14 stages built. Build a campus with its own gas power plant to become a Master electrician.`}</small></div></button>`:''}
  <div class="msg" id="bmsg"></div>
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
  bindHud();bindNav();
@@ -485,6 +494,7 @@ function board(){
  $('#yp').onclick=()=>{if(!canPrev)return;S.view=yr-1;saveLocal();tick();board()};$('#yn').onclick=()=>{if(!canNext)return;S.view=yr+1;saveLocal();tick();board()};
  const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
  app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked&&J(b.dataset.j).yr!==0){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
+ const dcb=$('#dcb');if(dcb)dcb.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();dcBoard()};
  $('#exam').onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}if(left&&!passed){bm(`Finish all ${js.length} Year ${yr} jobs first. ${left} to go.`);return}tick();exam(yr)};
 }
 
@@ -2249,12 +2259,14 @@ function myLook(){return{hat:S.look.hat||'yellow',card:S.look.card||'plain',truc
 
 
 /* ===== MASTER PROJECT: DATA CENTER (8 stages) ===== */
-const DCJ=['dcsite','dcphase','dcgear','dcsync','dcbatt','dcbus','dcground','datacenter'];
+const DCJ=['dcsite','dcphase','dcgear','dcsync','dcpdu','dcfeed','dcbatt','dcbus','dcwhip','dcrack','dccool','dcground','dcpower','datacenter'];
+const DC8=['dcsite','dcphase','dcgear','dcsync','dcbatt','dcbus','dcground','datacenter'];
+const DCPH=[[0,'Phase 1 · Outside: the gas plant'],[4,'Phase 2 · Electrical rooms'],[7,'Phase 3 · The data hall'],[12,'Phase 4 · Commissioning']];
 const dcDone=id=>S.stars[id]>0;
 const dcOpen=i=>i===0||dcDone(DCJ[i-1]);
 function siteMap(cur,live){
  // cur: index of stage being worked on (-1 = overview). A piece is built once its stage has stars.
- const stt=i=>i===cur?'c':dcDone(DCJ[i])?'b':'n';
+ const stt=i=>i===cur?'c':(i===5?dcDone('dcrack'):dcDone(DC8[i]))?'b':'n';
  const P=(i,on,off)=>{const s=stt(i);return s==='b'?on:s==='c'?`fill="#FFE070" stroke="#E0A500" stroke-width="3" class="dcpulse"`:off||`fill="#EEF1F4" stroke="#B8C0CA" stroke-width="2" stroke-dasharray="4 3"`};
  const ink=`stroke="${INK}" stroke-width="2.5"`;
  const up=i=>stt(i)==='b';
@@ -2282,8 +2294,8 @@ function siteMap(cur,live){
  <!-- generator yard -->
  <rect x="10" y="106" width="122" height="78" rx="6" ${up(0)?`fill="#D5DAE1" ${ink}`:P(0)}/>
  ${[0,1,2].map(k=>`<rect x="${16+k*38}" y="114" width="32" height="28" rx="4" ${up(3)?`fill="#FFC93C" ${ink}`:cur===3?P(3):`fill="#F4F6F8" stroke="#B8C0CA" stroke-width="2" stroke-dasharray="4 3"`}/>${up(3)?`<rect x="${36+k*38}" y="108" width="6" height="9" fill="#5A6270"/>`:''}`).join('')}
- <rect x="16" y="150" width="70" height="24" rx="12" ${up(0)?`fill="#E3E7EC" ${ink}`:`fill="#F4F6F8" stroke="#B8C0CA" stroke-width="2" stroke-dasharray="4 3"`}/><text x="51" y="166" text-anchor="middle" font-size="9" font-weight="700" fill="${INK}">FUEL</text>
- <text x="111" y="168" text-anchor="middle" font-size="9" font-weight="700" fill="${INK}">GENS</text>
+ <rect x="16" y="150" width="70" height="24" rx="12" ${up(0)?`fill="#E3E7EC" ${ink}`:`fill="#F4F6F8" stroke="#B8C0CA" stroke-width="2" stroke-dasharray="4 3"`}/><text x="51" y="166" text-anchor="middle" font-size="9" font-weight="700" fill="${INK}">GAS</text>
+ <text x="111" y="168" text-anchor="middle" font-size="9" font-weight="700" fill="${INK}">ENGINES</text>
  <path d="M132 130H152" stroke="${up(3)?INK:'#9FB59A'}" stroke-width="3"/>
  ${live?`<rect x="250" y="34" width="86" height="20" rx="10" fill="#35C76F" ${ink}/><text x="293" y="48" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">LIVE</text>`:''}
  </svg>`;
@@ -2293,9 +2305,9 @@ function dcBoard(){
  stop();onHall=false;
  const n=DCJ.filter(dcDone).length;
  app.innerHTML=hud()+nav('jobs')+`<div class="yrsel"><button class="arw" id="dcbk" aria-label="Back to Year 5">&lsaquo;</button><h2 class="sec">Master project</h2><span style="width:48px"></span></div>
- <div class="stage card" style="padding:6px">${siteMap(-1,n===8)}</div>
- <p style="margin:0 2px 12px;font-weight:600">${n}/8 stages built. ${S.year>=7?'You\'re a Master electrician.':'Finish all 8 to become a Master electrician.'}</p>
- <div class="jobs">${DCJ.map((id,i)=>{const j=J(id),op=dcOpen(i);return `<button class="job card${op?'':' held'}" data-j="${id}" style="--c:${j.color}"><span class="jic">${op?IC[j.icon]:IC.lock}</span><span class="kind">Stage ${i+1}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[id]||0)}</button>`}).join('')}</div>
+ <div class="stage card" style="padding:6px">${siteMap(-1,n===14)}</div>
+ <p style="margin:0 2px 12px;font-weight:600">${n}/14 stages built. ${S.year>=7?'You\'re a Master electrician.':'Build an AI data center campus with its own gas power plant. Finish all 14 to become a Master electrician.'}</p>
+ <div class="jobs">${DCJ.map((id,i)=>{const j=J(id),op=dcOpen(i),ph=DCPH.find(x=>x[0]===i);return `${ph?`<h3 class="sideh" style="grid-column:1/-1;margin:${i?14:4}px 2px 0">${ph[1]}</h3>`:''}<button class="job card${op?'':' held'}" data-j="${id}" style="--c:${j.color}"><span class="jic">${op?IC[j.icon]:IC.lock}</span><span class="kind">Stage ${i+1}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[id]||0)}</button>`}).join('')}</div>
  <div class="msg" id="bmsg"></div>`;
  bindHud();bindNav();
  $('#dcbk').onclick=()=>{tick();S.view=5;board()};
@@ -2312,22 +2324,22 @@ function dcsite(){
  const side=Math.random()<.6?'w':'s';
  const IN=side==='w'?{x:7,y:2+Math.floor(Math.random()*4),w:1,h:2}:{x:8+Math.floor(Math.random()*2),y:7,w:2,h:1};
  const POLE=Math.random()<.5?{x:0,y:0,w:1,h:1}:{x:0,y:8,w:1,h:1};
- const PC={xf:{n:'Transformer',w:2,h:2},g1:{n:'Gen 1',w:2,h:1},g2:{n:'Gen 2',w:2,h:1},tk:{n:'Fuel tank',w:1,h:1}};
+ const PC={xf:{n:'Transformer',w:2,h:2},g1:{n:'Engine 1',w:2,h:1},g2:{n:'Engine 2',w:2,h:1},tk:{n:'Gas meter',w:1,h:1}};
  const pos={};let sel='xf',miss=0,bads=[];
  const gap=(a,b)=>{const dx=Math.max(0,b.x-(a.x+a.w),a.x-(b.x+b.w)),dy=Math.max(0,b.y-(a.y+a.h),a.y-(b.y+b.h));return {dx,dy,d:Math.max(dx,dy),e:Math.hypot(dx,dy)}};
  const rect=k=>pos[k]&&{x:pos[k].x,y:pos[k].y,w:PC[k].w,h:PC[k].h};
  const hit=(a,b)=>a.x<b.x+b.w&&b.x<a.x+a.w&&a.y<b.y+b.h&&b.y<a.y+a.h;
- shell(j,'Lay out the equipment yard for the data center. One square = 5 ft. Follow the engineer\'s spec, then call the inspector.',
+ shell(j,'This AI campus makes its own power: gas engines run the building full time, and the utility is the backup. Lay out the yard. One square = 5 ft. Follow the engineer\'s spec, then call the inspector. The dashed gold line on the left is the gas main.',
  dcMini(0)+`<div class="qcard card" style="padding:12px 14px"><h3 style="margin-bottom:4px">Engineer's spec</h3><ul style="margin:0;padding-left:20px;font-size:15.5px;line-height:1.5">
  <li>Transformer: <b>10 ft+</b> from the building (oil fire risk), within <b>15 ft</b> of the utility pole</li>
- <li>Generators: exhaust <b>20 ft+</b> from the air intake, <b>5 ft</b> from the building and each other</li>
- <li>Fuel tank: within <b>10 ft</b> of a generator, <b>10 ft+</b> from the transformer, <b>5 ft</b> from the building</li></ul></div>
+ <li>Gas engines: exhaust <b>20 ft+</b> from the air intake, <b>5 ft</b> from the building and each other</li>
+ <li>Gas meter: at the <b>street edge</b> where the gas main comes in (left edge), <b>10 ft+</b> from the transformer, <b>5 ft</b> from the building</li></ul></div>
  <div id="pcs" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px"></div>
  <div class="stage card" style="padding:4px"><svg id="yd" viewBox="0 0 360 292" style="display:block;width:100%;touch-action:manipulation"></svg></div>
  <button class="btn go" id="insp" style="width:100%;margin-top:10px">Call the inspector</button><div class="msg" id="msg"></div>`);
  const ico=(k,x,y,w,h,bad)=>{const s=bad?'#FF5A5A':INK,sw=bad?4:3;
   if(k==='xf')return `<rect x="${x+3}" y="${y+3}" width="${w-6}" height="${h-6}" rx="5" fill="#7BC67B" stroke="${s}" stroke-width="${sw}"/>${[0,1,2,3].map(i=>`<path d="M${x+12+i*9} ${y+12}v${h-24}" stroke="${INK}" stroke-width="2"/>`).join('')}`;
-  if(k==='tk')return `<rect x="${x+2}" y="${y+5}" width="${w-4}" height="${h-10}" rx="8" fill="#E3E7EC" stroke="${s}" stroke-width="${sw}"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle" font-size="9" font-weight="700" fill="${INK}">FUEL</text>`;
+  if(k==='tk')return `<rect x="${x+3}" y="${y+3}" width="${w-6}" height="${h-6}" rx="5" fill="#FFE070" stroke="${s}" stroke-width="${sw}"/><circle cx="${x+w/2}" cy="${y+h/2-2}" r="6" fill="#fff" stroke="${INK}" stroke-width="2"/><text x="${x+w/2}" y="${y+h-5}" text-anchor="middle" font-size="7" font-weight="700" fill="${INK}">GAS</text>`;
   return `<rect x="${x+3}" y="${y+3}" width="${w-6}" height="${h-6}" rx="5" fill="#FFC93C" stroke="${s}" stroke-width="${sw}"/><circle cx="${x+w-12}" cy="${y+h/2}" r="5" fill="#5A6270" stroke="${INK}" stroke-width="2"/><text x="${x+18}" y="${y+h/2+4}" text-anchor="middle" font-size="10" font-weight="700" fill="${INK}">G${k[1]}</text>`};
  const draw=()=>{let h=`<rect x="0" y="0" width="360" height="292" fill="#BFE8A8"/>`;
   for(let c=0;c<=CW;c++)h+=`<path d="M${OX+c*C} ${OY}V${OY+RH*C}" stroke="#A5D58A" stroke-width="1"/>`;for(let r=0;r<=RH;r++)h+=`<path d="M${OX} ${OY+r*C}H${OX+CW*C}" stroke="#A5D58A" stroke-width="1"/>`;
@@ -2335,6 +2347,7 @@ function dcsite(){
   const ix=OX+IN.x*C,iy=OY+IN.y*C;
   h+=side==='w'?`<rect x="${ix-5}" y="${iy+2}" width="10" height="${IN.h*C-4}" fill="#9CCBFF" stroke="${INK}" stroke-width="2"/>${[1,2,3,4,5].map(i=>`<path d="M${ix-5} ${iy+i*IN.h*C/6}h10" stroke="${INK}" stroke-width="1.5"/>`).join('')}<text x="${ix+8}" y="${iy+IN.h*C/2+4}" font-size="10" font-weight="700" fill="#1C5FB0">AIR IN</text>`
    :`<rect x="${ix+2}" y="${iy+C-5}" width="${IN.w*C-4}" height="10" fill="#9CCBFF" stroke="${INK}" stroke-width="2"/>${[1,2,3,4,5,6,7].map(i=>`<path d="M${ix+i*IN.w*C/8} ${iy+C-5}v10" stroke="${INK}" stroke-width="1.5"/>`).join('')}<text x="${ix+IN.w*C/2}" y="${iy+C-10}" text-anchor="middle" font-size="10" font-weight="700" fill="#1C5FB0">AIR IN</text>`;
+  h+=`<path d="M${OX-6} ${OY}V${OY+RH*C}" stroke="#E0A500" stroke-width="5" stroke-dasharray="10 6"/>`;
   const px=OX+POLE.x*C,py=OY+POLE.y*C;h+=`<path d="M${px+14} ${py+3}v22M${px+5} ${py+8}h18" stroke="#8A5A2B" stroke-width="4" stroke-linecap="round"/><text x="${px+30}" y="${py+18}" font-size="9" font-weight="700" fill="#5A3A1B">POLE</text>`;
   for(const k in pos){const r=rect(k);h+=ico(k,OX+r.x*C,OY+r.y*C,r.w*C,r.h*C,bads.includes(k))}
   h+=`<text x="${OX+2}" y="${OY+RH*C+14}" font-size="10" fill="#2E5A2E">1 square = 5 ft</text>`;
@@ -2358,9 +2371,9 @@ function dcsite(){
   if(gap(X,POLE).d>3)add('xf','Transformer is more than 15 ft from the pole.');
   G.forEach((g,i)=>{const k='g'+(i+1);if(gap(g,IN).e<4)add(k,`Generator ${i+1} exhaust is within 20 ft of the air intake. It would pump fumes into the data hall.`);if(gap(g,B).d<1)add(k,`Generator ${i+1} is right against the building. Leave 5 ft.`)});
   if(gap(G[0],G[1]).d<1){add('g1','The generators are touching. Leave 5 ft to work between them.');bads.push('g2')}
-  if(gap(T,G[0]).d>2&&gap(T,G[1]).d>2)add('tk','Fuel tank is more than 10 ft from both generators.');
-  if(gap(T,X).d<2)add('tk','Fuel tank is within 10 ft of the transformer.');
-  if(gap(T,B).d<1)add('tk','Fuel tank is right against the building.');
+  if(T.x!==0)add('tk','The gas meter has to sit on the street edge, where the gas main comes in. Otherwise you\'re running high-pressure gas pipe across the whole site.');
+  if(gap(T,X).d<2)add('tk','The gas meter is within 10 ft of the transformer. Keep gas equipment away from anything that can arc.');
+  if(gap(T,B).d<1)add('tk','The gas meter is right against the building.');
   if(v.length){miss++;bad();msgEl(`<b>Inspector says no:</b><br>• ${v.join('<br>• ')}`,'bad');draw();return}
   good();draw();msgEl('<b>Approved.</b> Clean layout.','ok');$('#insp').disabled=true;
   setTimeout(()=>result(j,dcStars(miss,0,1,3),'Equipment placement is safety. Oil-filled transformers can burn, so they sit away from the building. Generator exhaust has to stay far from air intakes or it gets pulled inside. Fuel lives near the generators but away from the transformer, and everything needs room for crews to work.'),1300)};
@@ -2372,7 +2385,7 @@ function dcsite(){
 function dcphase(){
  const j=J('dcphase');let svc=1,miss=0;
  const LUG=['A','B','C','N'],LC={A:'#8B5A2B',B:'#FF8A3D',C:'#FFD23C',N:'#F4F6F8'};
- shell(j,'Two utility services feed the switchgear: 480Y/277 V. The cables come in all black and untagged. Find the neutral with your meter, land the cables, and prove the rotation before you energize. Wrong rotation runs every cooling fan backwards.',dcMini(1)+`<div id="ph"></div><div class="msg" id="msg"></div>`);
+ shell(j,'The utility is this campus\'s backup, but it still has to be landed right. Two utility services feed the switchgear: 480Y/277 V. The cables come in all black and untagged. Find the neutral with your meter, land the cables, and prove the rotation before you energize. Wrong rotation runs every cooling fan backwards.',dcMini(1)+`<div id="ph"></div><div class="msg" id="msg"></div>`);
  function round(){
   const truth=shuffle(['A','B','C','N']); // truth[i] = what cable i really is
   const land=[null,null,null,null];let probe=[],selC=null,tested=false,reading='',rot=null;
@@ -2428,7 +2441,7 @@ function dcgear(){
   {t:'Utility 1 is back and stable. Return the gear to normal.',set:()=>{g.U1=true},ok:()=>g.M1&&g.M2&&!g.T},
   {t:'<b>Fault on Bus 2!</b> M2 tripped. Keep Hall A running, isolate Bus 2, and lock out M2 for the crew.',set:()=>{g.fault=true;g.M2=false},ok:()=>g.M1&&!g.M2&&!g.T&&lock,lock:true},
   {t:'Bus 2 is repaired. Now the utility is taking Utility 2 down for maintenance. Keep both halls running.',set:()=>{g.fault=false;lock=false;g.U2=false},ok:()=>{const l=live();return l.b1&&l.b2&&!g.M2}}];
- shell(j,'Main-tie-main switchgear: two utilities, two buses, one tie breaker. Run the gear through the day. When a bus goes dead, its hall runs on UPS batteries, and they don\'t last. In switchgear, <b style="color:#C0392B">red = closed</b> and <b style="color:#1E8C4C">green = open</b>.',
+ shell(j,'Before the engines are commissioned, the building runs on its two utility feeds, and they stay as the backup forever. Main-tie-main switchgear: two utilities, two buses, one tie breaker. Run the gear through the day. When a bus goes dead, its hall runs on UPS batteries, and they don\'t last. In switchgear, <b style="color:#C0392B">red = closed</b> and <b style="color:#1E8C4C">green = open</b>.',
  dcMini(2)+`<div class="gamehud card"><span>Round <b id="rn">1</b> of ${RS.length}</span><span>Mistakes: <b id="mi">0</b></span></div><div class="qcard card" style="padding:12px 14px" id="rt"></div>
  <div class="stage card" style="padding:4px"><svg id="gs" viewBox="0 0 360 290" style="display:block;width:100%"></svg></div>
  <div style="margin-top:10px"><small style="font-weight:700">UPS battery</small>${dcTimerBar()}</div><div class="row" id="lkr" style="margin-top:10px"></div><div class="msg" id="msg"></div>`);
@@ -2469,44 +2482,44 @@ function dcgear(){
 
 /* Stage 4: parallel the generators with a sync scope, timed */
 function dcsync(){
- const j=J('dcsync');let miss=0,gi=2,f,v,ang,tl,done=false;
- shell(j,'Generator 1 is already running the bus (it closed onto a dead bus, so there was nothing to sync to). Now parallel Generators 2 and 3. Match the voltage, run the generator just a hair <b>fast</b>, and close the breaker when the sync scope needle hits 12 o\'clock.',
+ const j=J('dcsync');let miss=0,gi=2,f,v,ang,tl,done=false,bf=60;
+ shell(j,'No utility here: this plant runs <b>islanded</b>. Engine 1 is carrying the bus by itself, and as the GPU load swings, the bus frequency drifts. Parallel Engines 2 and 3. Match the voltage, run the generator just a hair <b>fast</b>, and close the breaker when the sync scope needle hits 12 o\'clock.',
  dcMini(3)+`<div class="gamehud card"><span>Generator <b id="gn">2</b></span><span>Mistakes: <b id="mi">0</b></span></div>
  <div class="stage card" style="padding:4px"><svg id="sy" viewBox="0 0 360 250" style="display:block;width:100%"></svg></div>
  <div style="margin-top:8px"><small style="font-weight:700">Load is climbing. Get it online.</small>${dcTimerBar()}</div>
  <div class="row" style="gap:8px;margin-top:10px"><button class="btn alt" id="fm" style="flex:1">Hz −</button><button class="btn alt" id="fp" style="flex:1">Hz +</button><button class="btn alt" id="vm" style="flex:1">V −</button><button class="btn alt" id="vp" style="flex:1">V +</button></div>
  <button class="btn big" id="cl" style="width:100%;margin-top:10px;background:#FF5A5A;color:#fff">CLOSE BREAKER</button><div class="msg" id="msg"></div>`);
- const draw=()=>{const df=f-60,dv=v-480;const fast=df>0;
+ const draw=()=>{const df=f-bf,dv=v-480;const fast=df>0;
   const nx=180+Math.sin(ang*Math.PI/180)*70,ny=118-Math.cos(ang*Math.PI/180)*70;
   const inF=df>=0&&df<=.2,inV=Math.abs(dv)<=10;
   $('#sy').innerHTML=`<rect width="360" height="250" fill="#E8F7FF"/>
-  <rect x="10" y="12" width="90" height="62" rx="8" fill="#fff" stroke="${INK}" stroke-width="3"/><text x="55" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#6B7684">BUS</text><text x="55" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">60.00 Hz</text><text x="55" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">480 V</text>
-  <rect x="260" y="12" width="90" height="62" rx="8" fill="#FFC93C" stroke="${INK}" stroke-width="3"/><text x="305" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">GEN ${gi}</text><text x="305" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="${inF?'#1E6B3A':'#B0281A'}">${f.toFixed(2)} Hz</text><text x="305" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="${inV?'#1E6B3A':'#B0281A'}">${Math.round(v)} V</text>
+  <rect x="10" y="12" width="90" height="62" rx="8" fill="#fff" stroke="${INK}" stroke-width="3"/><text x="55" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="#6B7684">BUS</text><text x="55" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">${bf.toFixed(2)} Hz</text><text x="55" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">480 V</text>
+  <rect x="260" y="12" width="90" height="62" rx="8" fill="#FFC93C" stroke="${INK}" stroke-width="3"/><text x="305" y="30" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">ENGINE ${gi}</text><text x="305" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="${inF?'#1E6B3A':'#B0281A'}">${f.toFixed(2)} Hz</text><text x="305" y="66" text-anchor="middle" font-size="15" font-weight="700" fill="${inV?'#1E6B3A':'#B0281A'}">${Math.round(v)} V</text>
   <circle cx="180" cy="118" r="86" fill="#fff" stroke="${INK}" stroke-width="4"/>
   <path d="M${180+Math.sin(-15*Math.PI/180)*86} ${118-Math.cos(-15*Math.PI/180)*86} A86 86 0 0 1 ${180+Math.sin(15*Math.PI/180)*86} ${118-Math.cos(15*Math.PI/180)*86} L180 118Z" fill="#9BE3AE"/>
   ${[...Array(12)].map((_,i)=>{const a=i*30*Math.PI/180;return `<path d="M${180+Math.sin(a)*74} ${118-Math.cos(a)*74}L${180+Math.sin(a)*84} ${118-Math.cos(a)*84}" stroke="${INK}" stroke-width="3"/>`}).join('')}
   <text x="250" y="200" font-size="12" font-weight="700" fill="${INK}">FAST ↻</text><text x="74" y="200" font-size="12" font-weight="700" fill="${INK}">↺ SLOW</text><text x="180" y="190" text-anchor="middle" font-size="11" font-weight="700" fill="#6B7684">SYNC SCOPE</text>
   <path d="M180 118L${nx} ${ny}" stroke="#C0392B" stroke-width="6" stroke-linecap="round"/><circle cx="180" cy="118" r="8" fill="${INK}"/>
-  <text x="180" y="236" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${Math.abs(df)>.5?'Needle spinning too fast to catch':fast?'Generator running fast':df<0?'Generator running slow':'Frequencies matched exactly (needle frozen)'}</text>`;
+  <text x="180" y="236" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${Math.abs(df)>.5?'Needle spinning too fast to catch':fast?'Engine running fast':df<0?'Engine running slow':'Frequencies matched exactly (needle frozen)'}</text>`;
   $('#gn').textContent=gi;$('#mi').textContent=miss};
  function startG(){done=false;const hi=Math.random()<.5;f=+(hi?60.5+Math.random()*.6:58.9+Math.random()*.6).toFixed(2);v=Math.round(462+Math.random()*36);if(Math.abs(v-480)<12)v+=v<480?-14:14;ang=Math.random()*360;tl=100;
-  for(const b of ['fm','fp','vm','vp','cl'])$('#'+b).disabled=false;msgEl(`Generator ${gi} is up to speed. Sync it.`);
+  for(const b of ['fm','fp','vm','vp','cl'])$('#'+b).disabled=false;msgEl(`Engine ${gi} is up to speed. Sync it.`);
   let t0=performance.now(),k=0;
-  timers.push(setInterval(()=>{const t=performance.now(),dt=(t-t0)/1000;t0=t;ang=(ang+360*(f-60)*dt)%360;if(ang<0)ang+=360;
+  timers.push(setInterval(()=>{const t=performance.now(),dt=(t-t0)/1000;t0=t;bf=Math.min(60.12,Math.max(59.88,bf+(Math.random()-.5)*.006));ang=(ang+360*(f-bf)*dt)%360;if(ang<0)ang+=360;
    if(++k%30===0){f+=(Math.random()-.5)*.03}
    tl-=dt*100/40;$('#tfill').style.width=Math.max(0,tl)+'%';$('#tfill').style.background=tl<30?'#FF5A5A':tl<60?'#FFC93C':'#35C76F';
-   if(tl<=0&&!done){done=true;stop();miss++;bad();msgEl('<b>Too slow.</b> The load got ahead of Generator 1 and it started to bog down. Shut down, restart, try again.','bad');setTimeout(startG,2200)}
+   if(tl<=0&&!done){done=true;stop();miss++;bad();msgEl('<b>Too slow.</b> The GPU load got ahead of Engine 1 and it started to bog down. Shut down, restart, try again.','bad');setTimeout(startG,2200)}
    draw()},33))}
  const adj=(df,dvv)=>{f=Math.round((f+df)*100)/100;v+=dvv;tick();draw()};
  $('#fm').onclick=()=>adj(-.05,0);$('#fp').onclick=()=>adj(.05,0);$('#vm').onclick=()=>adj(0,-2);$('#vp').onclick=()=>adj(0,2);
- $('#cl').onclick=()=>{if(done)return;const df=f-60,dv=v-480,a=ang>180?ang-360:ang;
+ $('#cl').onclick=()=>{if(done)return;const df=f-bf,dv=v-480,a=ang>180?ang-360:ang;
   let err='';
   if(Math.abs(dv)>10)err=`Voltage was ${Math.round(v)} V against a 480 V bus. Big circulating current, and the breaker tripped. Get within 10 V.`;
   else if(Math.abs(a)>15)err=`Out of phase by ${Math.round(Math.abs(a))}°. The generator got yanked into step and the breaker tripped. Close only in the green, at 12 o'clock.`;
   else if(df<0)err='The generator was slow. The bus drove it like a motor and it tripped on reverse power. Run it slightly fast.';
   else if(df>.2)err='Too fast. It slammed in and grabbed the load hard enough to trip. Keep it within 0.2 Hz.';
   if(err){done=true;stop();miss++;zap();msgEl('<b>Breaker tripped.</b> '+err,'bad');setTimeout(startG,2400);return}
-  done=true;stop();good();for(const b of ['fm','fp','vm','vp','cl'])$('#'+b).disabled=true;msgEl(`<b>Clunk.</b> Generator ${gi} is online and sharing the load.`,'ok');
+  done=true;stop();good();for(const b of ['fm','fp','vm','vp','cl'])$('#'+b).disabled=true;msgEl(`<b>Clunk.</b> Engine ${gi} is online and sharing the load.`,'ok');
   setTimeout(()=>{if(gi<3){gi++;startG()}else result(j,dcStars(miss,0,2,4),'To parallel a generator, match voltage, match frequency, and close when the waveforms line up. That\'s 12 o\'clock on the sync scope. Run the incoming generator slightly fast so it picks up load right away instead of getting driven like a motor. Close out of phase and you can wreck the generator\'s shaft and coupling.')},1600)};
  startG();
 }
@@ -2564,45 +2577,223 @@ function dcbatt(){
 }
 
 
-/* Stage 6: busway + rack phase balancing */
-function dcbus(){
- const j=J('dcbus');let miss=0;
- const PH=['AB','BC','CA'],CAP=38.4;
- let K,tries=0;
- do{K=[...Array(12)].map(()=>[4,6,8,10,12,14][Math.floor(Math.random()*6)]);tries++}
- while((K.reduce((a,b)=>a+b,0)<86||K.reduce((a,b)=>a+b,0)>104||!solv(K))&&tries<200);
- function loads(as,k){const p={A:0,B:0,C:0};as.forEach((x,i)=>{const s=PH[x];p[s[0]]+=k[i]/2;p[s[1]]+=k[i]/2});return p}
- function okL(p){const v=[p.A,p.B,p.C];return Math.max(...v)<=CAP&&Math.max(...v)-Math.min(...v)<=3}
- function solv(k){const a=Array(12).fill(0);for(let n=0;n<531441;n+=7){let m=n;for(let i=0;i<12;i++){a[i]=m%3;m=Math.floor(m/3)}if(okL(loads(a,k)))return true}return false}
- const as=Array(12).fill(0);
- shell(j,'Twelve racks hang off the overhead busway. Each rack is a 208 V load across two phases. Tap a rack\'s tap box to move it between AB, BC and CA. Spec: every phase under <b>80%</b> (38.4 kW), and the three phases within <b>3 kW</b> of each other. Every rack also gets a second feed from busway B, so either busway has to carry it all.',
- dcMini(5)+`<div class="stage card" style="padding:4px"><svg id="hl" viewBox="0 0 360 250" style="display:block;width:100%"></svg></div>
- <div class="card" style="padding:10px 12px;margin-top:10px" id="bars"></div>
- <button class="btn go" id="en" style="width:100%;margin-top:10px">Energize the busway</button><div class="msg" id="msg"></div>`);
- const PC={AB:'#9CCBFF',BC:'#FFC29A',CA:'#C7B8F2'};
- const draw=(lit)=>{let h=`<rect width="360" height="250" fill="#2B2F36"/><text x="180" y="20" text-anchor="middle" font-size="11" font-weight="700" fill="#9AA4B2">COLD AISLE</text>`;
-  for(let r=0;r<2;r++){const y=r?150:40;h+=`<path d="M12 ${y-8}H348" stroke="#2F7FE0" stroke-width="5"/><path d="M12 ${y-2}H348" stroke="#E0702F" stroke-width="5"/>`;
-   for(let c=0;c<6;c++){const i=r*6+c,x=14+c*57,ph=PH[as[i]];
-    h+=`<g class="rk" data-i="${i}" style="cursor:pointer"><rect x="${x}" y="${y+6}" width="50" height="66" rx="5" fill="#3A3F4A" stroke="#9AA4B2" stroke-width="2"/>${[0,1,2].map(k=>`<circle cx="${x+10+k*8}" cy="${y+18}" r="2.4" fill="${lit?'#35C76F':'#5A6270'}"/>`).join('')}<text x="${x+25}" y="${y+42}" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${K[i]} kW</text><rect x="${x+6}" y="${y+50}" width="38" height="18" rx="5" fill="${PC[ph]}" stroke="${INK}" stroke-width="2"/><text x="${x+25}" y="${y+63}" text-anchor="middle" font-size="12" font-weight="700" fill="${INK}">${ph}</text></g>`}}
-  h+=`<text x="180" y="138" text-anchor="middle" font-size="11" font-weight="700" fill="#9AA4B2">HOT AISLE</text>`;
-  $('#hl').innerHTML=h;
-  const p=loads(as,K),mx=Math.max(p.A,p.B,p.C),mn=Math.min(p.A,p.B,p.C);
-  $('#bars').innerHTML=['A','B','C'].map(k=>{const v=p[k],w=Math.min(100,v/48*100),over=v>CAP;return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0"><b style="width:56px">Phase ${k}</b><div style="flex:1;height:20px;border:2.5px solid ${INK};border-radius:8px;background:#fff;position:relative;overflow:hidden"><div style="height:100%;width:${w}%;background:${over?'#FF5A5A':'#35C76F'}"></div><div style="position:absolute;left:80%;top:0;bottom:0;border-left:3px dashed ${INK}"></div></div><b style="width:62px;text-align:right">${fmt1(v)} kW</b></div>`}).join('')+`<small>Dashed line = 80%. Spread: <b style="color:${mx-mn<=3?'#1E8C4C':'#C0392B'}">${fmt1(mx-mn)} kW</b></small>`};
- $('#hl').onclick=e=>{const g=e.target.closest('.rk');if(!g)return;const i=+g.dataset.i;as[i]=(as[i]+1)%3;tick();draw()};
- $('#en').onclick=()=>{const p=loads(as,K),v=[p.A,p.B,p.C],mx=Math.max(...v),mn=Math.min(...v);
-  if(mx>CAP){miss++;zap();msgEl(`<b>Phase ${['A','B','C'][v.indexOf(mx)]} is at ${fmt1(mx)} kW.</b> Over 80%. If busway A fails, busway B carries it all and it trips. Move some racks off that phase.`,'bad');return}
-  if(mx-mn>3){miss++;bad();msgEl(`Under 80%, but the phases are ${fmt1(mx-mn)} kW apart. Unbalanced phases heat the neutral and the transformer. Get them within 3 kW.`,'bad');return}
-  good();confetti();$('#en').disabled=true;draw(true);msgEl('<b>Balanced and under 80%.</b> The hall lights up.','ok');
-  setTimeout(()=>result(j,dcStars(miss,0,2,4),'Single-phase loads have to be spread evenly across all three phases. An unbalanced system overheats one phase, the neutral and the transformer, and wastes capacity. In a 2N data center, each busway normally carries half the load but has to be able to carry all of it, so you design to stay under 80% even in a failover.'),1600)};
- draw();msgEl('Everything starts on AB. Spread it out.');
+
+/* ===== MASTER PROJECT: new stages ===== */
+const SQ3=Math.sqrt(3);
+/* 5. PDU transformers */
+function dcpdu(){
+ const j=J('dcpdu');let miss=0,step=1;
+ const n=[3,4,5,6][Math.floor(Math.random()*4)],kw=[120,130,140][Math.floor(Math.random()*3)],row=n*kw,kva=Math.round(row/.95);
+ const KV=[300,500,750,1000,1500],need=KV.find(k=>k>=kva);let pick=0,volt=0;
+ const amps=v=>Math.round(row*1000/(SQ3*v*.95)),BR=[400,600,800,1000,1200,1600,2000,2500,3000];
+ shell(j,`A row of <b>${n} GPU racks</b> at <b>${kw} kW</b> each needs its power transformers (PDUs). Each row gets a PDU-A and a PDU-B. In 2N, either one has to carry the whole row alone. Power factor is 0.95.`,
+ dcMini(2)+`<div class="gamehud card"><span>Step <b id="st">1</b> of 3</span><span>Mistakes: <b id="mi">0</b></span></div>
+ <div class="stage card" style="padding:4px"><svg id="xs" viewBox="0 0 360 200" style="display:block;width:100%"></svg></div>
+ <div class="qcard card" style="padding:12px 14px" id="qq"></div><div class="row" id="ch" style="flex-wrap:wrap;gap:8px"></div><div class="msg" id="msg"></div>`);
+ const draw=()=>{const I=INK,v2=volt||'?';
+  $('#xs').innerHTML=`<rect width="360" height="200" fill="#E8F7FF"/><text x="60" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="${I}">480 V IN</text><path d="M60 38v40" stroke="#E0442F" stroke-width="5"/>
+  <rect x="100" y="50" width="160" height="110" rx="10" fill="${pick?'#7BC67B':'#D5DAE1'}" stroke="${I}" stroke-width="3.5"/>${[0,1,2,3,4,5].map(k=>`<path d="M${118+k*25} 60v90" stroke="${I}" stroke-width="2" opacity=".5"/>`).join('')}
+  <rect x="122" y="88" width="116" height="36" rx="8" fill="#fff" stroke="${I}" stroke-width="2.5"/><text x="180" y="112" text-anchor="middle" font-size="17" font-weight="700" fill="${I}">${pick?pick+' kVA':'? kVA'}</text>
+  <path d="M60 78h40M260 105h40" stroke="#E0442F" stroke-width="5"/><text x="310" y="94" text-anchor="middle" font-size="12" font-weight="700" fill="${I}">${v2} V</text><text x="310" y="130" text-anchor="middle" font-size="11" font-weight="700" fill="#6B7684">${volt?amps(volt)+' A':''}</text>
+  ${[...Array(n)].map((_,k)=>`<rect x="${110+k*(140/n)}" y="172" width="${140/n-6}" height="20" rx="3" fill="#3A3F4A"/><circle cx="${116+k*(140/n)}" cy="182" r="2.5" fill="#35C76F"/>`).join('')}`;
+  $('#st').textContent=step;$('#mi').textContent=miss};
+ const opts=(arr,lab,fn)=>{$('#ch').innerHTML=arr.map(v=>`<button class="btn alt" data-v="${v}" style="flex:1 1 30%">${lab(v)}</button>`).join('');$('#ch').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>fn(b.dataset.v,b))};
+ function s1(){$('#qq').innerHTML=`<h3 style="margin:0">Size the PDU</h3><p style="margin:4px 0 0">Row load: ${n} × ${kw} = <b>${row} kW</b>. kVA = kW ÷ 0.95.</p>`;
+  opts(KV,v=>v+' kVA',(v,b)=>{v=+v;if(v<kva){miss++;b.classList.add('wrong');msgEl(`Too small. ${row} kW ÷ 0.95 = ${kva} kVA, and in 2N one PDU has to carry the <b>whole row</b> when its partner is down, or it overheats.`,'bad');draw();return}
+   if(v>need){miss++;b.classList.add('wrong');msgEl(`That works, but it's bigger than needed. ${kva} kVA rounds up to ${need}.`,'bad');draw();return}
+   pick=v;good();msgEl(`${row} ÷ 0.95 = ${kva} kVA, so ${v} kVA.`,'ok');step=2;draw();setTimeout(s2,1300)})}
+ function s2(){$('#qq').innerHTML=`<h3 style="margin:0">Pick the output voltage</h3><p style="margin:4px 0 0">The GPU power shelves accept either one. Which is better for a ${row} kW row?</p>`;
+  opts([208,415],v=>v==208?'208Y/120 V':'415Y/240 V',(v,b)=>{v=+v;volt=v;draw();
+   if(v===208){miss++;b.classList.add('wrong');msgEl(`At 208 V that row pulls <b>${amps(208)} A</b>, about twice the amps of 415 V. That means double the copper, bigger breakers, and more heat. High-density racks run at 415 V.`,'bad');volt=0;return}
+   good();msgEl(`415 V: only ${amps(415)} A for the whole row. Fewer amps means smaller conductors and less heat.`,'ok');step=3;draw();setTimeout(s3,1500)})}
+ function s3(){const I=amps(415),nd=I*1.25,br=BR.find(x=>x>=nd);
+  $('#qq').innerHTML=`<h3 style="margin:0">Secondary main breaker</h3><p style="margin:4px 0 0">The row pulls <b>${I} A</b> at 415 V, around the clock. Continuous load.</p>`;
+  const o=[...new Set([BR.find(x=>x>=I),br,BR[BR.indexOf(br)+1]].filter(Boolean))].sort((a,b)=>a-b);
+  opts(o,v=>v+' A',(v,b)=>{v=+v;if(v<nd){miss++;b.classList.add('wrong');msgEl(`${v} A covers ${I} A, but continuous loads get 125%: ${I} × 1.25 = ${Math.round(nd)} A. It would nuisance-trip.`,'bad');return}
+   if(v>br){miss++;b.classList.add('wrong');msgEl(`Bigger than it needs to be. ${Math.round(nd)} A rounds up to ${br} A.`,'bad');return}
+   good();msgEl(`${I} × 1.25 = ${Math.round(nd)} A, so ${br} A.`,'ok');setTimeout(()=>result(j,dcStars(miss,0,1,3),'Data hall transformers (PDUs) are sized in kVA for the full load they might carry. In 2N that\'s the whole row, because its partner can fail. Higher voltage means fewer amps for the same power, which is why AI halls run at 415 V instead of 208 V. And the load never stops, so breakers get 125%.'),1400)})}
+ draw();s1();
 }
 
+/* 6. Pull the feeders: parallel sets + one set per conduit */
+function dcfeed(){
+ const j=J('dcfeed');let miss=0;
+ const F=[1000,1200,1600][Math.floor(Math.random()*3)],AMP=380,need=Math.ceil(F/AMP);let sets=2;
+ const PC={A:['#8B5A2B','A'],B:['#FF8A3D','B'],C:['#FFD23C','C'],N:['#C3CAD3','N']};
+ shell(j,`Feed the PDU from the main switchboard with a <b>${F} A</b> feeder. That much current takes several runs of 500 kcmil copper in parallel. Each one is good for 380 A.`,
+ dcMini(2)+`<div id="fd"></div><div class="msg" id="msg"></div>`);
+ function p1(){const draw=()=>{$('#fd').innerHTML=`<div class="qcard card" style="padding:12px 14px"><h3 style="margin:0">How many parallel sets?</h3><p style="margin:4px 0 0">${F} A breaker · 500 kcmil = 380 A each</p></div>
+   <div class="stage card" style="padding:4px"><svg viewBox="0 0 360 120" style="display:block;width:100%"><rect width="360" height="120" fill="#E8F7FF"/>${[...Array(sets)].map((_,k)=>`<g transform="translate(${20+k*56} 20)"><circle cx="22" cy="40" r="22" fill="#C5CDD6" stroke="${INK}" stroke-width="3"/>${['A','B','C','N'].map((p,q)=>`<circle cx="${14+(q%2)*16}" cy="${32+Math.floor(q/2)*16}" r="6.5" fill="${PC[p][0]}" stroke="${INK}" stroke-width="1.5"/>`).join('')}</g>`).join('')}<text x="350" y="112" text-anchor="end" font-size="13" font-weight="700" fill="${sets*AMP>=F?'#1E8C4C':'#C0392B'}">${sets} × 380 = ${sets*AMP} A</text></svg></div>
+   <div class="row" style="gap:8px;margin-top:10px;align-items:center"><button class="btn alt" id="sm" style="flex:1">− Set</button><b style="font-size:22px;min-width:40px;text-align:center">${sets}</b><button class="btn alt" id="sp" style="flex:1">+ Set</button></div><button class="btn go" id="ok" style="width:100%;margin-top:10px">Order the wire</button>`;
+   $('#sm').onclick=()=>{if(sets>1){sets--;tick();draw()}};$('#sp').onclick=()=>{if(sets<6){sets++;tick();draw()}};
+   $('#ok').onclick=()=>{if(sets*AMP<F){miss++;msgEl(sets*AMP>=F-150?`${sets*AMP} A is close, but over 800 A there's no rounding up to the next breaker size. The conductors must be rated for the <b>full ${F} A</b>. Add a set.`:`${sets*AMP} A won't carry a ${F} A feeder. It overheats.`,'bad');return}
+    if(sets>need){miss++;msgEl(`That works, but it's an extra run of copper you don't need. ${need} sets × 380 = ${need*AMP} A covers it.`,'bad');return}
+    good();msgEl(`${sets} sets × 380 A = ${sets*AMP} A for a ${F} A feeder.`,'ok');setTimeout(p2,1300)}};draw()}
+ function p2(){const cond=[];for(let s=0;s<need;s++)for(const p of ['A','B','C','N'])cond.push({p,len:250});
+  const bad2=Math.floor(Math.random()*cond.length);const spare={p:cond[bad2].p,len:250};cond[bad2].len=238;cond.push(spare);
+  const pile=shuffle(cond.map((c,i)=>Object.assign({i},c)));const tubes=[...Array(need)].map(()=>[]);let sel=null;
+  const draw=()=>{$('#fd').innerHTML=`<div class="qcard card" style="padding:12px 14px"><h3 style="margin:0">Load the conduits</h3><p style="margin:4px 0 0">${need} conduits, 4 wires each. Tap a wire, then a conduit. Check the length tags.</p></div>
+   <div class="pile">${pile.filter(c=>!tubes.flat().includes(c.i)).map(c=>`<button class="cw${sel===c.i?' on':''}" data-i="${c.i}" style="--c:${PC[c.p][0]}"><b>${c.p}</b><small${c.len<250?' class="short"':''}>${c.len} ft</small></button>`).join('')}</div>
+   <div class="tubes">${tubes.map((t,k)=>`<button class="tube card" data-t="${k}"><small>Conduit ${k+1}</small><span>${t.map(i=>{const c=cond.find(x=>x.i===i)||pile.find(x=>x.i===i);return `<i style="background:${PC[c.p][0]}">${c.p}</i>`}).join('')}</span></button>`).join('')}</div>
+   <button class="btn go" id="pl" style="width:100%;margin-top:10px">Pull it</button>`;
+   app.querySelectorAll('.cw').forEach(b=>b.onclick=()=>{sel=+b.dataset.i;tick();draw()});
+   app.querySelectorAll('.tube').forEach(b=>b.onclick=()=>{const t=tubes[+b.dataset.t];if(sel===null){if(t.length){t.pop();tick();draw()}return}if(t.length>=4){msgEl('That conduit is full. Tap it with nothing selected to pull a wire back out.');return}t.push(sel);sel=null;tick();draw()});
+   $('#pl').onclick=()=>{if(tubes.some(t=>t.length<4)){msgEl('Fill every conduit first.');bad();return}
+    const get=i=>pile.find(x=>x.i===i);
+    const sh=tubes.flat().map(get).find(c=>c.len<250);
+    if(sh){miss++;msgEl(`A ${sh.p} conductor is only 238 ft. <b>Parallel conductors must be the same length</b>, size and material, or the shorter one hogs the current and overheats. Swap in the spare.`,'bad');return}
+    const k=tubes.findIndex(t=>['A','B','C','N'].some(p=>!t.map(get).some(c=>c.p===p)));
+    if(k>=0){miss++;msgEl(`Conduit ${k+1} doesn't have one of each: A, B, C and N. Every conduit needs a full set. Otherwise the magnetic field doesn't cancel, and the steel conduit heats up by induction.`,'bad');return}
+    good();confetti();msgEl('Every conduit has a full set, all the same length. Pull!','ok');
+    setTimeout(()=>result(j,dcStars(miss,0,1,3),'Big feeders are built from parallel sets. Over 800 A, the conductors must be rated for the full breaker size, with no rounding up. Parallel conductors must match in length, size and material so they share current evenly. And each conduit carries a full set (every phase plus the neutral) so the magnetic fields cancel instead of heating the pipe.'),1500)};
+  };msgEl('');draw()}
+ p1();
+}
 
-/* Stage 7: bond everything, then drive rods to hit 5 ohms */
+/* 8. Busway + tap-off boxes */
+function dcbus(){
+ const j=J('dcbus');let miss=0;
+ const RA=[800,1000,1200][Math.floor(Math.random()*3)],RK=130,cap=RA*.8,per=Math.round(RK*1000/(SQ3*415)),max=Math.floor(cap/per);let n=0;
+ shell(j,`A <b>${RA} A, 415 V busway</b> runs over a row of GPU racks. Each rack is <b>${RK} kW</b>. In 2N, if busway B dies, this busway carries every rack's full load, and it has to stay under 80%. The owner wants as many racks per busway as you can safely fit.`,
+ dcMini(5)+`<div id="bw"></div><div class="msg" id="msg"></div>`);
+ function p1(){const draw=()=>{const a=n*per,pc=a/RA*100;
+   $('#bw').innerHTML=`<div class="stage card" style="padding:4px"><svg id="bsv2" viewBox="0 0 360 190" style="display:block;width:100%"><rect width="360" height="190" fill="#2B2F36"/><rect x="10" y="18" width="340" height="16" rx="4" fill="#2F7FE0" stroke="#9CCBFF" stroke-width="2"/><text x="180" y="30" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">BUSWAY A · ${RA} A</text>
+   ${[...Array(8)].map((_,k)=>{const x=14+k*42,on=k<n;return `<g class="slt" data-k="${k}" style="cursor:pointer">${on?`<rect x="${x+8}" y="34" width="20" height="16" rx="3" fill="#FFC93C" stroke="${INK}" stroke-width="2"/><path d="M${x+18} 50v22" stroke="#FFC93C" stroke-width="3"/>`:''}<rect x="${x}" y="72" width="36" height="100" rx="4" fill="${on?'#3A3F4A':'#3A3F4A55'}" stroke="${on?'#9AA4B2':'#5A6270'}" stroke-width="2" stroke-dasharray="${on?0:'4 3'}"/>${on?[0,1,2,3].map(r=>`<circle cx="${x+10}" cy="${84+r*20}" r="2.5" fill="#35C76F"/>`).join(''):`<text x="${x+18}" y="126" text-anchor="middle" font-size="18" fill="#9AA4B2">+</text>`}</g>`}).join('')}</svg></div>
+   <div class="card" style="padding:10px 12px;margin-top:10px"><b>If busway B fails: ${n} racks × ${per} A = ${a} A</b><div class="mbar"><div style="width:${Math.min(100,pc)}%;background:${pc>80?'#FF5A5A':'#35C76F'}"></div><i style="left:80%"></i></div><small>${Math.round(pc)}% of ${RA} A · dashed line = 80%</small></div>
+   <button class="btn go" id="ok" style="width:100%;margin-top:10px">Lock in ${n} rack${n===1?'':'s'}</button>`;
+   $('#bsv2').onclick=e=>{const g=e.target.closest('.slt');if(!g)return;const k=+g.dataset.k;n=k<n?k:k+1;tick();draw()};
+   $('#ok').onclick=()=>{if(!n)return;if(n*per>cap){miss++;msgEl(`${n*per} A is over 80% of ${RA} A. The moment busway B fails, this one is overloaded and the whole row goes down. Pull a rack.`,'bad');return}
+    if(n<max){miss++;msgEl(`Safe, but the owner is paying for empty space. ${max} racks = ${max*per} A, still under ${cap} A.`,'bad');return}
+    good();msgEl(`${max} racks: ${max*per} A in failover, under the ${cap} A limit.`,'ok');setTimeout(p2,1400)}};draw()}
+ function p2(){const nd=per*1.25,TB=[100,150,200,250,400],ok=TB.find(x=>x>=nd);
+  $('#bw').innerHTML=`<div class="qcard card" style="padding:12px 14px"><h3 style="margin:0">Size the tap-off box</h3><p style="margin:4px 0 0">Each tap box feeds one rack: <b>${per} A</b> at full load, around the clock.</p></div><div class="row" id="ch" style="flex-wrap:wrap;gap:8px">${TB.map(v=>`<button class="btn alt" data-v="${v}" style="flex:1 1 28%">${v} A</button>`).join('')}</div>`;
+  $('#ch').querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{const v=+b.dataset.v;if(v<nd){miss++;b.classList.add('wrong');msgEl(`${v} A ${v>=per?'carries it, but continuous loads get 125%':'is too small'}: ${per} × 1.25 = ${Math.round(nd)} A. It would trip.`,'bad');return}
+   if(v>ok){miss++;b.classList.add('wrong');msgEl(`Too big. ${Math.round(nd)} A rounds up to ${ok} A.`,'bad');return}
+   good();msgEl(`${per} × 1.25 = ${Math.round(nd)} A, so ${ok} A tap boxes.`,'ok');setTimeout(()=>result(j,dcStars(miss,0,1,3),'Busway feeds a whole row from overhead, with a tap-off box for each rack. In a 2N hall, every busway is sized for the failover case: if its partner dies, it carries every rack\'s full load and still has to stay under 80%. Tap boxes are sized like any branch circuit with a continuous load, at 125%.'),1400)})}
+ p1();
+}
+
+/* 9. Build the whips */
+function dcwhip(){
+ const j=J('dcwhip');let miss=0,w=0,tl=100,done=false;
+ const PIN=[['G','⏚','#35C76F'],['L1','L1','#8B5A2B'],['L2','L2','#FF8A3D'],['L3','L3','#FFD23C'],['N','N','#F4F6F8']];
+ const WC={L1:['Brown','#8B5A2B'],L2:['Orange','#FF8A3D'],L3:['Yellow','#FFD23C'],N:['Gray','#C3CAD3'],G:['Green','#35C76F']};
+ shell(j,'Build 3 power whips: heavy cords with a 5-pin pin-and-sleeve plug that plugs into the tap-off box. The site standard for 415 V is <b>brown, orange, yellow</b> for L1, L2, L3, <b>gray</b> neutral and <b>green</b> ground. The plug face turns on every whip, so read the pins. The foreman wants them before the crane leaves.',
+ dcMini(5)+`<div class="gamehud card"><span>Whip <b id="wn">1</b> of 3</span><span>Mistakes: <b id="mi">0</b></span></div>${dcTimerBar()}
+ <div class="stage card" style="padding:4px;margin-top:10px"><svg id="pf" viewBox="0 0 360 230" style="display:block;width:100%"></svg></div>
+ <div class="row" id="wr" style="gap:6px;flex-wrap:wrap;margin-top:10px"></div><div class="msg" id="msg"></div>`);
+ let rot,on,sel;
+ const draw=()=>{let h=`<rect width="360" height="230" fill="#E8F7FF"/><circle cx="180" cy="115" r="96" fill="#3A3F4A" stroke="${INK}" stroke-width="4"/><circle cx="180" cy="115" r="80" fill="#5A6270"/>`;
+  PIN.forEach(([k,t],i)=>{const a=(rot+i*72)*Math.PI/180,x=180+Math.sin(a)*52,y=115-Math.cos(a)*52,r=k==='G'?17:13,wc=on[k];
+   h+=`<g class="pin" data-k="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="${r+6}" fill="${wc?WC[wc][1]:'#2B2F36'}" stroke="${INK}" stroke-width="2.5"/><circle cx="${x}" cy="${y}" r="${r-3}" fill="#C5CDD6" stroke="${INK}" stroke-width="2"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="${k==='G'?15:12}" font-weight="700" fill="${INK}">${t}</text></g>`});
+  h+=`<text x="180" y="226" text-anchor="middle" font-size="11" font-weight="700" fill="#6B7684">PLUG FACE · back of the plug</text>`;$('#pf').innerHTML=h;
+  $('#wr').innerHTML=Object.entries(WC).filter(([k])=>!Object.values(on).includes(k)).map(([k,[n,c]])=>`<button class="btn sm${sel===k?'':' alt'}" data-w="${k}" style="flex:1 1 28%"><span class="wdot" style="background:${c}"></span>${n}</button>`).join('');
+  $('#wr').querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{sel=b.dataset.w;tick();draw()});$('#wn').textContent=w+1;$('#mi').textContent=miss};
+ $('#pf').onclick=e=>{const g=e.target.closest('.pin');if(!g||done)return;if(!sel){msgEl('Pick a wire color first.');return}const k=g.dataset.k;if(on[k])return;
+  if(sel!==k){miss++;const t=k==='G'||sel==='G'?'<b>The ground pin is the big one</b> (⏚), and only green goes there. Put a hot on the ground pin and the rack chassis goes live.':sel==='N'||k==='N'?'Neutral (gray) only goes on the N pin. A hot on the neutral puts 415 V where the shelf expects 240 V, and it smokes the power shelf.':`${WC[sel][0]} is ${sel}, not ${k}. Swapped phases mean the label lies, and the next electrician gets fooled.`;msgEl(t,'bad');sel=null;draw();return}
+  on[k]=sel;sel=null;tick();draw();
+  if(Object.keys(on).length===5){good();msgEl(`Whip ${w+1} done. Torqued and labeled.`,'ok');w++;if(w>=3){done=true;stop();setTimeout(()=>result(j,dcStars(miss,0,1,3),'A power whip is just a big cord, but it has to be perfect. Every pin gets its matching color, and the ground pin is always the biggest so it connects first and disconnects last. Mistakes here are dangerous: a hot on the ground pin energizes the rack chassis. Read the pins every time, because the plug face can be turned any way in your hand.'),1300);return}setTimeout(nw,900)}};
+ function nw(){rot=Math.floor(Math.random()*5)*72+Math.floor(Math.random()*3)*24;on={};sel=null;msgEl('');draw()}
+ timers.push(setInterval(()=>{if(done)return;tl-=.25;$('#tfill').style.width=Math.max(0,tl)+'%';$('#tfill').style.background=tl<30?'#FF5A5A':tl<60?'#FFC93C':'#35C76F';if(tl<=0){done=true;stop();miss+=2;msgEl('<b>The crane left.</b> The foreman finished the last whip himself. That counts.','bad');setTimeout(()=>result(j,dcStars(miss,0,1,3),'A power whip has to be built right and fast. Every pin gets its matching color, and the big ground pin only ever gets green.'),1800)}},250));
+ nw();
+}
+
+/* 10. Land the GPU rack */
+function dcrack(){
+ const j=J('dcrack');let miss=0;const S8=Array(8).fill('');const SRC=['','A1','A2','B1','B2'];const KW=33,RK=130;
+ shell(j,`This GPU rack draws <b>${RK} kW</b> through <b>8 power shelves</b>, ${KW} kW each, turning 415 V into DC for the servers. You have 4 whips: <b style="color:#2F7FE0">A1, A2</b> from busway A and <b style="color:#E0702F">B1, B2</b> from busway B. Each whip can feed <b>2 shelves</b>. Land them so that losing either busway never drops the rack.`,
+ dcMini(5)+`<div class="row" style="gap:10px;align-items:flex-start"><div class="stage card" style="padding:6px;flex:1"><div id="rk2"></div></div>
+ <div class="card" style="padding:10px;width:120px"><b style="font-size:14px">Whip load</b><div id="wl" style="margin-top:6px"></div></div></div>
+ <p class="fine" style="margin:8px 2px 0">Tap a shelf to cycle its input: none, A1, A2, B1, B2.</p><button class="btn go" id="pa" style="width:100%;margin-top:10px">Test: kill busway A</button><div class="msg" id="msg"></div>`);
+ const col=s=>s[0]==='A'?'#9CCBFF':s[0]==='B'?'#FFC29A':'#E3E7EC';
+ const draw=(dead)=>{$('#rk2').innerHTML=`<div class="rack">${S8.map((s,i)=>{const off=dead&&(!s||s[0]===dead);return `<button class="shelf${off?' off':''}" data-i="${i}" style="background:${col(s)}"><span>Shelf ${i+1}</span><b>${s||'—'}</b><i style="background:${dead?(off?'#FF5A5A':'#35C76F'):s?'#35C76F':'#5A6270'}"></i></button>`}).join('')}</div>`;
+  $('#wl').innerHTML=['A1','A2','B1','B2'].map(w=>{const c=S8.filter(x=>x===w).length;return `<div style="display:flex;justify-content:space-between;font-weight:700;color:${c>2?'#C0392B':INK}"><span style="color:${w[0]==='A'?'#2F7FE0':'#E0702F'}">${w}</span><span>${c}/2</span></div>`}).join('');
+  $('#rk2').querySelectorAll('.shelf').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;S8[i]=SRC[(SRC.indexOf(S8[i])+1)%5];tick();draw()})};
+ $('#pa').onclick=()=>{
+  if(S8.some(s=>!s)){msgEl('Every shelf needs a whip. An empty shelf is lost capacity.');bad();return}
+  const ov=['A1','A2','B1','B2'].find(w=>S8.filter(x=>x===w).length>2);
+  if(ov){miss++;msgEl(`Whip ${ov} is feeding ${S8.filter(x=>x===ov).length} shelves. It's rated for 2, so it overheats and its tap box trips.`,'bad');return}
+  const b=S8.filter(s=>s[0]==='B').length,a=8-b;draw('A');
+  if(b*KW<RK){miss++;msgEl(`<b>Busway A is down.</b> Only ${b} shelves are on B: ${b} × ${KW} = ${b*KW} kW for a ${RK} kW rack. The rack overloads its shelves and drops. Split them 4 and 4.`,'bad');setTimeout(()=>draw(),2000);return}
+  if(a*KW<RK){miss++;msgEl(`It survives losing A, but with only ${a} shelves on A it would drop if busway <b>B</b> failed instead. Split them 4 and 4.`,'bad');setTimeout(()=>draw(),2000);return}
+  good();msgEl(`Busway A is down and 4 B shelves are carrying it: ${4*KW} kW for a ${RK} kW rack. The rack never blinked.`,'ok');
+  setTimeout(()=>result(j,dcStars(miss,0,1,3),'GPU racks have many power shelves, split evenly between the A and B feeds. Either half alone has to carry the whole rack, so one busway, one whip or one tap box can fail without the rack noticing. And no whip gets more load than it\'s rated for.'),1800)};
+ draw();
+}
+
+/* 11. Coolant pumps and what goes on UPS */
+function dccool(){
+ const j=J('dccool');let miss=0;
+ const L=[['cdu','Coolant pumps (CDU)','ups'],['net','Network switches','ups'],['sec','Door locks + cameras','ups'],['chl','Chillers','gen'],['crah','Hall air handlers','gen'],['off','Office HVAC','norm'],['brk','Break room','norm']];
+ const PN={ups:['UPS','#C7B8F2'],gen:['Engine plant only','#FFE070'],norm:['Normal (can drop)','#E3E7EC']},ORD=['','ups','gen','norm'];const as={};
+ shell(j,'The GPU racks are on UPS. Now decide what else rides the UPS, what rides the engine plant alone, and what can just go dark when power blips. UPS capacity is expensive, so don\'t waste it.',
+ dcMini(5)+`<div class="opts" id="ld"></div><p class="fine" style="margin:8px 2px 0">Tap a load to cycle: UPS, engine plant only, normal.</p><button class="btn go" id="bl" style="width:100%;margin-top:10px">Simulate a 10-second power blip</button>
+ <div class="card" id="sim" style="padding:10px 12px;margin-top:10px;display:none"></div><div class="msg" id="msg"></div>`);
+ const draw=()=>{$('#ld').innerHTML=`<div class="card" style="padding:10px 12px;background:#C7B8F2"><b>GPU racks</b> · UPS 🔒</div>`+L.map(([k,n])=>`<button class="btn alt" data-k="${k}" style="display:flex;justify-content:space-between;background:${as[k]?PN[as[k]][1]:'#fff'}"><span>${n}</span><small style="font-weight:700">${as[k]?PN[as[k]][0]:'Tap to assign'}</small></button>`).join('');
+  $('#ld').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{const k=b.dataset.k;as[k]=ORD[(ORD.indexOf(as[k]||'')+1)%4];tick();draw()})};
+ $('#bl').onclick=()=>{if(L.some(([k])=>!as[k])){msgEl('Assign every load first.');bad();return}
+  const sim=$('#sim');sim.style.display='';
+  if(as.cdu!=='ups'){miss++;sim.innerHTML='<b>GPU temp:</b> <span style="color:#C0392B;font-weight:700">45 °C → 92 °C in 6 seconds</span>';msgEl('<b>The coolant pumps stopped for 10 seconds and the GPUs overheated</b> and throttled hard. The GPUs had power but no cooling. On liquid-cooled racks, the pumps are as critical as the servers. They go on UPS.','bad');return}
+  if(as.net!=='ups'){miss++;msgEl('The network switches dropped, so every GPU lost contact with the others and the training run crashed, even though the GPUs never lost power. Network gear rides the UPS.','bad');return}
+  if(as.chl==='ups'){miss++;msgEl('<b>The UPS tripped on overload.</b> Chillers are huge motor loads, way too big for the UPS. A chilled-water tank rides through the blip until the engine plant restarts them.','bad');return}
+  if(as.sec!=='ups'){miss++;msgEl('The door locks reset and the cameras went dark for 10 seconds. Security is life safety plus a big liability. It rides the UPS (it\'s a small load).','bad');return}
+  if(as.off==='ups'||as.brk==='ups'){miss++;msgEl('The office and break room are on UPS. That works, but it burns expensive UPS capacity on a coffee maker. Let them drop.','bad');return}
+  if(as.crah==='ups'||as.crah==='norm'){miss++;msgEl(as.crah==='ups'?'Air handlers are big fan motors. They\'re fine riding the engine plant, since the liquid loop handles the GPU heat for 10 seconds. UPS capacity is better spent elsewhere.':'With the air handlers on normal, the hall\'s air side stays off until someone resets them. Put them on the engine plant so they restart on their own.','bad');return}
+  good();sim.innerHTML='<b>GPU temp:</b> <span style="color:#1E8C4C;font-weight:700">45 °C → 46 °C. Steady.</span>';msgEl('<b>Not a blip on the GPUs.</b> Pumps, network and security rode the UPS, the big motors waited for the engines, and the office just went dark for a moment.','ok');
+  setTimeout(()=>result(j,dcStars(miss,0,1,3),'In a liquid-cooled AI hall, power alone isn\'t enough. The coolant pumps have to keep running too, or the GPUs overheat in seconds. So pumps, network and security ride the UPS. Big motor loads like chillers and air handlers ride the engine plant, with thermal storage covering the gap. Everything else can drop.'),1800)};
+ draw();
+}
+
+/* 13. Rack power-up */
+function dcpower(){
+ const j=J('dcpower');let miss=0;const badW=Math.random()<.5?'A':'B';
+ const st={mg:false,fix:false,vt:false,A:false,B:false,leds:false,fail:false};
+ shell(j,'Commissioning day for one GPU rack. Power it up the right way: prove the whips are healthy, prove the voltage, bring up feed A, then B, then prove the rack survives losing a feed.',
+ dcMini(7)+`<div class="stage card" style="padding:4px"><svg id="pu" viewBox="0 0 360 200" style="display:block;width:100%"></svg></div>
+ <div class="opts" id="ac"></div><div class="msg" id="msg"></div>`);
+ const draw=()=>{const I=INK,A=st.A,B=st.B;
+  $('#pu').innerHTML=`<rect width="360" height="200" fill="#2B2F36"/><rect x="10" y="12" width="160" height="14" rx="4" fill="#2F7FE0"/><rect x="190" y="12" width="160" height="14" rx="4" fill="#E0702F"/>
+  <rect x="68" y="26" width="44" height="26" rx="4" fill="${A?'#FF5A5A':'#35C76F'}" stroke="${I}" stroke-width="2"/><text x="90" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="${I}">TOB A</text>
+  <rect x="248" y="26" width="44" height="26" rx="4" fill="${B?'#FF5A5A':'#35C76F'}" stroke="${I}" stroke-width="2"/><text x="270" y="44" text-anchor="middle" font-size="11" font-weight="700" fill="${I}">TOB B</text>
+  <path d="M90 52V80H150M270 52V80H210" fill="none" stroke="${A?'#2F7FE0':'#5A6270'}" stroke-width="5"/>${B?'<path d="M270 52V80H210" fill="none" stroke="#E0702F" stroke-width="5"/>':''}
+  ${st.mg&&!st.fix?`<text x="${badW==='A'?90:270}" y="100" text-anchor="middle" font-size="18">⚠️</text>`:''}
+  <rect x="150" y="70" width="60" height="122" rx="5" fill="#3A3F4A" stroke="#9AA4B2" stroke-width="2"/>${[...Array(8)].map((_,k)=>{const on=k<4?A:B;return `<rect x="156" y="${76+k*14}" width="48" height="10" rx="2" fill="#2B2F36"/><circle cx="198" cy="${81+k*14}" r="3" fill="${on?'#35C76F':'#5A6270'}"/>`}).join('')}
+  <text x="40" y="140" font-size="11" font-weight="700" fill="#9CCBFF">A shelves 1–4</text><text x="230" y="186" font-size="11" font-weight="700" fill="#FFC29A">B shelves 5–8</text>`;
+  const acts=[['mg','Megger both whips'],['fix',`Replace whip ${badW}`],['vt','Meter 415 V at both tap boxes'],['ca','Close TOB A'],['cb','Close TOB B'],['oa','Open TOB A (failover test)']];
+  $('#ac').innerHTML=acts.filter(([k])=>k!=='fix'||(st.mg&&!st.fix)).map(([k,t])=>`<button class="btn alt" data-a="${k}">${t}</button>`).join('');
+  $('#ac').querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>act(b.dataset.a))};
+ function act(a){tick();
+  if(a==='mg'){st.mg=true;msgEl(`Megger at 1,000 V: whip ${badW==='A'?'B':'A'} reads <b>&gt;2,000 MΩ</b>, good. Whip ${badW} reads <b>0.4 MΩ</b>: the insulation is nicked somewhere. Don't energize that one.`,'ok');draw();return}
+  if(a==='fix'){st.fix=true;msgEl(`New whip ${badW} megs &gt;2,000 MΩ. Good.`,'ok');draw();return}
+  if(a==='vt'){if(!st.mg){miss++;msgEl('Test the whips first. Voltage at the tap box tells you nothing about a damaged cord.','bad');return}st.vt=true;msgEl('415 V phase to phase, 240 V phase to neutral, at both tap boxes. Rotation checks good.','ok');draw();return}
+  if(a==='ca'||a==='cb'){const w=a==='ca'?'A':'B';
+   if(!st.mg||(badW===w&&!st.fix)){miss++;msgEl(`<b>BANG.</b> Whip ${w} had nicked insulation and it faulted the second you closed the tap box. That's what the megger test is for.`,'bad');st.mg=true;draw();return}
+   if(!st.vt){miss++;msgEl('Prove the voltage at the tap box before you energize a rack. Wrong voltage would cook the power shelves.','bad');return}
+   if(w==='B'&&!st.A){miss++;msgEl('Bring up A first and check its shelves, then B. One feed at a time, so if something\'s wrong you know which feed it is.','bad');return}
+   st[w]=true;good();msgEl(w==='A'?'TOB A closed: shelves 1 to 4 lit, rack booting on A.':'TOB B closed: all 8 shelves lit. Both feeds live.','ok');draw();return}
+  if(a==='oa'){if(!st.A||!st.B){miss++;msgEl('Both feeds have to be live before you test failover. Pull one with only one up and you just turned the rack off.','bad');return}
+   st.A=false;draw();good();confetti();msgEl('<b>TOB A open. Rack still running on B.</b> Failover proven. Close A back up, label it, done.','ok');
+   setTimeout(()=>result(j,dcStars(miss,0,1,3),'Commissioning follows a ritual for a reason. Megger the cords so a damaged one never gets energized. Prove the voltage before the equipment sees it. Energize one feed at a time, so a problem shows up on a known feed. Finish by pulling a feed to prove the redundancy actually works.'),1800)}}
+ draw();
+}
+
+/* 12b. EPO wiring (added onto the ground grid stage) */
+function dcEpo(j,miss,fin){
+ const IT=[['ups','UPS output to the hall',true],['pdu','Hall PDUs',true],['hvac','Hall cooling units',true],['fa','Fire alarm panel',false],['egr','Exit + emergency lights',false],['fp','Fire pump',false]],on={};
+ $('#gd').innerHTML=`<div class="qcard card" style="padding:12px 14px"><h3 style="margin:0">Wire the EPO button</h3><p style="margin:4px 0 0">The big red Emergency Power Off by the door. Tap what it should shut down when someone hits it.</p></div><div class="opts" id="ep"></div><button class="btn big" id="epb" style="width:100%;margin-top:10px;background:#FF5A5A;color:#fff">Test the EPO</button>`;
+ const draw=()=>{$('#ep').innerHTML=IT.map(([k,t])=>`<button class="btn alt" data-k="${k}" style="display:flex;justify-content:space-between;${on[k]?'background:#FFE0E0':''}"><span>${t}</span><b>${on[k]?'KILL':'stays on'}</b></button>`).join('');
+  $('#ep').querySelectorAll('[data-k]').forEach(b=>b.onclick=()=>{on[b.dataset.k]=!on[b.dataset.k];tick();draw()})};
+ $('#epb').onclick=()=>{const w=IT.find(([k,,y])=>!!on[k]!==y);
+  if(w){miss.v++;msgEl(w[2]?`<b>EPO hit, but ${w[1].toLowerCase()} kept running.</b> The EPO has to de-energize the hall's equipment <i>and</i> its cooling, so firefighters aren't spraying water on live gear.`:`<b>EPO hit and the ${w[1].toLowerCase()} died too.</b> Life safety has to stay up when the EPO is pressed: fire alarm, exit lights and fire pump never go on the EPO.`,'bad');return}
+  good();msgEl('EPO test: the hall went dark and quiet. Fire alarm, exit lights and fire pump stayed up.','ok');setTimeout(fin,1500)};
+ draw();
+}
+
+/* Stage 12: ground grid + EPO */
 function dcground(){
  const j=J('dcground');let miss=0;
  const R={x:100,y:34,w:170,h:156};
- const IT=shuffle([['Transformer',true,'A transformer case'],['Generator 1',true],['Generator 2',true],['Fuel tank',true],['Fence',true],['Building steel',true],['Metal water pipe',true],['Gas pipe',true,'Gas pipe gets bonded (it\'s just never used as an electrode)'],['PVC drain line',false,'PVC. There\'s no metal to bond.'],['Fiberglass ladder',false,'Fiberglass doesn\'t conduct. Nothing to bond.']]);
+ const IT=shuffle([['Transformer',true,'A transformer case'],['Generator 1',true],['Generator 2',true],['Gas meter',true],['Fence',true],['Building steel',true],['Metal water pipe',true],['Gas pipe',true,'Gas pipe gets bonded (it\'s just never used as an electrode)'],['PVC drain line',false,'PVC. There\'s no metal to bond.'],['Fiberglass ladder',false,'Fiberglass doesn\'t conduct. Nothing to bond.']]);
  const POS=[[44,30],[44,80],[44,130],[44,180],[44,232],[150,224],[250,224],[314,180],[314,110],[314,40]];
  const bond={};
  shell(j,'The ground ring is buried around the building. First, bond every piece of metal on site to it so nothing can sit at a different voltage. Then drive ground rods until the grid tests at <b>5 ohms or less</b> (the data center spec, way tighter than NEC\'s 25 for a single rod).',dcMini(6)+`<div id="gd"></div><div class="msg" id="msg"></div>`);
@@ -2633,7 +2824,7 @@ function dcground(){
   $('#fp').onclick=()=>{const r=ohms();$('#rd').textContent=r.toFixed(1)+' Ω';tests++;
    if(r>5){if(tests>1)miss++;bad();msgEl(`${r.toFixed(1)} Ω. Not there yet.${rods.size>=6?' Check your spacing: rods bunched together barely lower it.':''}`,'bad');return}
    good();$('#fp').disabled=true;msgEl(`<b>${r.toFixed(1)} Ω.</b> Under 5. That grid will carry a fault and a lightning strike.`,'ok');
-   setTimeout(()=>result(j,dcStars(miss,0,2,4),'Bonding puts every piece of metal at the same voltage, so nobody gets shocked touching two things at once. That includes the gas pipe, which gets bonded even though it can never be an electrode. Ground rods lower the resistance to earth, but only when they\'re spaced out. Rods closer than about twice their length share the same soil and barely help.'),1500)};
+   setTimeout(()=>{const m={v:miss};dcEpo(j,m,()=>result(j,dcStars(m.v,0,2,4),'The EPO button kills the hall and its cooling, but never life safety. Bonding puts every piece of metal at the same voltage, so nobody gets shocked touching two things at once. That includes the gas pipe, which gets bonded even though it can never be an electrode. Ground rods lower the resistance to earth, but only when they\'re spaced out. Rods closer than about twice their length share the same soil and barely help.'))},1500)};
   draw();msgEl('Your first test is free. Every failed test after that counts.');
  }
  part1();
@@ -2643,19 +2834,19 @@ function dcground(){
 /* Stage 8: integrated systems test, timed. Finish to become a Master. */
 function datacenter(){
  const j=J('datacenter');let miss=0,ei=-1,el=0,busy=false,gT=0;
- const g={U1:true,U2:true,M1:true,M2:true,T:false,GA:false,GB:false,gen:'off',ua:'ok',ub:'ok',ca:100,cb:100,pa:true,pb:true,shed:false,crashed:false};
+ const g={U1:true,U2:true,M1:false,M2:false,T:false,GA:true,GB:true,gen:'ready',bat:false,ua:'ok',ub:'ok',ca:100,cb:100,pa:true,pb:true,shed:false,crashed:false};
  const genOn=()=>g.gen==='ready';
  const bus=()=>{const s1=(g.M1&&g.U1)||(g.GA&&genOn()),s2=(g.M2&&g.U2)||(g.GB&&genOn());return{b1:s1||(g.T&&s2),b2:s2||(g.T&&s1)}};
  const side=(b,u,c,p)=>p&&(b?u!=='fault':(u==='ok'&&c>0));
  const up=()=>{const b=bus();return{A:side(b.b1,g.ua,g.ca,g.pa),B:side(b.b2,g.ub,g.cb,g.pb)}};
  const EV=[
-  {t:'<b>Utility 1 just dropped.</b> Bus 1 is dark and UPS-A is on battery.',set:()=>{g.U1=false},ok:()=>{const b=bus();return b.b1&&b.b2},sec:30},
-  {t:'<b>Utility 2 is gone too. Total blackout.</b> Both UPSs are on battery. Get the generators on the buses.',set:()=>{g.U2=false},ok:()=>{const b=bus();return b.b1&&b.b2&&genOn()},sec:40},
-  {t:'<b>Generator 2 of 3 just tripped.</b> Two generators can\'t carry the whole building. Shed load before they overload.',set:()=>{},ok:()=>g.shed,sec:15,act:[['shed','Shed office + lighting load']],fail:()=>{g.shed=true}},
+  {t:'<b>Gas pressure is dropping!</b> The engines will starve and shut down in about 10 seconds. Get the halls onto the utility before they do.',set:()=>{g.gasT=Date.now()},ok:()=>{const b=bus();return b.b1&&b.b2&&g.M1&&g.M2&&!g.GA&&!g.GB},sec:35},
+  {t:'Gas pressure is back. The utility is only the backup here. <b>Get the campus back on its own engines.</b> (Tap the engines to start them.)',set:()=>{g.gen='off'},ok:()=>{const b=bus();return b.b1&&b.b2&&genOn()&&g.GA&&g.GB&&!g.M1&&!g.M2},sec:45},
+  {t:'<b>A huge AI training run just kicked off.</b> The load is jumping 40% in a second, faster than the engines can respond. Catch it!',set:()=>{g.bat=false},ok:()=>g.bat,sec:8,act:[['shed','Shed the office load'],['bat','Bring the battery plant in']],fail:()=>{g.bat=true}},
+  {t:'<b>Engine 3 just tripped.</b> The rest of the plant can\'t carry the full campus. Shed load before they overload.',set:()=>{},ok:()=>g.shed,sec:15,act:[['shed','Shed office + lighting load']],fail:()=>{g.shed=true}},
   {t:'<b>UPS-A alarm: inverter failed.</b> Side A racks just lost their A feed. Restore it.',set:()=>{g.ua='fault'},ok:()=>g.ua==='bypass',sec:20,act:[['rsa','Restart the inverter'],['bya','Transfer UPS-A to bypass']],fail:()=>{g.ua='bypass'}},
-  {t:'<b>PDU B breaker tripped!</b> The racks are running on side A only.',set:()=>{g.pb=false},ok:()=>g.called,sec:15,act:[['rsb','Reset PDU B'],['call','Leave it open, call it in']],fail:()=>{g.called=true}},
-  {t:'The techs fixed UPS-A and PDU B. <b>Utility power is back and stable.</b> Get the building back on utility and take the generators off the buses.',set:()=>{g.U1=true;g.U2=true;g.ua='ok';g.pb=true},ok:()=>g.M1&&g.M2&&!g.GA&&!g.GB&&!g.T,sec:45}];
- shell(j,'Final commissioning test. The owner\'s team throws failures at your building, live. Keep the servers running through all of it. Each UPS only has about 25 seconds of battery. <b style="color:#C0392B">Red = closed</b>, <b style="color:#1E8C4C">green = open</b>. Tap the generators to start them.',
+  {t:'<b>PDU B breaker tripped!</b> The racks are running on side A only.',set:()=>{g.pb=false},ok:()=>g.called,sec:15,act:[['rsb','Reset PDU B'],['call','Leave it open, call it in']],fail:()=>{g.called=true}}];
+ shell(j,'Final commissioning test. The campus is running on its own gas engines, with the utility as backup. The owner\'s team throws failures at it, live. Keep the servers running through all of it. Each UPS only has about 25 seconds of battery. <b style="color:#C0392B">Red = closed</b>, <b style="color:#1E8C4C">green = open</b>. Tap the engines to start them.',
  `<div class="gamehud card"><span>Event <b id="en">1</b> of ${EV.length}</span><span>Mistakes: <b id="mi">0</b></span></div><div class="qcard card" style="padding:12px 14px;min-height:74px" id="et"></div>
  <div>${dcTimerBar()}</div>
  <div class="stage card" style="padding:4px;margin-top:10px"><svg id="ol" viewBox="0 0 360 340" style="display:block;width:100%"></svg></div>
@@ -2668,7 +2859,7 @@ function datacenter(){
   $('#ol').innerHTML=`<rect width="360" height="340" fill="#E8F7FF"/>
   <circle cx="44" cy="24" r="17" fill="${g.U1?'#FFE070':'#E3E7EC'}" stroke="${INK}" stroke-width="3"/><text x="44" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">U1</text>
   <circle cx="316" cy="24" r="17" fill="${g.U2?'#FFE070':'#E3E7EC'}" stroke="${INK}" stroke-width="3"/><text x="316" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">U2</text>
-  <g id="gens" style="cursor:pointer"><rect x="136" y="6" width="88" height="36" rx="7" fill="${g.gen==='ready'?'#FFC93C':g.gen==='crank'?'#FFE9A8':'#E3E7EC'}" stroke="${INK}" stroke-width="3"/><text x="180" y="21" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">GENERATORS</text><text x="180" y="35" text-anchor="middle" font-size="10" font-weight="700" fill="${g.gen==='ready'?'#1E6B3A':INK}">${g.gen==='ready'?'READY':g.gen==='crank'?'CRANKING…':'OFF · tap to start'}</text></g>
+  <g id="gens" style="cursor:pointer"><rect x="136" y="6" width="88" height="36" rx="7" fill="${g.gen==='ready'?'#FFC93C':g.gen==='crank'?'#FFE9A8':'#E3E7EC'}" stroke="${INK}" stroke-width="3"/><text x="180" y="21" text-anchor="middle" font-size="11" font-weight="700" fill="${INK}">GAS ENGINES</text><text x="180" y="35" text-anchor="middle" font-size="10" font-weight="700" fill="${g.gen==='ready'?'#1E6B3A':INK}">${g.gen==='ready'?'READY':g.gen==='crank'?'CRANKING…':'OFF · tap to start'}</text></g>
   <path d="M44 41V66" stroke="${g.U1?H:D}" stroke-width="5"/><path d="M316 41V66" stroke="${g.U2?H:D}" stroke-width="5"/>
   <path d="M180 42V54M132 54H228M132 54V66M228 54V66" fill="none" stroke="${gc?H:D}" stroke-width="5"/>
   <path d="M44 96V122M132 96V122" stroke="${b.b1?H:D}" stroke-width="5"/><path d="M316 96V122M228 96V122" stroke="${b.b2?H:D}" stroke-width="5"/>
@@ -2687,16 +2878,17 @@ function datacenter(){
  const hazards=()=>{const s1u=g.M1&&g.U1,s2u=g.M2&&g.U2,s1g=g.GA&&genOn(),s2g=g.GB&&genOn();
   if(s1u&&s2u&&g.T){g.T=false;bang('<b>BANG.</b> You paralleled the two utilities through the tie.');return true}
   const seg1u=s1u||(g.T&&s2u),seg1g=s1g||(g.T&&s2g),seg2u=s2u||(g.T&&s1u),seg2g=s2g||(g.T&&s1g);
-  if((seg1u&&seg1g)||(seg2u&&seg2g)){g.GA=false;g.GB=false;bang('<b>BANG.</b> You tied the generators to the live utility with no sync. Open the main before you close a generator breaker, and the generator breaker before you close the main.');return true}
+  if((seg1u&&seg1g)||(seg2u&&seg2g)){g.GA=false;g.GB=false;bang('<b>BANG.</b> You tied the engines to the live utility with no sync. Open the main before you close a generator breaker, and the generator breaker before you close the main.');return true}
   const b=bus();
   if((g.M1&&!g.U1&&b.b1)||(g.M2&&!g.U2&&b.b2)){g.T=false;g.GA=false;g.GB=false;bang('<b>You backfed the dead utility line.</b> Lineworkers could be on it. Open the main before you feed that bus another way.');return true}
   return false};
- $('#ol').onclick=e=>{if(busy)return;const gn=e.target.closest('#gens');if(gn){if(g.gen==='off'){g.gen='crank';tick();gT=Date.now();msgEl('Generators cranking. About 8 seconds to speed and voltage.');draw()}return}
+ $('#ol').onclick=e=>{if(busy)return;const gn=e.target.closest('#gens');if(gn){if(g.gen==='off'){g.gen='crank';tick();gT=Date.now();msgEl('Engines cranking. About 8 seconds to speed and voltage.');draw()}return}
   const br=e.target.closest('.br');if(!br)return;const k=br.dataset.b;
-  if((k==='GA'||k==='GB')&&!g[k]&&!genOn()){bad();msgEl('The generators aren\'t ready. Tap them to start, then wait for READY.','bad');return}
+  if((k==='GA'||k==='GB')&&!g[k]&&!genOn()){bad();msgEl('The engines aren\'t ready. Tap them to start, then wait for READY.','bad');return}
   g[k]=!g[k];tick();hazards();draw()};
  $('#acts').onclick=e=>{const b=e.target.closest('[data-a]');if(!b||busy)return;const a=b.dataset.a;
-  if(a==='shed'){g.shed=true;good();msgEl('Office and lighting load shed. The generators settle down.','ok')}
+  if(a==='shed'){if(ei===2){bang('Shedding the office barely dents a 40% GPU spike, and it\'s too slow. The engines bog down and the frequency sags. The battery plant is built for exactly this.');draw();return}g.shed=true;good();msgEl('Office and lighting load shed. The engines settle down.','ok')}
+  if(a==='bat'){g.bat=true;good();msgEl('The battery plant picks up the spike instantly, then hands it back to the engines as they ramp up. Frequency held at 60 Hz.','ok')}
   if(a==='rsa'){bang('The inverter faults again the second it restarts. A failed inverter needs a tech. Use bypass to keep power flowing.')}
   if(a==='bya'){g.ua='bypass';tick();msgEl('UPS-A on bypass. Side A has power, but no battery backup until it\'s fixed.','ok')}
   if(a==='rsb'){bang('<b>It trips again, with an arc.</b> Never reset a breaker that tripped on a fault before you find the fault. The racks were fine on side A.')}
@@ -2706,7 +2898,8 @@ function datacenter(){
   $('#acts').innerHTML=(e.act||[]).map(([k,t])=>`<button class="btn alt" data-a="${k}" style="flex:1 1 140px">${t}</button>`).join('');msgEl('');draw();
   let last=Date.now();
   timers.push(setInterval(()=>{const now=Date.now(),dt=(now-last)/1000;last=now;
-   if(g.gen==='crank'&&now-gT>8000){g.gen='ready';good();msgEl('Generators are at speed and voltage. <b>READY.</b>','ok')}
+   if(g.gen==='crank'&&now-gT>8000){g.gen='ready';good();msgEl('Engines are at speed and voltage. <b>READY.</b>','ok')}
+   if(ei===0&&g.gasT&&now-g.gasT>10000&&genOn()){g.gen='off';g.gasT=0;bad();msgEl('<b>The engines starved of gas and shut down.</b> Get the utility on, fast.','bad')}
    const b=bus();
    if(!b.b1&&g.ua==='ok')g.ca=Math.max(0,g.ca-dt*4);else if(b.b1&&g.ua==='ok')g.ca=Math.min(100,g.ca+dt*6);
    if(!b.b2&&g.ub==='ok')g.cb=Math.max(0,g.cb-dt*4);else if(b.b2&&g.ub==='ok')g.cb=Math.min(100,g.cb+dt*6);
@@ -2717,15 +2910,14 @@ function datacenter(){
    if(el<=0&&!busy){busy=true;stop();miss++;bad();msgEl('<b>Out of time.</b> The owner\'s team steps in and fixes it. That one counts.','bad');recover();draw();setTimeout(startE,2400);return}
    draw()},200))}
  function recover(){const e=EV[ei];if(e.fail)e.fail();
-  if(ei===0){g.M1=false;g.T=true}
+  if(ei===0){g.GA=false;g.GB=false;g.T=false;g.M1=true;g.M2=true;g.gasT=0}
   if(ei===1){g.M1=false;g.M2=false;g.T=false;g.gen='ready';g.GA=true;g.GB=true}
-  if(ei===5){g.GA=false;g.GB=false;g.T=false;g.M1=true;g.M2=true}
   g.ca=Math.max(g.ca,40);g.cb=Math.max(g.cb,40)}
  function finish(){const stars=dcStars(miss,0,2,5);let extra='';
-  if(stars&&S.year<7){S.year=7;const bn=5000;S.cash+=bn;S.earned=(S.earned||0)+bn;extra=`<p style="margin:0 0 6px;font-weight:700">You're a Master electrician! +${money(bn)} bonus.</p>`;post(`${S.name} commissioned a data center and is now a Master electrician!`)}
-  result(j,stars,'A data center is layers of backup. Utilities back each other up through the tie. Generators back up the utilities. UPS batteries cover the seconds in between, and A/B feeds mean any one piece can fail. The rules that keep it safe: never parallel sources without sync, never backfeed a dead line, and never reset a breaker until you know why it tripped.',extra)}
+  if(stars&&S.year<7){S.year=7;const bn=5000;S.cash+=bn;S.earned=(S.earned||0)+bn;extra=`<p style="margin:0 0 6px;font-weight:700">You're a Master electrician! +${money(bn)} bonus.</p>`;post(`${S.name} built and commissioned an AI data center campus and is now a Master electrician!`)}
+  result(j,stars,'An AI campus that makes its own power is layers of backup. The gas engines carry the load, and the utility waits as the backup. UPS batteries cover the seconds in between, the battery plant catches sudden GPU load spikes faster than any engine can, and A/B feeds mean any one piece can fail. The rules that keep it safe: never parallel sources without sync, never backfeed a dead line, and never reset a breaker until you know why it tripped.',extra)}
  draw();
- setTimeout(()=>{msgEl('Normal operation: both utilities, mains closed, tie open. Here comes the first failure…');setTimeout(startE,2200)},300);
+ setTimeout(()=>{msgEl('Normal operation: the gas engines carry both buses, utility mains open as the backup. Here comes the first failure…');setTimeout(startE,2200)},300);
 }
 
 
@@ -2967,7 +3159,7 @@ function coach(html){const k=fxKind(html);breakFx(k);
  c.querySelector('.cx').onclick=kill;const tm=setTimeout(kill,10000);c._t=tm}
 const coachOff=()=>{const c=$('#coach');if(c){clearTimeout(c._t);c.remove()}};
 
-const JOBF={dial,probe,readings,wiresize,install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush,dcsite,dcphase,dcgear,dcsync,dcbatt,dcbus,dcground,datacenter};
+const JOBF={dcpdu,dcfeed,dcwhip,dcrack,dccool,dcpower,dial,probe,readings,wiresize,install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush,dcsite,dcphase,dcgear,dcsync,dcbatt,dcbus,dcground,datacenter};
 const JSRC={};
 for(const k in JOBF){const f=JOBF[k];JSRC[k]=f;JOBF[k]=(...a)=>{const j=J(k);if(j&&j.yr<6&&lockLeft(k)){curJob=null;return lockedScreen(j)}curJob=j&&j.yr<6?j:null;strikes=0;attemptOver=false;JLOG=[];return f(...a)}}
 title();
