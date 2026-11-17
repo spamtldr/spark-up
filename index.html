@@ -198,7 +198,7 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-const VER='2026.11.16-8';
+const VER='2026.11.16-9';
 let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
@@ -247,11 +247,12 @@ gen:`<svg viewBox="0 0 48 48"><rect x="6" y="14" width="36" height="24" rx="5" f
 drop:`<svg viewBox="0 0 48 48"><path d="M24 4C16 18 10 24 10 31a14 14 0 0 0 28 0c0-7-6-13-14-27z" fill="#4FA8FF" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M17 31a7 7 0 0 0 6 7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/></svg>`,
 pool:`<svg viewBox="0 0 48 48"><rect x="4" y="12" width="40" height="28" rx="6" fill="#7FD8FF" stroke="${INK}" stroke-width="3"/><path d="M8 26c4-3 8 3 12 0s8 3 12 0 8 3 8 0" fill="none" stroke="#fff" stroke-width="3"/><path d="M34 4v16M40 4v16M34 8h6M34 14h6" stroke="${INK}" stroke-width="3"/></svg>`,
 exit:`<svg viewBox="0 0 48 48"><rect x="4" y="12" width="40" height="24" rx="4" fill="#FF5A5A" stroke="${INK}" stroke-width="3"/><text x="24" y="29" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">EXIT</text></svg>`,
+sun:`<svg viewBox="0 0 48 48"><circle cx="16" cy="14" r="8" fill="#FFC93C" stroke="${INK}" stroke-width="3"/><path d="M10 44l6-20h28l-6 20z" fill="#2F7FE0" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M20 34h22M24 24l-4 20M33 24l-4 20" stroke="#BFE8FF" stroke-width="2"/></svg>`,
 snd:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#FFC93C" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`,
 off:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#E3E7EC" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9l5 6M21 9l-5 6" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`
 };
 const RANK=['','1st year apprentice','2nd year apprentice','3rd year apprentice','4th year apprentice','5th year apprentice','Journeyman','Master electrician'];
-const YMAX=4,PLAN={1:6,2:8,3:10,4:16,5:20};
+const YMAX=5,PLAN={1:6,2:8,3:10,4:16,5:20};
 const JOBS=[
  {id:'install',yr:1,kind:'Install job',title:'Swap a receptacle',pay:80,xp:40,icon:'plug',color:'#FFC93C'},
  {id:'service',yr:1,kind:'Service call',title:'"My bathroom outlets died!"',pay:120,xp:50,icon:'meter',color:'#7FD8FF'},
@@ -292,7 +293,27 @@ const JOBS=[
  {id:'derate',yr:4,kind:'Conduit job',title:'Crowded conduit',pay:450,xp:140,icon:'emt',color:'#B8E1FF'},
  {id:'ladder',yr:4,kind:'Motor job',title:'Start/stop control',pay:600,xp:180,icon:'motor',color:'#FFD6A5'},
  {id:'recept',yr:4,kind:'Punch list',title:'Receptacle check rush',pay:420,xp:130,icon:'plug',color:'#FFC93C'},
- {id:'emlight',yr:4,kind:'Inspection job',title:'Emergency lighting test',pay:450,xp:140,icon:'exit',color:'#FF9C9C'}];
+ {id:'emlight',yr:4,kind:'Inspection job',title:'Emergency lighting test',pay:450,xp:140,icon:'exit',color:'#FF9C9C'},
+ {id:'dwellcalc',yr:5,kind:'Calc job',title:'Size a house service',pay:750,xp:187,icon:'house',color:'#FFB3B3'},
+ {id:'codebook1',yr:5,kind:'Exam prep',title:'Code book speed run I',pay:600,xp:150,icon:'clip',color:'#FFE9A6'},
+ {id:'codebook2',yr:5,kind:'Exam prep',title:'Code book speed run II',pay:600,xp:150,icon:'clip',color:'#FFE9A6'},
+ {id:'solar',yr:5,kind:'Install job',title:'Rooftop solar string',pay:900,xp:225,icon:'sun',color:'#FFD6A5'},
+ {id:'hazloc',yr:5,kind:'Industrial job',title:'Hazardous locations',pay:700,xp:175,icon:'drop',color:'#FF9C9C'},
+ {id:'counter',yr:5,kind:'Layout job',title:'Kitchen counter receptacles',pay:650,xp:162,icon:'plug',color:'#E3E7EC'},
+ {id:'wallrecs',yr:5,kind:'Layout job',title:'Living room receptacles',pay:650,xp:162,icon:'plug',color:'#FFF8E7'},
+ {id:'gensize',yr:5,kind:'Sales call',title:'Size a generator',pay:800,xp:200,icon:'gen',color:'#FF9C9C'},
+ {id:'xfsize',yr:5,kind:'Commercial job',title:'Size a transformer',pay:850,xp:212,icon:'xf',color:'#FFD6A5'},
+ {id:'motorbranch',yr:5,kind:'Motor job',title:'Motor branch circuit',pay:950,xp:237,icon:'motor',color:'#7FD8FF'},
+ {id:'gesystem',yr:5,kind:'Service job',title:'Grounding electrode system',pay:850,xp:212,icon:'house',color:'#9BE3AE'},
+ {id:'panelswap',yr:5,kind:'Service job',title:'Panel swap day',pay:900,xp:225,icon:'panel',color:'#B8E1FF'},
+ {id:'torque',yr:5,kind:'Panel job',title:'Torque it right',pay:700,xp:175,icon:'panel',color:'#C9B6FF'},
+ {id:'fusehunt',yr:5,kind:'Service call',title:'"Compressor just hums!"',pay:950,xp:237,icon:'motor',color:'#7FD8FF'},
+ {id:'gfcitrip',yr:5,kind:'Service call',title:'"GFCI won\'t reset!"',pay:800,xp:200,icon:'plug',color:'#7FD8FF'},
+ {id:'afcirooms',yr:5,kind:'Layout job',title:'AFCI or not?',pay:650,xp:162,icon:'panel',color:'#B8E1FF'},
+ {id:'lowv',yr:5,kind:'Smart home job',title:'Low-voltage separation',pay:700,xp:175,icon:'meter',color:'#8EE59B'},
+ {id:'aic',yr:5,kind:'Commercial job',title:'Fault current check',pay:850,xp:212,icon:'bolt',color:'#FFE9A6'},
+ {id:'clearance',yr:5,kind:'Service job',title:'Service drop clearance',pay:750,xp:187,icon:'house',color:'#7FD8FF'},
+ {id:'rush',yr:5,kind:'Exam prep',title:'Journeyman rush',pay:1000,xp:250,icon:'clip',color:'#FFC93C'}];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
 const stop=()=>{timers.forEach(clearInterval);timers=[]};
@@ -370,7 +391,7 @@ function board(){
  const yr=S.view=Math.max(1,Math.min(S.view||ce||S.year,S.year,YMAX));
  const js=jobsOf(yr),left=js.filter(j=>!(S.stars[j.id]>0)).length,passed=S.exams[yr],blocked=!!(ce&&yr>ce);
  const more=(PLAN[yr]||0)-js.length;
- const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`Passed! Year ${yr+1} jobs are coming soon. Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
+ const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`${yr===5?'You\'re a Journeyman! The data center job is coming soon.':'Passed! Year '+(yr+1)+' jobs are coming soon.'} Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
  const canPrev=yr>1,canNext=yr<Math.min(S.year,YMAX);
  const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
  const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
@@ -381,7 +402,7 @@ function board(){
  app.innerHTML=hud()+nav('jobs')+lockBox+tipBox+ceBox+`<div class="yrsel"><button class="arw" id="yp" ${canPrev?'':'disabled'} aria-label="Previous year">&lsaquo;</button><h2 class="sec">Year ${yr} jobs${passed?' <span class="ok">✓</span>':''}</h2><button class="arw" id="yn" ${canNext?'':'disabled'} aria-label="Next year">&rsaquo;</button></div>
  ${dj?`<button class="dailybar" id="dj">⚡ <b>Job of the day:</b> ${dj.title.replace(/"/g,'')}${dj.yr!==yr?` (Year ${dj.yr})`:''} &middot; 2× pay</button>`:''}<div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
  ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
- <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>Year ${yr} exam${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
+ <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>${yr===5?'Journeyman exam':'Year '+yr+' exam'}${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
  <div class="msg" id="bmsg"></div>
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p><p class="vers">Version ${VER}</p>`;
  bindHud();bindNav();
@@ -1495,6 +1516,202 @@ function emlight(){
  draw();
 }
 
+/* ================= YEAR 5 ================= */
+function chain(rounds,done){let i=0,tot=0;const go=()=>{if(i>=rounds.length){done(tot);return}const r=rounds[i++];msgEl(r.intro||'');sortGame(r.items,r.bins,r.title,(s)=>{tot+=s;if(tot>=3){done(tot);return}$('#sg2')&&$('#sg2').remove();go()})};go()}
+const mk=(arr)=>shuffle(arr).map(x=>({html:`<div class="hz">${x[0]}</div>`,bin:x[1],why:x[2]}));
+const s3=s=>s>=3?0:s===0?3:s===1?2:1;
+
+/* ---------- Y5: DWELLING LOAD CALC ---------- */
+function dwellcalc(){
+ const j=J('dwellcalc'),ft=[1800,2200,2600,3000][Math.floor(Math.random()*4)];
+ const FIX=shuffle([['Electric range',8000,'One range up to 12 kW counts as 8,000 VA.'],['Electric dryer',5000,'Dryers count at 5,000 VA or the nameplate, whichever is more.'],['Water heater',4500,'Nameplate: 4,500 VA.'],['Central AC',5000,'Nameplate: 5,000 VA.'],['EV charger',7680,'Nameplate: 32 A × 240 V = 7,680 VA.']]).slice(0,3+Math.floor(Math.random()*2));
+ const GL=ft*3+3000+1500,GLd=Math.min(GL,3000)+Math.max(0,GL-3000)*.35,TOT=GLd+FIX.reduce((a,f)=>a+f[1],0),AMP=TOT/240,SV=[100,125,150,200],best=SV.find(v=>v>=AMP);
+ const LD=[['gl',`General lighting: ${ft.toLocaleString('en-US')} ft² × 3 VA`,ft*3,'Homes count 3 VA per square foot for general lighting and receptacles.'],['sa','Two small-appliance circuits',3000,'Every kitchen gets at least two 20 A small-appliance circuits, counted at 1,500 VA each.'],['ld','Laundry circuit',1500,'The laundry circuit counts 1,500 VA.'],['df','Apply the demand factor',0,`Not everything runs at once: the first 3,000 VA counts 100% and the rest counts 35%. ${GL.toLocaleString('en-US')} VA becomes ${Math.round(GLd).toLocaleString('en-US')} VA.`],...FIX.map((f,i)=>['f'+i,f[0],f[1],f[2]])];
+ const on={};let tries=0;
+ shell(j,`New ${ft.toLocaleString('en-US')} ft² house. Tap each line to add it to the load calc (a simplified standard method), then pick the service size.`,
+ `<div class="gamehud card"><span>Load: <b id="va">0</b> VA</span><span><b id="am">0</b> A at 240 V</span></div><div class="opts" id="lc">${LD.map(l=>`<button class="btn alt" data-k="${l[0]}">${l[1]}${l[2]?` <b>+${l[2].toLocaleString('en-US')} VA</b>`:''}</button>`).join('')}</div>
+ <div id="svp"></div><div class="msg" id="msg"></div>`);
+ const cur=()=>{let g=0;['gl','sa','ld'].forEach(k=>{if(on[k])g+=LD.find(l=>l[0]===k)[2]});if(on.df)g=Math.min(g,3000)+Math.max(0,g-3000)*.35;FIX.forEach((f,i)=>{if(on['f'+i])g+=f[1]});return g};
+ $('#lc').onclick=e=>{const b=e.target.closest('[data-k]');if(!b||on[b.dataset.k])return;const k=b.dataset.k;if(k==='df'&&!(on.gl&&on.sa&&on.ld)){bad();msgEl('Add general lighting, small-appliance and laundry first. The demand factor applies to those three together.','bad');return}
+  on[k]=1;b.classList.add('right');tick();const v=cur();$('#va').textContent=Math.round(v).toLocaleString('en-US');$('#am').textContent=fmt1(v/240);msgEl(LD.find(l=>l[0]===k)[3]);
+  if(Object.keys(on).length===LD.length){$('#svp').innerHTML=`<h2 class="sec" style="font-size:19px">Pick the service</h2><div class="row">${SV.map(v=>`<button class="btn alt sv" data-v="${v}">${v} A</button>`).join('')}</div>`;
+   app.querySelectorAll('.sv').forEach(x=>x.onclick=()=>{tries++;const v=+x.dataset.v;if(v<AMP){bad();x.classList.add('wrong');msgEl(`${fmt1(AMP)} A won't fit on ${v} A.`,'bad');return}
+    good();msgEl(`${fmt1(AMP)} A calculated, so ${v} A works.${v===best?' Smallest that fits.':` (${best} A would have done it.)`}`,'ok');setTimeout(()=>result(j,tries===1&&v===best?3:tries<=2?2:1,'A dwelling load calculation adds general lighting (3 VA per ft²), two small-appliance circuits and laundry (1,500 VA each), then applies a demand factor: first 3,000 VA at 100%, the next chunk at 35%. Add the big fixed appliances at their calc values, divide by 240 V, and size the service to fit (never less than 100 A for a house).'),1500)})}};
+}
+
+/* ---------- Y5: CODE BOOK SPEED RUNS ---------- */
+function codebook1(){const j=J('codebook1');shell(j,'The Journeyman exam is open book, so speed in the NEC wins. Slot each topic into the right article before it drops.',`<div class="msg" id="msg"></div>`);
+ chain([{title:'Chapters 1 and 2',bins:[['210','Art. 210'],['220','Art. 220'],['230','Art. 230'],['240','Art. 240']],items:mk([['Branch circuit rules (GFCI, AFCI, receptacle spacing)','210','Article 210: branch circuits.'],['Service and feeder load calculations','220','Article 220: calculations.'],['Service drops, service conductors and disconnects','230','Article 230: services.'],['Overcurrent protection and standard breaker sizes','240','Article 240: overcurrent protection.'],['Minimum receptacle outlets in a kitchen','210','Article 210 covers required receptacle outlets.'],['Standard sizes of fuses and breakers','240','Article 240 lists standard ampere ratings.']])},
+  {title:'Grounding and wiring methods',bins:[['250','Art. 250'],['300','Art. 300'],['310','Art. 310'],['314','Art. 314']],items:mk([['Grounding electrodes and bonding jumpers','250','Article 250: grounding and bonding.'],['Burial depths and protecting cables from nails','300','Article 300: general wiring-method rules.'],['Conductor ampacity tables','310','Article 310: conductors.'],['Box fill calculations','314','Article 314: boxes.'],['Sizing the grounding electrode conductor','250','Article 250 (Table 250.66).'],['Conductor insulation types like THHN','310','Article 310.']])}],
+  t=>result(j,s3(t),'Know your way around the NEC: 210 branch circuits, 220 calculations, 230 services, 240 overcurrent, 250 grounding and bonding, 300 wiring-method basics, 310 conductors and ampacity, 314 boxes.'));}
+function codebook2(){const j=J('codebook2');shell(j,'Part two of the code book speed run: equipment and special occupancies.',`<div class="msg" id="msg"></div>`);
+ chain([{title:'Wiring methods and equipment',bins:[['334','Art. 334'],['358','Art. 358'],['406','Art. 406'],['430','Art. 430']],items:mk([['NM (Romex) cable','334','Article 334: nonmetallic-sheathed cable.'],['EMT conduit','358','Article 358: electrical metallic tubing.'],['Receptacles and tamper-resistant rules','406','Article 406: receptacles.'],['Motor circuits and overloads','430','Article 430: motors.'],['Securing and supporting NM cable','334','Article 334.'],['Motor full-load current tables','430','Article 430 (Table 430.250).']])},
+  {title:'Special equipment',bins:[['450','Art. 450'],['625','Art. 625'],['680','Art. 680'],['690','Art. 690']],items:mk([['Transformers','450','Article 450: transformers.'],['EV charging equipment','625','Article 625: electric vehicle power transfer.'],['Swimming pools and hot tubs','680','Article 680: pools.'],['Solar PV systems','690','Article 690: solar photovoltaic systems.'],['Pool bonding grid','680','Article 680.'],['PV string voltage limits','690','Article 690.']])}],
+  t=>result(j,s3(t),'More of the map: 334 NM cable, 358 EMT, 406 receptacles, 430 motors, 450 transformers, 625 EV charging, 680 pools, 690 solar PV. On an open-book exam, knowing where to look is half the battle.'));}
+
+/* ---------- Y5: SOLAR STRING ---------- */
+function solar(){
+ const j=J('solar'),VOC=[38,40,42][Math.floor(Math.random()*3)],CF=1.14,per=VOC*CF,MAX=Math.floor(600/per),MIN=Math.ceil(250/per);let n=8,tries=0;
+ shell(j,`Rooftop solar on a house. Each panel is rated ${VOC} V open-circuit, but cold mornings push voltage up, so the designer says multiply by ${CF}. Panels in series add up. Build the longest string that stays at or under 600 V (the limit on a house) and above the inverter's 250 V start-up.`,
+ `<div class="stage card"><svg id="sv5" viewBox="0 0 360 160" style="display:block;width:100%"></svg></div><div class="row"><button class="btn alt" id="m1">− Panel</button><button class="btn alt" id="p1">+ Panel</button></div><button class="btn go" id="cm" style="width:100%;margin-top:10px">Commission the system</button><div class="msg" id="msg"></div>`);
+ const draw=()=>{const v=n*per;let h=`<path d="M10 120L180 30 350 120z" fill="#C98A4B" stroke="${INK}" stroke-width="3"/>`;for(let i=0;i<n;i++){const x=40+(i%8)*36,y=i<8?78:100;h+=`<rect x="${x}" y="${y}" width="32" height="18" rx="2" fill="#2F7FE0" stroke="${INK}" stroke-width="2"/>`}
+  h+=`<rect x="110" y="128" width="140" height="30" rx="8" fill="${v>600?'#FFC9C9':v<250?'#E3E7EC':'#C8E6B0'}" stroke="${INK}" stroke-width="3"/><text x="180" y="149" text-anchor="middle" font-size="15" font-weight="700" fill="${INK}">${n} panels: ${fmt1(v)} V</text>`;$('#sv5').innerHTML=h};
+ $('#m1').onclick=()=>{n=Math.max(1,n-1);tick();draw()};$('#p1').onclick=()=>{n=Math.min(16,n+1);tick();draw()};
+ $('#cm').onclick=()=>{tries++;const v=n*per;if(v>600){zap();msgEl(`${fmt1(v)} V on a cold morning. That's over the 600 V limit for a house, and it could wreck the inverter.`,'bad');return}if(v<250){bad();msgEl(`${fmt1(v)} V is too low. The inverter needs 250 V to start.`,'bad');return}
+  good();msgEl(`${n} panels at ${fmt1(v)} V cold.${n===MAX?' The longest string that works.':` You could fit ${MAX}.`}`,'ok');$('#cm').disabled=true;setTimeout(()=>result(j,tries===1&&n===MAX?3:n>=MAX-1?2:1,'Solar panels in series add their voltages. Cold weather raises panel voltage, so the string is sized using the coldest-morning voltage, not the label. On one- and two-family homes, PV DC circuits are limited to 600 V.'),1500)};
+ draw();
+}
+
+/* ---------- Y5: HAZARDOUS LOCATIONS ---------- */
+function hazloc(){const j=J('hazloc');shell(j,'Industrial walk-through. Classify each area before it slides past.',`<div class="msg" id="msg"></div>`);
+ sortGame(mk([['Inside a gasoline dispenser','1','Flammable vapors: Class I.'],['Inside a paint spray booth','1','Flammable vapors: Class I.'],['A grain elevator full of dust','2','Combustible dust: Class II.'],['A flour mill','2','Combustible dust: Class II.'],['A textile mill with cotton lint in the air','3','Ignitable fibers: Class III.'],['The gas station\'s office','u','No hazard there: unclassified.'],['A bakery\'s storefront','u','Unclassified.']]),[['1','Class I gas'],['2','Class II dust'],['3','Class III fibers'],['u','Ordinary']],'Classify it',s=>result(j,s3(s),'Hazardous (classified) locations come in three classes: Class I for flammable gases and vapors, Class II for combustible dust, and Class III for ignitable fibers. Equipment there has to be rated for the class, so it can\'t ignite what\'s in the air.'))}
+
+/* ---------- Y5: RECEPTACLE SPACING (shared) ---------- */
+function spacing(cfg){
+ const j=J(cfg.id),L=cfg.L;let st=[],tries=0,err=null;
+ const X=p=>20+p/L*320,unit=v=>cfg.ft?fmt1(v/12)+' ft':v+' in.';
+ let need=1,pos=cfg.end;while(pos<L-cfg.end){pos+=cfg.gap;need++}
+ shell(j,cfg.order,`<div class="gamehud card"><span>Receptacles: <b id="nst">0</b></span><span>${cfg.what}: ${unit(L)}</span></div>
+ <div class="stage card"><svg id="rw" viewBox="0 0 360 140" style="display:block;width:100%;touch-action:manipulation"></svg></div><p class="hint">${cfg.rule}</p>
+ <button class="btn go" id="insp" style="width:100%">Call the inspector</button><div class="msg" id="msg"></div>`);
+ function draw(){let h=`<rect x="20" y="40" width="320" height="50" fill="${cfg.bg}" stroke="${INK}" stroke-width="3"/>`;
+  if(err)h+=`<rect x="${X(err[0])}" y="40" width="${X(err[1])-X(err[0])}" height="50" fill="#FF5A5A" opacity=".45"/>`;
+  st.forEach(p=>{h+=`<rect x="${X(p)-9}" y="52" width="18" height="26" rx="5" fill="#fff" stroke="${INK}" stroke-width="2.5"/><rect x="${X(p)-4}" y="57" width="2" height="6" fill="${INK}"/><rect x="${X(p)+2}" y="57" width="2" height="6" fill="${INK}"/>`});
+  const step=cfg.ft?24:12;for(let x=0;x<=L;x+=step)h+=`<text x="${X(x)}" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="${INK}">${cfg.ft?x/12+"'":x+'"'}</text>`;
+  h+=`<text x="180" y="28" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${cfg.label}</text>`;$('#rw').innerHTML=h;$('#nst').textContent=st.length}
+ $('#rw').addEventListener('click',e=>{const r=$('#rw').getBoundingClientRect(),x=(e.clientX-r.left)/r.width*360;let p=Math.round(((x-20)/320*L)/cfg.snap)*cfg.snap;p=Math.max(0,Math.min(L,p));
+  const near=st.findIndex(q=>Math.abs(q-p)<=cfg.snap);if(near>=0)st.splice(near,1);else st.push(p);st.sort((a,b)=>a-b);err=null;tick();draw()});
+ $('#insp').onclick=()=>{tries++;let e=null;
+  if(!st.length)e=[0,L,'No receptacles at all.'];else if(st[0]>cfg.end)e=[0,st[0],`The first one is ${unit(st[0])} from the end. Max is ${unit(cfg.end)}.`];else if(L-st[st.length-1]>cfg.end)e=[st[st.length-1],L,`The last one is ${unit(L-st[st.length-1])} from the end. Max is ${unit(cfg.end)}.`];
+  else for(let i=1;i<st.length;i++)if(st[i]-st[i-1]>cfg.gap){e=[st[i-1],st[i],`${unit(st[i]-st[i-1])} between two receptacles. Max is ${unit(cfg.gap)}.`];break}
+  if(e){err=e;draw();bad();msgEl('<b>Red tag.</b> '+e[2],'bad');return}
+  good();msgEl(`<b>Passed!</b> ${st.length} receptacles (fewest possible: ${need}).`,'ok');$('#insp').disabled=true;setTimeout(()=>result(j,tries===1&&st.length<=need?3:tries<=2&&st.length<=need+1?2:1,cfg.lesson),1500)};
+ draw()}
+const counter=()=>{const L=(8+Math.floor(Math.random()*7))*12;spacing({id:'counter',L,end:24,gap:48,snap:3,ft:false,what:'Counter',bg:'#E3E7EC',label:'Kitchen countertop (wall side)',order:`A ${L/12} ft kitchen countertop along a wall. Tap to place receptacles (tap again to remove), then call the inspector.`,rule:'No point on the counter can be more than 24 in. from a receptacle. So: within 24 in. of each end, and at most 48 in. apart.',lesson:'Countertop receptacles: no point along the counter wall can be more than 24 in. from a receptacle. That works out to within 24 in. of each end and no more than 48 in. apart, so nobody stretches a toaster cord across the sink.'})};
+const wallrecs=()=>{const L=(18+Math.floor(Math.random()*16))*12;spacing({id:'wallrecs',L,end:72,gap:144,snap:6,ft:true,what:'Wall',bg:'#FFF8E7',label:'Living room wall',order:`A ${L/12} ft living room wall. Place the receptacles, then call the inspector.`,rule:'No point along the floor line can be more than 6 ft from a receptacle. So: within 6 ft of each end, and at most 12 ft apart.',lesson:'General wall receptacles in a home follow the 6-and-12 rule: no point along the floor line more than 6 ft from a receptacle, so within 6 ft of each end (like a doorway) and no more than 12 ft apart. That way any lamp with a 6 ft cord reaches.'})};
+
+/* ---------- Y5: GENERATOR SIZING ---------- */
+function gensize(){
+ const j=J('gensize'),ALL=[['Fridge',700,2200],['Sump pump',1050,2200],['Furnace blower',800,2350],['Well pump',1000,2100],['Lights',600,600],['TV and internet',300,300],['Freezer',500,1500]];
+ const L=shuffle(ALL).slice(0,5),run=L.reduce((a,l)=>a+l[1],0),surge=Math.max(...L.map(l=>l[2]-l[1])),need=run+surge,G=[5000,7500,9500,12000],best=G.find(g=>g>=need);let tries=0;
+ shell(j,'A customer wants a portable generator that can run these loads during an outage. Size it: add up the running watts, then add the biggest single starting surge.',
+ `<div class="opts">${L.map(l=>`<div class="card" style="padding:8px 12px;display:flex;justify-content:space-between"><b style="font-weight:600">${l[0]}</b><span>${l[1].toLocaleString('en-US')} W run${l[2]>l[1]?` &middot; ${l[2].toLocaleString('en-US')} W start`:''}</span></div>`).join('')}</div>
+ <h2 class="sec" style="font-size:19px">Pick the generator (running watts)</h2><div class="row">${G.map(g=>`<button class="btn alt gn" data-g="${g}">${g/1000} kW</button>`).join('')}</div><div class="msg" id="msg"></div>`);
+ app.querySelectorAll('.gn').forEach(b=>b.onclick=()=>{tries++;const g=+b.dataset.g;if(g<need){bad();b.classList.add('wrong');msgEl(`Bogs down! Running total is ${run.toLocaleString('en-US')} W, and the biggest motor start adds ${surge.toLocaleString('en-US')} W on top. That's ${need.toLocaleString('en-US')} W.`,'bad');return}
+  good();msgEl(`Runs it all. ${run.toLocaleString('en-US')} + ${surge.toLocaleString('en-US')} = ${need.toLocaleString('en-US')} W.${g===best?' Smallest that works.':''}`,'ok');setTimeout(()=>result(j,tries===1&&g===best?3:tries<=2?2:1,'Size a generator by adding the running watts of everything that will be on, then adding the largest single starting surge (the extra a motor pulls for a second or two when it starts). Start motors one at a time and the generator only has to handle one surge.'),1400)});
+}
+
+/* ---------- Y5: TRANSFORMER kVA ---------- */
+function xfsize(){
+ const j=J('xfsize'),A=[80,110,180,250][Math.floor(Math.random()*4)],kva=208*A*1.732/1000,K=[30,45,75,112.5],best=K.find(k=>k>=kva);let tries=0;
+ shell(j,`A new 208Y/120 V panel will carry ${A} A per phase. Pick the transformer size.`,`<div class="qcard card"><h3>3-phase kVA</h3><p class="q" style="font-size:17px">kVA = V × A × 1.732 ÷ 1,000</p></div><div class="row">${K.map(k=>`<button class="btn alt kv" data-k="${k}">${k} kVA</button>`).join('')}</div><div class="msg" id="msg"></div>`);
+ app.querySelectorAll('.kv').forEach(b=>b.onclick=()=>{tries++;const k=+b.dataset.k;if(k<kva){bad();b.classList.add('wrong');msgEl(`208 × ${A} × 1.732 ÷ 1,000 = ${fmt1(kva)} kVA. That's too much for ${k} kVA. It would cook.`,'bad');return}
+  good();msgEl(`${fmt1(kva)} kVA needed, so ${k} kVA works.${k===best?' Smallest standard size that fits.':''}`,'ok');setTimeout(()=>result(j,tries===1&&k===best?3:tries<=2?2:1,'Three-phase kVA = volts × amps × 1.732 ÷ 1,000. Size the transformer to the next standard size that covers the load (common sizes: 30, 45, 75, 112.5 kVA).'),1400)});
+}
+
+/* ---------- Y5: MOTOR BRANCH CIRCUIT ---------- */
+function motorbranch(){
+ const j=J('motorbranch'),M=[[5,7.6],[10,14],[15,21],[20,27]][Math.floor(Math.random()*4)],F=M[1],W=[[14,20],[12,25],[10,35],[8,50]],BR=[15,20,25,30,35,40,45,50,60,70,80];
+ const wNeed=F*1.25,bMax=F*2.5,bOK=BR.find(b=>b>=bMax),wBest=W.find(w=>w[1]>=wNeed)[0];let wr=null,br=null,tries=0;
+ shell(j,`A ${M[0]} hp, 460 V, 3-phase motor. The NEC table lists its full-load current as ${F} A. Pick the wire and an inverse-time breaker that let it start without tripping.`,
+ `<div class="qcard card"><h3>Motor rules</h3><p class="q" style="font-size:16px">Wire: at least 125% of FLC. Breaker: up to 250% of FLC (go to the next standard size if it lands between). Motors pull big current when they start.</p></div>
+ <h2 class="sec" style="font-size:18px">Wire (75°C copper)</h2><div class="chips">${W.map(w=>`<button class="chip mw" data-w="${w[0]}">${w[0]} AWG (${w[1]} A)</button>`).join('')}</div>
+ <h2 class="sec" style="font-size:18px">Breaker</h2><div class="chips">${BR.map(b=>`<button class="chip mb2" data-b="${b}">${b} A</button>`).join('')}</div><button class="btn go" id="st5" style="width:100%" disabled>Start the motor</button><div class="msg" id="msg"></div>`);
+ const upd=()=>{app.querySelectorAll('.mw').forEach(x=>x.classList.toggle('sel',+x.dataset.w===wr));app.querySelectorAll('.mb2').forEach(x=>x.classList.toggle('sel',+x.dataset.b===br));$('#st5').disabled=!(wr&&br)};
+ app.querySelectorAll('.mw').forEach(b=>b.onclick=()=>{wr=+b.dataset.w;tick();upd()});app.querySelectorAll('.mb2').forEach(b=>b.onclick=()=>{br=+b.dataset.b;tick();upd()});
+ $('#st5').onclick=()=>{tries++;const amp=W.find(w=>w[0]===wr)[1];
+  if(amp<wNeed){bad();msgEl(`Wire too small: ${F} × 1.25 = ${fmt1(wNeed)} A, and ${wr} AWG is only ${amp} A.`,'bad');return}
+  if(br<F*1.5){zap();msgEl(`Tripped on startup! A ${br} A breaker can't ride through the inrush. Motor breakers can go up to 250% of FLC (${fmt1(bMax)} A).`,'bad');return}
+  if(br>bOK){bad();msgEl(`Too big. 250% of ${F} A is ${fmt1(bMax)} A, so the max is ${bOK} A.`,'bad');return}
+  good();msgEl(`Motor\'s running. ${wr} AWG on a ${br} A breaker.`,'ok');$('#st5').disabled=true;setTimeout(()=>result(j,tries===1&&wr===wBest&&br===bOK?3:tries<=2?2:1,`Motor branch circuits are sized differently than lights or receptacles. Use the NEC table's full-load current, not the nameplate: wires at 125% of FLC, and an inverse-time breaker up to 250% of FLC (next standard size up if needed) so the motor can start. The overload, sized from the nameplate, protects the motor itself. That's why a ${wr} AWG wire can legally sit on a ${bOK} A breaker for a motor.`),1500)};
+}
+/* ---------- Y5: GROUNDING ELECTRODE SYSTEM ---------- */
+function gesystem(){const j=J('gesystem');let m=0;
+ shell(j,'New house with a 200 A service on 2/0 copper. Build the grounding electrode system. First pick everything that has to be bonded together as electrodes (when it\'s there).',`<div class="msg" id="msg"></div>`);
+ pickSet('Tap every grounding electrode that must be used, then tap Done.',[['water','Metal underground water pipe (10 ft or more in the earth)'],['ufer','Concrete-encased electrode (rebar in the footing)'],['rods','Ground rods'],['steel','Building steel that\'s effectively grounded'],['gas','Metal gas piping'],['pvc','PVC water pipe']],
+  on=>{const need=['water','ufer','rods','steel'];if(on.gas){m++;return 'Gas piping is never a grounding electrode.'}if(on.pvc){m++;return 'PVC doesn\'t conduct. It can\'t be an electrode.'}const miss=need.filter(k=>!on[k]);if(miss.length){m++;return `Missing ${miss.length}. Every electrode that\'s present gets bonded together into one system.`}return ''},
+  ()=>{msgEl('Good system. Now size the grounding electrode conductor (GEC) to the water pipe.','ok');
+   app.insertAdjacentHTML('beforeend',`<div class="qcard card" style="margin-top:12px"><p class="q" style="font-size:17px">Service conductors are 2/0 copper. Which copper GEC runs to the water pipe?</p></div><div class="chips" id="gc">${shuffle([['4 AWG',1],['8 AWG',0],['2/0 AWG',0],['12 AWG',0]]).map(o=>`<button class="chip" data-ok="${o[1]}">${o[0]}</button>`).join('')}</div>`);$('#gc').scrollIntoView({behavior:'smooth',block:'nearest'});
+   $('#gc').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;if(b.dataset.ok==='1'){good();setTimeout(()=>result(j,m===0?3:m<=2?2:1,'Every grounding electrode that\'s present gets bonded together: metal water pipe, the concrete-encased electrode, ground rods, building steel and so on. Gas pipe never counts. The GEC is sized from the service conductors (Table 250.66): 2/0 copper calls for 4 AWG copper. A GEC that only goes to rods never has to be bigger than 6 AWG copper.'),500)}else{m++;bad();b.disabled=true;msgEl('Check Table 250.66. For 2/0 or 3/0 copper service conductors, the copper GEC is 4 AWG.','bad')}}});
+}
+
+/* ---------- Y5: PANEL SWAP DAY ---------- */
+function panelswap(){const j=J('panelswap');shell(j,'Replacing an old fuse box with a new breaker panel. Put the job in order.',`<div class="msg" id="msg"></div>`);
+ ordering('Panel swap, start to finish',['Pull the permit','Schedule the utility disconnect','Label every circuit while it still has power','Kill the power and verify it\'s dead','Remove the old panel','Install the new panel and torque every lug to spec','Pass the inspection','The utility reconnects power'],miss=>setTimeout(()=>result(j,miss===0?3:miss<=2?2:1,'A clean panel swap: permit, coordinate the utility disconnect, label circuits while you can still test them, then lock out and verify dead. Install, torque everything to the manufacturer\'s spec, pass inspection, and only then does the utility restore power.'),800));}
+
+/* ---------- Y5: TORQUE IT ---------- */
+function torque(){
+ const j=J('torque'),TG=shuffle([[20,25,'Branch breaker screw'],[35,45,'Neutral bar lug'],[50,60,'Ground bar lug'],[250,275,'Main lug']]);let i=0,val=0,hold=null,miss=0;
+ shell(j,'Torque every terminal to the spec printed on the panel label. Press and hold to tighten, and let go in the green zone.',
+ `<div class="qcard card"><h3 id="tq"></h3><p class="q" style="font-size:17px" id="tq2"></p></div><div class="stage card"><svg id="tv" viewBox="0 0 360 120" style="display:block;width:100%"></svg></div><button class="btn big" id="th" style="width:100%;touch-action:none;user-select:none">Hold to tighten</button><div class="msg" id="msg"></div>`);
+ const draw=()=>{const t=TG[i],mx=t[1]*1.6,X=v=>20+Math.min(1,v/mx)*320;$('#tq').textContent=`Terminal ${i+1} of 4: ${t[2]}`;$('#tq2').innerHTML=`Spec: <b>${t[0]}–${t[1]} in-lb</b>`;
+  $('#tv').innerHTML=`<rect x="20" y="40" width="320" height="30" rx="8" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="${X(t[0])}" y="40" width="${X(t[1])-X(t[0])}" height="30" fill="#9BE3AE"/><rect x="20" y="40" width="${X(val)-20}" height="30" rx="8" fill="#FFC93C" opacity=".85"/><text x="180" y="100" text-anchor="middle" font-size="18" font-weight="700" fill="${INK}">${Math.round(val)} in-lb</text>`};
+ const start=e=>{e.preventDefault();if(hold)return;val=0;const t=TG[i],rate=t[1]/70;hold=setInterval(()=>{val+=rate*(1+val/t[1]*.6);if(val>t[1]*1.6)val=t[1]*1.6;draw()},30)};
+ const stop2=()=>{if(!hold)return;clearInterval(hold);hold=null;const t=TG[i];
+  if(val<t[0]){miss++;bad();msgEl(`${Math.round(val)} in-lb is too loose. Loose lugs heat up and burn. Try again.`,'bad');val=0;draw();return}
+  if(val>t[1]){miss++;zap();msgEl(`${Math.round(val)} in-lb. Over-torqued, so you can crush the conductor or strip the lug. Try again.`,'bad');val=0;draw();return}
+  good();msgEl(`${Math.round(val)} in-lb. In spec.`,'ok');i++;val=0;if(i<TG.length)setTimeout(draw,600);else setTimeout(()=>result(j,miss===0?3:miss<=3?2:1,'The NEC requires terminals to be tightened to the manufacturer\'s torque spec with a calibrated torque tool. Too loose and the connection heats up and fails. Too tight and you damage the conductor or the lug. "Good and tight" isn\'t a spec.'),800)};
+ const b=$('#th');b.addEventListener('pointerdown',start);b.addEventListener('pointerup',stop2);b.addEventListener('pointerleave',stop2);b.addEventListener('pointercancel',stop2);
+ draw();
+}
+
+/* ---------- Y5: FUSE HUNT (single phasing) ---------- */
+function fusehunt(){
+ const j=J('fusehunt'),badF=Math.floor(Math.random()*3);let locked=false,tested={},miss=0,tests=0;
+ shell(j,'Call from a shop: "The air compressor just hums and won\'t start." It\'s a 3-phase motor fed through a fused disconnect. Find the problem.',
+ `<div class="opts" id="fh"><button class="btn alt" data-a="lock">Open the disconnect, lock it out and verify dead</button>${[0,1,2].map(i=>`<button class="btn alt" data-a="f${i}">Ohm test fuse ${i+1}</button>`).join('')}</div><div class="meter card" style="margin-top:12px"><div class="lcd" id="lcd">--- Ω</div><p id="mt">Fuses get tested with power off, on the ohms setting.</p></div><h2 class="sec" style="font-size:19px">Make the fix</h2><div class="chips" id="fx2">${[0,1,2].map(i=>`<button class="chip" data-f="${i}">Replace fuse ${i+1}</button>`).join('')}<button class="chip" data-f="m">Replace the motor</button></div><div class="msg" id="msg"></div>`);
+ $('#fh').onclick=e=>{const b=e.target.closest('[data-a]');if(!b)return;const a=b.dataset.a;if(a==='lock'){locked=true;b.classList.add('right');tick();msgEl('Locked out and verified dead.','ok');return}
+  if(!locked){miss++;zap();msgEl('<b>Whoa.</b> Ohm testing on a live 480 V circuit can blow up your meter in your hands. Lock it out first.','bad');return}
+  const i=+a[1];tested[i]=1;tests++;tick();const r=i===badF?'OL':'0.0';$('#lcd').textContent=r+(r==='OL'?'':' Ω');$('#mt').textContent=`Fuse ${i+1}: ${r==='OL'?'OL (open). It\'s blown.':'0.0 Ω. Good.'}`;b.classList.add(i===badF?'wrong':'right')};
+ $('#fx2').onclick=e=>{const b=e.target.closest('[data-f]');if(!b)return;const f=b.dataset.f;
+  if(f==='m'){miss++;bad();b.disabled=true;msgEl('A $1,200 motor for a $15 fuse? Test first.','bad');return}
+  if(+f!==badF){miss++;bad();b.disabled=true;msgEl('That fuse tested fine. Still humming.','bad');return}
+  good();msgEl('New fuse in. The compressor starts right up.','ok');setTimeout(()=>result(j,miss===0&&tests<=3?3:miss<=1?2:1,'A 3-phase motor that hums but won\'t start is usually single-phasing: one phase is missing, often from a blown fuse. Lock out, then test each fuse on the ohms setting. Good reads near 0 Ω, blown reads OL (open). Single-phasing a running motor can burn it up fast, which is what the overloads are for.'),1400)};
+}
+
+/* ---------- Y5: GFCI WON'T RESET ---------- */
+function gfcitrip(){
+ const j=J('gfcitrip');let step=0,miss=0;const boxes=shuffle(['Front porch box','Back patio box','Garden box']),wet=boxes[Math.floor(Math.random()*3)];
+ shell(j,'Garage GFCI trips the instant you reset it, and the outdoor outlets it feeds are dead. Isolate the fault.',
+ `<div class="opts" id="gt">${shuffle([['load','Lock out, disconnect the LOAD wires, then try RESET'],['swap','Replace the GFCI right away'],['bypass','Move all the wires to LINE so it stops tripping']]).map(o=>`<button class="btn alt" data-a="${o[0]}">${o[1]}</button>`).join('')}</div><div id="g2"></div><div class="msg" id="msg"></div>`);
+ $('#gt').onclick=e=>{const b=e.target.closest('[data-a]');if(!b||step)return;const a=b.dataset.a;
+  if(a==='bypass'){miss++;bad();b.disabled=true;msgEl('That takes GFCI protection away from the outdoor outlets. Never bypass it to stop nuisance trips.','bad');return}
+  if(a==='swap'){miss++;bad();b.disabled=true;msgEl('New GFCI, same instant trip. The GFCI was doing its job.','bad');return}
+  step=1;good();b.classList.add('right');msgEl('With LOAD disconnected, it resets and holds. The ground fault is downstream.','ok');
+  $('#g2').innerHTML=`<h2 class="sec" style="font-size:19px">Open a downstream box</h2><div class="opts">${boxes.map(x=>`<button class="btn alt ob" data-b="${x}">${x}</button>`).join('')}</div>`;
+  app.querySelectorAll('.ob').forEach(x=>x.onclick=()=>{if(x.dataset.b===wet){good();x.classList.add('right');msgEl(`Found it: the ${wet.toLowerCase()} is full of water. Its cover was missing. Dry it out, replace the device and put on an in-use (bubble) cover.`,'ok');setTimeout(()=>result(j,miss===0?3:miss<=1?2:1,'A GFCI that trips the instant you reset it is usually seeing a real ground fault. Disconnect the LOAD side: if it holds, the fault is downstream. Then hunt it down. Outdoors, it\'s often water in a box. Outdoor receptacles in wet locations need in-use (bubble) covers.'),1500)}else{miss++;tick();x.disabled=true;msgEl('Dry and clean in there.','')}})};
+}
+
+/* ---------- Y5: AFCI ROOMS ---------- */
+function afcirooms(){const j=J('afcirooms');shell(j,'Laying out a new house panel. For each area\'s 120 V, 15/20 A circuit, call whether the code requires AFCI protection.',`<div class="msg" id="msg"></div>`);
+ sortGame(mk([['Bedroom','y','Bedrooms need AFCI.'],['Living room','y','Living and family rooms need AFCI.'],['Hallway','y','Hallways need AFCI.'],['Kitchen','y','Kitchens are on the AFCI list too.'],['Laundry area','y','Laundry areas need AFCI.'],['Bathroom','n','Bathrooms aren\'t on the AFCI list. They need GFCI instead.'],['Garage','n','Garages aren\'t on the AFCI list. They need GFCI.'],['Outdoor receptacle','n','Outdoors isn\'t on the AFCI list. It needs GFCI.']]),[['y','AFCI required'],['n','Not required']],'AFCI or not?',s=>result(j,s3(s),'In homes, AFCI protection covers the living spaces: kitchens, family and living rooms, dining rooms, bedrooms, closets, hallways, laundry areas and similar rooms. Bathrooms, garages and outdoors aren\'t on the AFCI list, but they need GFCI.'))}
+
+/* ---------- Y5: LOW-VOLTAGE SEPARATION ---------- */
+function lowv(){const j=J('lowv');shell(j,'Smart home job: doorbell, thermostat and data cables are going in alongside 120 V wiring. Keep them separated right.',`<div class="msg" id="msg"></div>`);
+ pickSet('Tap every setup that\'s allowed, then tap Done.',[['own','Low-voltage cables in their own low-voltage ring or box'],['div','A two-gang box with a barrier between power and data'],['same','Data cable in the same box as 120 V wires, no barrier'],['tape','Thermostat wire taped to the NM cable for support'],['sep','Doorbell transformer mounted on the outside of a junction box']],
+  on=>{if(on.same)return 'Class 2 low-voltage cable can\'t share a box with power wiring unless there\'s a barrier.';if(on.tape)return 'Low-voltage cable can\'t be strapped or taped to power cables for support.';const miss=['own','div','sep'].filter(k=>!on[k]);if(miss.length)return `You missed ${miss.length} that\'s allowed.`;return ''},
+  t=>setTimeout(()=>result(j,t===0?3:t<=2?2:1,'Class 2 low-voltage wiring (doorbells, thermostats, data) has to stay separated from power wiring: its own box or ring, or a barrier in a shared box. Don\'t use power cables to support it. Separation keeps 120 V from ending up on a thermostat wire someone thinks is safe to touch.'),600));}
+
+/* ---------- Y5: FAULT CURRENT (AIC) ---------- */
+function aic(){const j=J('aic'),F=[14,25,35][Math.floor(Math.random()*3)],R=[10,22,42,65],best=R.find(r=>r>=F);let tries=0;
+ shell(j,`New service for a restaurant. The utility letter says the available fault current at the service is ${F},000 A. Pick breakers with a high enough interrupting rating (AIC).`,`<div class="qcard card"><p class="q" style="font-size:17px">A breaker has to safely interrupt the worst short circuit possible at that spot. If the fault current is bigger than its rating, it can explode instead of tripping.</p></div><div class="row">${R.map(r=>`<button class="btn alt ai" data-r="${r}">${r} kA</button>`).join('')}</div><div class="msg" id="msg"></div>`);
+ app.querySelectorAll('.ai').forEach(b=>b.onclick=()=>{tries++;const r=+b.dataset.r;if(r<F){zap();b.classList.add('wrong');msgEl(`A ${r} kA breaker facing ${F} kA of fault current can blow apart instead of opening.`,'bad');return}
+  good();msgEl(`${r} kA rating covers ${F} kA.${r===best?' The right fit.':' Safe, but pricier than you needed.'} Don\'t forget the available-fault-current label at the service.`,'ok');setTimeout(()=>result(j,tries===1&&r===best?3:tries<=2?2:1,'Every breaker and fuse has an interrupting rating: the biggest fault current it can safely open. It has to be at least the available fault current where it\'s installed. Commercial services also get labeled with the available fault current and the date it was calculated.'),1500)});
+}
+
+/* ---------- Y5: SERVICE DROP CLEARANCE ---------- */
+function clearance(){const j=J('clearance');const SP=[['Over the sidewalk at the house',10],['Over the residential driveway',12],['Over the public street',18]];const h=[8,8,8];let tries=0;
+ shell(j,'New overhead 120/240 V service drop. Set the lowest point of the drop over each spot, then call the utility.',
+ `${SP.map((s,i)=>`<div class="card" style="padding:10px 12px;margin-bottom:10px"><b style="font-weight:600">${s[0]}</b><div class="row" style="align-items:center;margin-top:6px"><button class="btn alt sm" data-i="${i}" data-d="-1">−</button><span style="text-align:center;font-weight:700;font-size:20px" id="h${i}">8 ft</span><button class="btn alt sm" data-i="${i}" data-d="1">+</button></div></div>`).join('')}<button class="btn go" id="cu" style="width:100%">Call the utility</button><div class="msg" id="msg"></div>`);
+ app.querySelectorAll('[data-d]').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;h[i]=Math.max(6,Math.min(24,h[i]+ +b.dataset.d));$('#h'+i).textContent=h[i]+' ft';tick()});
+ $('#cu').onclick=()=>{tries++;const low=SP.findIndex((s,i)=>h[i]<s[1]);if(low>=0){bad();msgEl(`Too low ${SP[low][0].toLowerCase()}. A ${SP[low][0].includes('street')?'truck':SP[low][0].includes('drive')?'moving van':'ladder'} could snag it.`,'bad');return}
+  good();const exact=SP.every((s,i)=>h[i]===s[1]);msgEl('Utility approves the drop.'+(exact?' Right at the minimums.':''),'ok');setTimeout(()=>result(j,tries===1?3:tries<=3?2:1,'Overhead service drop clearances for a 120/240 V house: at least 10 ft above finished grade and sidewalks, 12 ft over residential driveways, and 18 ft over public streets and roads, so trucks clear it.'),1400)};
+}
+
+/* ---------- Y5: JOURNEYMAN RUSH ---------- */
+function rush(){const j=J('rush');shell(j,'Final warm-up before the Journeyman exam. True or false? Call it before it drops.',`<div class="msg" id="msg"></div>`);
+ sortGame(mk([['14 AWG copper goes on a 15 A breaker.','t','True.'],['Neutral and ground are bonded in every subpanel.','f','False. Only at the service.'],['GFCIs trip at about 5 mA.','t','True.'],['To reverse a 3-phase motor, roll all three leads.','f','False. Swap any two.'],['Water heaters are sized at 125%.','t','True.'],['Ground rods trip breakers during a fault.','f','False. The equipment grounding conductor does.'],['Two ground rods go at least 6 ft apart.','t','True.'],['Kitchen countertop receptacles can be 6 ft apart.','f','False. 48 in. max (24 in. from any point).'],['A 4-way switch goes between two 3-ways.','t','True.'],['Gas pipe is a grounding electrode.','f','False. Never.']]),[['t','TRUE'],['f','FALSE']],'True or false',s=>result(j,s3(s),'Everything here came from your apprenticeship: wire sizes, bonding only at the service, GFCI at 5 mA, motor rotation, 125% loads, the equipment ground path, rod spacing, countertop spacing and switching. You\'re ready.'))}
+
 /* ---------- EXAM (every question is taught in a job) ---------- */
 const QB1=[
  ['A 120 V circuit has 10 Ω of resistance. How many amps flow?',['12 A','1,200 A','0.08 A','130 A'],0,'Ohm\'s law: I = V ÷ R. 120 ÷ 10 = 12 A.','bench'],
@@ -1593,14 +1810,42 @@ const QB4=[
  ['Hot to neutral 120 V, hot to ground 0 V. The receptacle has&hellip;',['An open ground','An open neutral','Reversed polarity','No problem'],0,'No voltage to ground means the ground isn\'t connected.','recept'],
  ['Battery emergency lights get an annual test of&hellip;',['90 minutes','30 seconds','10 minutes','24 hours'],0,'Monthly: 30 seconds. Yearly: a full 90 minutes.','emlight']];
 const MATCH4=[['Handle tie','Shuts both hots off together'],['Seal-in contact','Keeps a starter running after START'],['Interlock','Stops generator backfeed'],['Take-up','Pipe used by a 90° bend'],['Bonding grid','Keeps pool parts at the same voltage']];
-const QB={1:QB1,2:QB2,3:QB3,4:QB4},MATCH={1:MATCH1,2:MATCH2,3:MATCH3,4:MATCH4};
+const QB5=[
+ ['Dwelling general lighting load is calculated at&hellip;',['3 VA per ft²','1 VA per ft²','5 VA per ft²','10 VA per ft²'],0,'3 VA per square foot for dwellings.','dwellcalc'],
+ ['Each small-appliance circuit counts in a dwelling load calc as&hellip;',['1,500 VA','1,000 VA','2,400 VA','3,000 VA'],0,'1,500 VA each, and you need at least two.','dwellcalc'],
+ ['The general lighting demand factor: the first 3,000 VA at 100%, then the next portion at&hellip;',['35%','50%','75%','25%'],0,'35% for the portion from 3,001 to 120,000 VA.','dwellcalc'],
+ ['Which NEC article covers grounding and bonding?',['250','210','300','110'],0,'Article 250.','codebook1'],
+ ['Which NEC article covers branch circuits?',['210','220','230','240'],0,'Article 210.','codebook1'],
+ ['Which NEC article covers motors?',['430','450','410','422'],0,'Article 430.','codebook2'],
+ ['Which NEC article covers swimming pools?',['680','690','625','700'],0,'Article 680.','codebook2'],
+ ['On one- and two-family dwellings, PV DC circuits are limited to&hellip;',['600 V','1,000 V','300 V','1,500 V'],0,'600 V maximum.','solar'],
+ ['Cold weather makes solar panel voltage&hellip;',['Go up','Go down','Stay the same','Drop to zero'],0,'Cold raises open-circuit voltage, so strings are sized for the coldest morning.','solar'],
+ ['A grain elevator full of combustible dust is a&hellip;',['Class II location','Class I location','Class III location','Ordinary location'],0,'Class II is combustible dust.','hazloc'],
+ ['Flammable gases and vapors make an area&hellip;',['Class I','Class II','Class III','Unclassified'],0,'Class I.','hazloc'],
+ ['Countertop receptacles: no point along the wall counter may be more than how far from a receptacle?',['24 in.','6 ft','12 in.','48 in.'],0,'24 in., so they can be at most 48 in. apart.','counter'],
+ ['General wall receptacles in a living room: no point along the floor line more than&hellip;',['6 ft from a receptacle','12 ft from a receptacle','24 in. from a receptacle','3 ft from a receptacle'],0,'The 6-and-12 rule: within 6 ft of any point, so max 12 ft apart.','wallrecs'],
+ ['Sizing a generator: running watts plus&hellip;',['The largest single starting surge','Every starting surge added up','10%','Nothing'],0,'Add the biggest motor\'s starting surge on top of the running total.','gensize'],
+ ['3-phase kVA equals&hellip;',['V × A × 1.732 ÷ 1,000','V × A ÷ 1,000','V × A × 3','V ÷ A'],0,'Multiply by √3 (1.732) for 3-phase.','xfsize'],
+ ['Motor branch conductors are sized at what percent of the table FLC?',['125%','100%','250%','80%'],0,'125% of the full-load current.','motorbranch'],
+ ['An inverse-time breaker for a typical motor can be up to&hellip;',['250% of FLC','100% of FLC','125% of FLC','80% of FLC'],0,'Up to 250%, so it rides through starting current.','motorbranch'],
+ ['For 2/0 copper service conductors, the copper GEC to a water pipe is&hellip;',['4 AWG','8 AWG','2/0 AWG','12 AWG'],0,'Table 250.66: 4 AWG copper.','gesystem'],
+ ['Torquing terminals should be done&hellip;',['To the manufacturer\'s spec with a calibrated tool','As tight as you can','Hand tight','Only on main lugs'],0,'It\'s a code requirement to use the specified torque.','torque'],
+ ['A 3-phase motor that hums but won\'t start is often&hellip;',['Single-phasing (one phase lost)','Over-voltage','Wired backwards','Perfectly fine'],0,'Often a blown fuse on one phase.','fusehunt'],
+ ['A GFCI that trips the moment you reset it, but holds with LOAD disconnected, means&hellip;',['The fault is downstream','The GFCI is bad','The breaker is bad','The neutral is open'],0,'Disconnecting LOAD isolates it: the fault is on the downstream wiring.','gfcitrip'],
+ ['Which dwelling area does NOT require AFCI for its 15/20 A circuits?',['Bathroom','Bedroom','Hallway','Kitchen'],0,'Bathrooms need GFCI but aren\'t on the AFCI list.','afcirooms'],
+ ['Class 2 data cable can share a box with 120 V wiring if&hellip;',['There\'s a barrier separating them','It\'s taped up','It\'s a short run','Never, under any conditions'],0,'A barrier keeps them separated.','lowv'],
+ ['A breaker\'s interrupting rating must be at least&hellip;',['The available fault current where it\'s installed','The load current','Its trip rating','10,000 A, always'],0,'It has to safely interrupt the worst fault available.','aic'],
+ ['Minimum service drop clearance over a residential driveway (120/240 V):',['12 ft','10 ft','18 ft','8 ft'],0,'12 ft over residential driveways, 18 ft over public streets, 10 ft over grade and sidewalks.','clearance']];
+const MATCH5=[['Article 250','Grounding and bonding'],['Article 430','Motors'],['Article 690','Solar PV'],['Class II','Combustible dust'],['AIC rating','Max fault current a breaker can open']];
+const QB={1:QB1,2:QB2,3:QB3,4:QB4,5:QB5},MATCH={1:MATCH1,2:MATCH2,3:MATCH3,4:MATCH4,5:MATCH5};
 
 function exam(yr){
- const pool=QB[yr].filter(q=>{const s=J(q[4]);return s&&s.yr<=yr});
- const N=Math.min(8,pool.length),TOT=N+5,PASS=Math.ceil(TOT*.75);
+ const EN=yr===5?'Journeyman exam':`Year ${yr} exam`;
+ const pool=(yr===5?[].concat(...Object.values(QB)):QB[yr]).filter(q=>{const s=J(q[4]);return s&&s.yr<=yr});
+ const N=Math.min(yr===5?15:8,pool.length),TOT=N+5,PASS=Math.ceil(TOT*.75);
  const qs=shuffle(pool).slice(0,N).map(q=>{const ord=shuffle([0,1,2,3]);return{q:q[0],a:ord.map(i=>q[1][i]),c:ord.indexOf(q[2]),e:q[3],src:q[4]}});
  let qi=0,right=0,res=[];
- const top=`<div class="top"><button class="btn alt sm" id="back">&larr; Quit</button><span class="tag" style="--c:#FFC93C">Year ${yr} exam</span></div>`;
+ const top=`<div class="top"><button class="btn alt sm" id="back">&larr; Quit</button><span class="tag" style="--c:#FFC93C">${EN}</span></div>`;
  function showQ(){const q=qs[qi];let answered=false;
   app.innerHTML=top+`<div class="dots">${qs.map((_,i)=>`<i class="${res[i]===1?'r':res[i]===0?'w':i===qi?'c':''}"></i>`).join('')}</div>
   <div class="qcard card"><h3>Question ${qi+1} of ${N}</h3><p class="q">${q.q}</p></div>
@@ -1626,7 +1871,7 @@ function exam(yr){
    save();syncMe();
    if(pass){good();confetti()}else{bad();post(`${S.name} failed the Year ${yr} exam (${tot}/${TOT}). Back to the books!`)}
    const o=document.createElement('div');o.className='modal';
-   o.innerHTML=`<div class="res card"><h2>${pass?'You passed!':'Not yet'}</h2><div class="earn" style="color:${pass?'#1E8C4C':'#C0392B'}">${tot} / ${TOT}</div><p style="margin:0 0 10px">Quiz: ${right}/${N} &middot; Match-up: ${mp}/5. You need ${PASS} to pass.</p><div class="why"><b>${pass?'Promoted to '+RANK[yr+1]:'Study up and try again'}</b><p>${pass?bonusTxt+(yr<YMAX?`Year ${yr+1} jobs are unlocked on the job board.`:`Year ${yr+1} jobs are coming in the next update.`):'Every question comes from a job you\'ve done. Replay the ones it pointed you to, then try again. You get a new mix of questions each time.'}</p></div><button class="btn" id="tb" style="width:100%">Job board</button></div>`;
+   o.innerHTML=`<div class="res card"><h2>${pass?'You passed!':'Not yet'}</h2><div class="earn" style="color:${pass?'#1E8C4C':'#C0392B'}">${tot} / ${TOT}</div><p style="margin:0 0 10px">Quiz: ${right}/${N} &middot; Match-up: ${mp}/5. You need ${PASS} to pass.</p><div class="why"><b>${pass?'Promoted to '+RANK[yr+1]:'Study up and try again'}</b><p>${pass?bonusTxt+(yr<YMAX?`Year ${yr+1} jobs are unlocked on the job board.`:yr===5?'Welcome to the trade, Journeyman. The data center job is coming in the next update.':`Year ${yr+1} jobs are coming in the next update.`):'Every question comes from a job you\'ve done. Replay the ones it pointed you to, then try again. You get a new mix of questions each time.'}</p></div><button class="btn" id="tb" style="width:100%">Job board</button></div>`;
    document.body.appendChild(o);o.querySelector('#tb').onclick=()=>{o.remove();tick();board()}}
  }
  showQ();
@@ -1875,7 +2120,7 @@ function hall(){
 
 }
 function myLook(){return{hat:S.look.hat||'yellow',card:S.look.card||'plain',truck:S.look.truck||'',belt:S.look.belt||'',tool:S.look.tool||'',tools:Object.keys(TOOLS).filter(k=>S.owned['tool_'+k])}}
-const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight};
+const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2,boxfill,roughin,heater240,subpanel,bend,pull,motor,balance,lighting,service3,vdrop,megger,xfmr,storm,mwbc,fourway,ev,genint,kitchen4,locations,heat3,faultpath,openneutral,pool,inspect4,stub90,derate,ladder,recept,emlight,dwellcalc,codebook1,codebook2,solar,hazloc,counter,wallrecs,gensize,xfsize,motorbranch,gesystem,panelswap,torque,fusehunt,gfcitrip,afcirooms,lowv,aic,clearance,rush};
 title();
 initFB();
 function checkUpdate(){try{fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'}).then(r=>r.text()).then(t=>{const m=t.match(/const VER='([^']+)'/);if(m&&m[1]!==VER&&!document.getElementById('upd')){const b=document.createElement('button');b.id='upd';b.className='updbar';b.textContent='New version of Spark Up! Tap to update';b.onclick=()=>{location.replace(location.pathname+'?v='+m[1])};document.body.appendChild(b)}}).catch(()=>{})}catch(e){}}
