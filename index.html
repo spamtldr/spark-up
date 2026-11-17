@@ -109,6 +109,11 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .sub{margin:-4px 4px 12px;font-size:14px;font-weight:500}
 .rc,.rp,.radd{border:2px solid var(--ink);border-radius:999px;background:#fff;min-height:34px;padding:2px 10px;font-size:15px}.rc.on{background:var(--yel)}.radd{opacity:.7;font-size:14px}.rp{min-width:44px}
 .mine{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}.mine .codebox{grid-column:1/-1;margin:0;text-align:left;background:#F4F7FA;border:2.5px solid var(--ink);border-radius:12px}
+.lane{height:210px;position:relative;overflow:hidden;background:#E8F7FF;margin-bottom:10px}.itm{position:absolute;left:0;right:0;top:8px;display:flex;justify-content:center}
+.hz{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:10px 12px;max-width:280px;font-size:17px;font-weight:600;text-align:center;box-shadow:0 4px 0 var(--ink)}
+.bins{display:flex;gap:8px}.bins .btn{flex:1;font-size:17px;min-height:58px}
+.bulge{animation:bul .25s 4 alternate}@keyframes bul{to{transform:scale(1.08,1.04)}}
+@media (prefers-reduced-motion:reduce){.bulge{animation:none}}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -239,7 +244,9 @@ const JOBS=[
  {id:'service2',yr:2,kind:'Service call',title:'"Some of my outlets quit!"',pay:160,xp:70,icon:'chain',color:'#7FD8FF'},
  {id:'layout2',yr:2,kind:'Layout job',title:'Bathroom remodel circuit',pay:140,xp:60,icon:'grid',color:'#8EE59B'},
  {id:'inspect2',yr:2,kind:'Inspection rush',title:'Safe or hazard?',pay:140,xp:60,icon:'insp',color:'#C9B6FF'},
+ {id:'boxfill',yr:2,kind:'Rough-in job',title:'Pack the junction box',pay:150,xp:60,icon:'box',color:'#FFD6A5'},
  {id:'roughin',yr:2,kind:'Rough-in job',title:'Staple the rough-in',pay:150,xp:60,icon:'staple',color:'#F2D8A7'},
+ {id:'heater240',yr:2,kind:'Install job',title:'Wire a 240 V water heater',pay:170,xp:70,icon:'heater',color:'#FFB3B3'},
  {id:'subpanel',yr:2,kind:'Panel job',title:'Garage subpanel',pay:170,xp:70,icon:'panel',color:'#B8E1FF'}];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
@@ -368,7 +375,7 @@ function wiring(W,T,st){
  function draw(){
   let wg='',sg='',tg='';
   for(const k in W){const w=W[k];const d=st.map[k]?wp(k):`M${w.x} 334 L${w.x} 318`;
-   wg+=`<path d="${d}" fill="none" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${w.c}" stroke-width="7" stroke-linecap="round"/>`;
+   wg+=`<path d="${d}" fill="none" stroke="${INK}" stroke-width="13" stroke-linecap="round"/><path d="${d}" fill="none" stroke="${w.c}" stroke-width="7" stroke-linecap="round"/>${w.tape?`<path d="${d}" fill="none" stroke="${INK}" stroke-width="8" stroke-dasharray="10 12"/>`:''}`;
    if(!st.map[k])sg+=`<circle cx="${w.x}" cy="316" r="${st.sel===k?13:9}" fill="${w.c}" stroke="${INK}" stroke-width="3" ${st.sel===k?'class="pulse"':''}/>`;
    sg+=`<circle data-w="${k}" cx="${w.x}" cy="322" r="18" fill="transparent"/>`}
   for(const k in T){const t=T[k],left=t.x<=180;
@@ -713,30 +720,99 @@ function steps(j,order,list,done){
 }
 const fmt1=n=>(Math.round(n*10)/10).toLocaleString('en-US');
 
-/* ---------- BENCH TEST (year 1) ---------- */
+/* ---------- BENCH TEST (year 1): circuit sandbox ---------- */
 function bench(){
- const j=J('bench');
- const R=[8,10,12,15,20,24,30,40][Math.floor(Math.random()*8)],I=120/R,P=120*I;
- const heater=`<svg viewBox="0 0 360 150" style="display:block;width:100%"><rect x="16" y="34" width="196" height="76" rx="14" fill="#FFF8E7" stroke="${INK}" stroke-width="4"/><path d="M36 72l12-20 12 40 12-40 12 40 12-40 12 40 12-40 12 40 12-40 12 20" fill="none" stroke="#FF8A3D" stroke-width="6" stroke-linejoin="round"/><text x="114" y="136" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">Heater element</text><rect x="234" y="18" width="110" height="112" rx="14" fill="#FFC93C" stroke="${INK}" stroke-width="4"/><rect x="246" y="32" width="86" height="42" rx="6" fill="#C8E6B0" stroke="${INK}" stroke-width="3"/><text x="289" y="61" text-anchor="middle" font-size="20" font-weight="700" fill="${INK}" font-family="Courier New,monospace">${R} &#937;</text><text x="289" y="110" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Ohmmeter</text></svg>`;
- let mode='series',pulled=false;
- const lamp=(x,y,on,gone)=>gone?`<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="${INK}" stroke-width="3" stroke-dasharray="4 4"/>`:`<circle cx="${x}" cy="${y}" r="${on?20:0}" fill="#FFE070" opacity=".5"/><circle cx="${x}" cy="${y}" r="14" fill="${on?'#FFE070':'#E3E7EC'}" stroke="${INK}" stroke-width="3.5"/>`;
- function sp(){const ser=mode==='series',on1=!pulled,on2=ser?!pulled:true;
-  const w=ser?`<path d="M44 66V36H136M164 36H236M264 36H330V136H44V106" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${lamp(150,36,on1&&on2,pulled)}${lamp(250,36,on2,false)}<text x="150" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Lamp 1</text><text x="250" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Lamp 2</text>`
-   :`<path d="M44 66V30H290M44 106V140H290M170 30V56M170 114V140M290 30V56M290 114V140" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${lamp(170,85,on1,pulled)}${lamp(290,85,on2,false)}<text x="214" y="90" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Lamp 1</text><text x="332" y="90" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">2</text>`;
-  $('#spv').innerHTML=`<rect x="18" y="66" width="52" height="40" rx="8" fill="#A7B1BD" stroke="${INK}" stroke-width="3.5"/><text x="44" y="91" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">120 V</text>${w}`;
-  $('#sm1').classList.toggle('on',ser);$('#sm2').classList.toggle('on',!ser);$('#spl').textContent=pulled?'Put lamp 1 back':'Pull lamp 1'}
- const spHtml=`<svg id="spv" viewBox="0 0 360 160" style="display:block;width:100%"></svg><div class="row" style="margin-top:8px"><button class="btn alt sm seg" id="sm1">Series</button><button class="btn alt sm seg" id="sm2">Parallel</button></div><button class="btn sm" id="spl" style="width:100%;margin-top:8px">Pull lamp 1</button>`;
- const spInit=()=>{sp();$('#sm1').onclick=()=>{mode='series';tick();sp()};$('#sm2').onclick=()=>{mode='parallel';tick();sp()};$('#spl').onclick=()=>{pulled=!pulled;pulled?snd(220,.1,'triangle'):tick();sp()}};
- steps(j,'Slow morning. The foreman has you at the training bench with a heater element, two lamps and a meter. Work through his questions.',[
-  {html:heater,q:`The heater element reads ${R} Ω. Plugged into 120 V, how many amps will it draw?`,a:[fmt1(I)+' A',fmt1(120*R)+' A',fmt1(I*2)+' A',fmt1(R/120)+' A'],c:0,e:`Ohm's law: amps = volts ÷ ohms (I = V ÷ R). 120 ÷ ${R} = ${fmt1(I)} A. Resistance is measured in ohms (Ω).`},
-  {html:heater,q:'Same heater. How many watts does it put out?',a:[fmt1(P)+' W',fmt1(120+I)+' W',fmt1(P/2)+' W',fmt1(I/120)+' W'],c:0,e:`Power = volts × amps (P = V × I). 120 × ${fmt1(I)} = ${fmt1(P)} W.`},
-  {html:spHtml,init:spInit,q:'Try both setups and pull lamp 1. Which setup keeps lamp 2 lit?',a:['Parallel','Series','Both','Neither'],c:0,e:'Series has one path, so the same current flows through everything, and one break kills it all. Parallel gives every branch its own path with the same full voltage. That\'s why the outlets in a house are wired in parallel.'},
-  {q:'You want to measure how many amps the heater draws. How do you hook up the multimeter?',a:['In series, so the current flows through the meter','Across the heater, in parallel','From hot to ground','On the ohms setting, with the power on'],c:0,e:'To read amps, current has to flow through the meter, so it goes in series. To read volts, you go across (in parallel). A clamp meter reads amps without opening the circuit.'},
-  {q:'At a house panel you measure hot to neutral, then hot to hot. What do you read?',a:['About 120 V, then 240 V','120 V both times','240 V, then 480 V','120 V, then 0 V'],c:0,e:'Most homes get 120/240 V single-phase service: 120 V from either hot to neutral, and 240 V between the two hots.'}
- ],miss=>result(j,miss===0?3:miss<=2?2:1,'Ohm\'s law (I = V ÷ R) and power (P = V × I) let you size almost anything. Series circuits share one path. Parallel circuits give every branch the same voltage, which is how house wiring works. Read volts across a load, and read amps in series or with a clamp meter.'));
+ const j=J('bench');let miss=0,round=0;
+ shell(j,'Training bench day. The foreman has a sandbox circuit set up. Beat his 4 challenges.',`<div class="dots" id="bd"></div><div id="bb"></div><div class="msg" id="msg"></div>`);
+ const dots=()=>{$('#bd').innerHTML=[0,1,2,3].map(k=>`<i class="${k<round?'r':k===round?'c':''}"></i>`).join('')};
+ const msg=(t,c)=>{const m=$('#msg');m.className='msg'+(c?' '+c:'');m.innerHTML=t};
+ const RS=[6,8,10,12,15,20,24,30,40,60];
+ const lampG=(on,lvl)=>`<circle cx="0" cy="0" r="${on?14+lvl*16:0}" fill="#FFE070" opacity="${on?.25+.35*lvl:0}"/><circle cx="0" cy="0" r="16" fill="${on?(lvl>.6?'#FFE070':lvl>.25?'#FFE9A6':'#F4ECD2'):'#E3E7EC'}" stroke="${INK}" stroke-width="3.5"/>`;
+ // Round 1+2: pick the resistor
+ function ohm(kind){dots();const R=kind==='amps'?[8,12,15,20,24,30][Math.floor(Math.random()*6)]:[6,8,10,12,15,20][Math.floor(Math.random()*6)];
+  const target=kind==='amps'?120/R:14400/R;let pick=null,tries=0;
+  const goal=kind==='amps'?`Make the circuit draw exactly <b>${fmt1(target)} A</b>.`:`Make the heater put out exactly <b>${Math.round(target).toLocaleString('en-US')} W</b>.`;
+  $('#bb').innerHTML=`<div class="qcard card"><h3>Challenge ${round+1}: ${kind==='amps'?'Ohm\'s law':'Power'}</h3><p class="q" style="font-size:18px">120 V source. ${goal} Pick a resistor and lock it in.</p></div>
+  <div class="stage card"><svg id="oc" viewBox="0 0 360 150" style="display:block;width:100%"></svg></div>
+  <div class="chips">${RS.map(r=>`<button class="chip rr" data-r="${r}">${r} Ω</button>`).join('')}</div>
+  <button class="btn go" id="lk" style="width:100%" disabled>Lock it in</button>`;
+  const draw=(res)=>{const I=pick?120/pick:0,lvl=Math.min(1,I/15);
+   $('#oc').innerHTML=`<rect x="14" y="52" width="56" height="46" rx="8" fill="#A7B1BD" stroke="${INK}" stroke-width="3.5"/><text x="42" y="80" text-anchor="middle" font-size="14" font-weight="700" fill="${INK}">120 V</text><path d="M42 52V26H160M200 26H300V124H42V98" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>
+   <rect x="160" y="14" width="40" height="24" rx="5" fill="${pick?'#FFC93C':'#fff'}" stroke="${INK}" stroke-width="3" ${pick?'':'stroke-dasharray="5 4"'}/><text x="180" y="31" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${pick?pick+'Ω':'?'}</text>
+   <g transform="translate(300 75)">${lampG(!!pick,lvl)}</g>
+   <rect x="102" y="62" width="128" height="50" rx="10" fill="#FFC93C" stroke="${INK}" stroke-width="3"/><rect x="110" y="70" width="112" height="34" rx="5" fill="#C8E6B0" stroke="${INK}" stroke-width="2.5"/><text x="166" y="94" text-anchor="middle" font-size="18" font-weight="700" fill="${INK}" font-family="Courier New,monospace">${res?res:'-- --'}</text>`};
+  draw();
+  app.querySelectorAll('.rr').forEach(b=>b.onclick=()=>{pick=+b.dataset.r;app.querySelectorAll('.rr').forEach(x=>x.classList.toggle('sel',x===b));$('#lk').disabled=false;tick();draw();msg('')});
+  $('#lk').onclick=()=>{tries++;const I=120/pick,P=14400/pick,val=kind==='amps'?I:P;draw(kind==='amps'?fmt1(I)+' A':Math.round(P)+' W');
+   if(Math.abs(val-target)<.01){good();msg(kind==='amps'?`Nailed it. I = V ÷ R: 120 ÷ ${R} = ${fmt1(target)} A.`:`Nailed it. Amps = 120 ÷ ${R} = ${fmt1(120/R)} A, and watts = 120 × ${fmt1(120/R)} = ${Math.round(target)} W.`,'ok');$('#lk').disabled=true;app.querySelectorAll('.rr').forEach(x=>x.disabled=true);setTimeout(next,1400)}
+   else{miss++;bad();const hi=val>target;msg(`${kind==='amps'?fmt1(I)+' A':Math.round(P)+' W'} is too ${hi?'high':'low'}. ${hi?'More ohms means less current.':'Fewer ohms means more current.'} ${kind==='amps'?'Use I = V ÷ R.':'Find the amps first (I = V ÷ R), then watts = V × I.'}`,'bad')}}}
+ // Round 3: series vs parallel
+ function sp(){dots();let mode=null,ran=false;
+  $('#bb').innerHTML=`<div class="qcard card"><h3>Challenge 3: Work lights</h3><p class="q" style="font-size:18px">Wire 2 work lights so they both run at <b>full brightness</b> and one <b>stays on</b> if the other burns out.</p></div>
+  <div class="stage card"><svg id="spv" viewBox="0 0 360 160" style="display:block;width:100%"></svg></div>
+  <div class="row"><button class="btn alt seg" id="s1">Series</button><button class="btn alt seg" id="s2">Parallel</button></div>
+  <button class="btn go" id="run" style="width:100%;margin-top:10px" disabled>Run the shift</button>`;
+  const draw=(dead)=>{if(!mode){$('#spv').innerHTML=`<text x="180" y="85" text-anchor="middle" font-size="16" font-weight="600" fill="${INK}">Pick a wiring style below</text>`;return}
+   const ser=mode==='s',l1=!dead,l2=ser?!dead:true,lv=ser?.35:1;
+   const L=(x,y,on,gone)=>`<g transform="translate(${x} ${y})">${gone?`<circle r="16" fill="#3A3F4A" stroke="${INK}" stroke-width="3.5"/><path d="M-6-6l12 12M6-6l-12 12" stroke="#fff" stroke-width="2.5"/>`:lampG(on,lv)}</g>`;
+   $('#spv').innerHTML=`<rect x="18" y="66" width="52" height="40" rx="8" fill="#A7B1BD" stroke="${INK}" stroke-width="3.5"/><text x="44" y="91" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">120 V</text>`+(ser?
+    `<path d="M44 66V36H134M166 36H234M266 36H330V136H44V106" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${L(150,36,l1&&l2,dead)}${L(250,36,l2,false)}<text x="200" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">${dead?'0 V':'60 V'} each</text>`
+    :`<path d="M44 66V30H290M44 106V140H290M170 30V69M170 101V140M290 30V69M290 101V140" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${L(170,85,l1,dead)}${L(290,85,l2,false)}<text x="230" y="20" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">120 V each</text>`)};
+  draw();
+  const pickM=m=>{if(ran)return;mode=m;$('#s1').classList.toggle('on',m==='s');$('#s2').classList.toggle('on',m==='p');$('#run').disabled=false;tick();draw();msg(m==='s'?'Series: one path. The two lights split the 120 V, so each gets about 60 V and glows dim.':'Parallel: each light gets its own path and the full 120 V.')};
+  $('#s1').onclick=()=>pickM('s');$('#s2').onclick=()=>pickM('p');
+  $('#run').onclick=()=>{ran=true;$('#run').disabled=true;snd(220,.15,'triangle');draw(true);
+   if(mode==='p'){good();msg('Light 1 burned out, and light 2 kept going at full brightness. That\'s why house circuits are wired in parallel: every branch gets the same voltage.','ok');setTimeout(next,1800)}
+   else{miss++;bad();msg('Light 1 burned out and took light 2 with it. In series there\'s one path, so the same current flows through everything, and one break kills it all. Try again.','bad');setTimeout(()=>{ran=false;$('#run').disabled=false;draw()},1800)}}}
+ // Round 4: probe it
+ function probe(){dots();let mode='V',sel=[],task=0;
+  const P={h:[150,40,'Hot'],n:[150,120,'Neutral'],l1:[300,30,'L1'],l2:[300,70,'L2'],pn:[300,112,'N'],gap:[96,40,'Gap']};
+  const T=[{q:'Measure the <b>voltage across the heater</b>.',ok:(m,s)=>m==='V'&&s.includes('h')&&s.includes('n')},
+   {q:'Measure the <b>current</b> the heater draws. (Open the gap to put the meter in the circuit.)',ok:(m,s)=>m==='A'&&s.includes('gap')},
+   {q:'At the panel, find <b>240 V</b>.',ok:(m,s)=>m==='V'&&s.includes('l1')&&s.includes('l2')},
+   {q:'At the panel, find <b>120 V</b>.',ok:(m,s)=>m==='V'&&s.includes('pn')&&(s.includes('l1')||s.includes('l2'))}];
+  $('#bb').innerHTML=`<div class="qcard card"><h3>Challenge 4: Probe it</h3><p class="q" style="font-size:18px" id="pq"></p></div>
+  <div class="stage card"><svg id="pv" viewBox="0 0 360 160" style="display:block;width:100%"></svg></div>
+  <div class="row"><button class="btn alt seg" id="mv">Meter: Volts</button><button class="btn alt seg" id="ma">Meter: Amps</button></div><p class="hint" style="margin:8px 2px 0">Tap two test points (or the gap for amps).</p>`;
+  const read=()=>{if(sel.includes('gap'))return mode==='A'?fmt1(4500/240)+' A':'---';if(sel.length<2)return '';const s=sel;
+   if(s.includes('h')&&s.includes('n'))return mode==='V'?'240 V':'POP';if(s.includes('l1')&&s.includes('l2'))return '240 V';if(s.includes('pn'))return '120 V';return '0 V'};
+  const draw=()=>{const r=read();let h=`<text x="20" y="148" font-size="13" font-weight="700" fill="${INK}">Water heater circuit</text><rect x="120" y="60" width="60" height="40" rx="8" fill="#fff" stroke="${INK}" stroke-width="3.5"/><text x="150" y="85" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">4500W</text>
+   <path d="M20 40H84M108 40H150V60M150 100V120H20" fill="none" stroke="${INK}" stroke-width="5"/><rect x="250" y="12" width="94" height="128" rx="8" fill="#A7B1BD" stroke="${INK}" stroke-width="3"/><text x="297" y="152" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">Panel</text>`;
+   for(const k in P){const[x,y,l]=P[k],on=sel.includes(k);h+=`<g data-k="${k}" style="cursor:pointer"><circle cx="${x}" cy="${y}" r="20" fill="transparent"/>${k==='gap'?`<rect x="${x-12}" y="${y-12}" width="24" height="24" rx="5" fill="${on?'#FFC93C':'#fff'}" stroke="${INK}" stroke-width="3" stroke-dasharray="4 3"/>`:`<circle cx="${x}" cy="${y}" r="9" fill="${on?'#FFC93C':'#fff'}" stroke="${INK}" stroke-width="3"/>`}<text x="${k==='gap'?x:k[0]==='l'||k==='pn'?x-16:x+16}" y="${k==='gap'?y-18:y+5}" text-anchor="${k==='gap'?'middle':k[0]==='l'||k==='pn'?'end':'start'}" font-size="13" font-weight="700" fill="${INK}">${l}</text></g>`}
+   h+=`<rect x="172" y="4" width="70" height="28" rx="6" fill="#C8E6B0" stroke="${INK}" stroke-width="2.5"/><text x="207" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}" font-family="Courier New,monospace">${r||'--'}</text>`;
+   $('#pv').innerHTML=h;$('#mv').classList.toggle('on',mode==='V');$('#ma').classList.toggle('on',mode==='A');$('#pq').innerHTML=T[task].q};
+  const check=()=>{const t=T[task];if(t.ok(mode,sel)){good();msg(['Volts are read across a load, in parallel.','Amps are read in series: the current has to flow through the meter. (A clamp meter skips opening the circuit.)','L1 to L2 is 240 V: the two hot legs.','Either hot leg to neutral is 120 V. That\'s 120/240 V single-phase.'][task],'ok');task++;sel=[];setTimeout(()=>{if(task<T.length){draw()}else next()},1200);return}
+   miss++;if(read()==='POP'){zap();msg('<b>POP!</b> In amps mode the meter is nearly a dead short. Across a load, that blows the meter\'s fuse. Amps go in series, volts go across.','bad')}else{bad();msg(`That reads ${read()||'nothing useful'}. ${mode==='A'&&!sel.includes('gap')?'For amps, open the gap so current flows through the meter.':task===0&&mode==='A'?'Switch the meter to volts.':'Try another pair.'}`,'bad')}
+   setTimeout(()=>{sel=[];draw()},900)};
+  $('#pv').addEventListener('click',e=>{const g=e.target.closest('[data-k]');if(!g)return;const k=g.dataset.k;tick();
+   if(k==='gap'){sel=['gap'];draw();check();return}
+   if(sel.includes(k))sel=sel.filter(x=>x!==k);else{sel=sel.filter(x=>x!=='gap');sel.push(k)}draw();if(sel.length===2)check()});
+  $('#mv').onclick=()=>{mode='V';sel=[];tick();draw()};$('#ma').onclick=()=>{mode='A';sel=[];tick();draw()};
+  draw()}
+ function next(){round++;msg('');if(round===1)ohm('watts');else if(round===2)sp();else if(round===3)probe();
+  else result(j,miss===0?3:miss<=3?2:1,'Ohm\'s law (I = V ÷ R) and power (P = V × I) let you size almost anything. Series circuits share one path, so one break kills it all. Parallel gives every branch the same voltage, which is how house wiring works. Read volts across a load, amps in series. At the panel, either hot to neutral is 120 V, and hot to hot is 240 V.',`<p style="margin:0 0 4px">Mistakes: ${miss}</p>`)}
+ ohm('amps');
 }
 
-/* ---------- LOCKOUT (year 1) ---------- */
+/* ---------- ARCADE SORT (shared) ---------- */
+function sortGame(items,bins,title,done){
+ let i=0,strikes=0,score=0,tm=null,over=false;
+ app.querySelector('#sg2')&&app.querySelector('#sg2').remove();
+ app.insertAdjacentHTML('beforeend',`<div id="sg2"><div class="gamehud card"><span>${title}</span><span class="hearts" id="sh"></span></div>
+ <div class="lane card"><div class="itm" id="it"></div></div><div class="bins">${bins.map(b=>`<button class="btn" data-b="${b[0]}">${b[1]}</button>`).join('')}</div><div class="msg" id="smg"></div></div>`);
+ $('#sg2').scrollIntoView({behavior:'smooth',block:'start'});
+ const hh=()=>{$('#sh').innerHTML=[0,1,2].map(k=>HEART.replace('F',k<3-strikes?'#FF5A5A':'#E3E7EC')).join('')};
+ function show(){if(over)return;if(i>=items.length||strikes>=3){over=true;clearTimeout(tm);done(strikes,score);return}
+  const it=items[i],d=Math.max(2200,4200-i*180),el=$('#it');el.innerHTML=it.html;el.style.transition='none';el.style.transform='translateY(0)';void el.offsetWidth;el.style.transition=`transform ${d}ms linear`;el.style.transform='translateY(150px)';
+  clearTimeout(tm);tm=setTimeout(()=>{strikes++;bad();$('#smg').className='msg bad';$('#smg').textContent='Too slow! '+it.why;hh();i++;setTimeout(show,700)},d)}
+ app.querySelectorAll('#sg2 .bins .btn').forEach(b=>b.onclick=()=>{if(over||i>=items.length)return;clearTimeout(tm);const it=items[i],m=$('#smg');
+  if(b.dataset.b===it.bin){score++;tick();m.className='msg ok';m.textContent=it.why}else{strikes++;bad();m.className='msg bad';m.textContent='Nope. '+it.why;hh()}
+  i++;setTimeout(show,350)});
+ hh();show();
+}
+const spool=(aw,c)=>`<svg viewBox="0 0 120 70" style="width:150px;height:88px"><ellipse cx="60" cy="35" rx="50" ry="30" fill="${c}" stroke="${INK}" stroke-width="3.5"/>${[0,1,2].map(k=>`<ellipse cx="60" cy="35" rx="${44-k*10}" ry="${25-k*6}" fill="none" stroke="${INK}" stroke-width="${aw===10?5:aw===12?3.5:2.2}" opacity=".55"/>`).join('')}<circle cx="60" cy="35" r="8" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="34" y="52" width="52" height="18" rx="5" fill="#fff" stroke="${INK}" stroke-width="2.5"/><text x="60" y="66" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${aw} AWG</text></svg>`;
+
+/* ---------- LOCKOUT (year 1): order + toolbox arcade ---------- */
 function lockout(){
  const j=J('lockout');
  const ST=['Tell everyone affected that the power is going off','Find the right breaker using the panel directory','Switch the breaker OFF','Put your lock and tag on the breaker','Test your tester on a known live circuit','Test the circuit and confirm it\'s dead','Test your tester again on the live circuit'];
@@ -747,37 +823,87 @@ function lockout(){
  function draw(){$('#pl').innerHTML=ST.slice(0,next).map(s=>`<li>${s}</li>`).join('')||'<li style="list-style:none;margin-left:-22px;opacity:.6">Tap the first step below.</li>';
   $('#lo').innerHTML=ord.filter(i=>i>=next).map(i=>`<button class="btn" data-i="${i}">${ST[i]}</button>`).join('')}
  $('#lo').onclick=e=>{const b=e.target.closest('[data-i]');if(!b)return;const i=+b.dataset.i,m=$('#msg');
-  if(i===next){next++;tick();m.className='msg';m.textContent='';draw();if(next===ST.length){good();setTimeout(toolbox,500)}}
+  if(i===next){next++;tick();m.className='msg';m.textContent='';draw();if(next===ST.length){good();m.className='msg ok';m.textContent='Locked out and proven dead. Now the foreman\'s toolbox sort!';setTimeout(round2,1200)}}
   else{miss++;bad();b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),600);m.className='msg bad';m.textContent='Not yet. '+HINT[next]}};
  draw();
- function toolbox(){
-  steps(j,'Locked out and proven dead. Before you start, the foreman runs a quick toolbox talk.',[
-   {h:'Toolbox talk',q:'What does an AFCI breaker protect against?',a:['Arcing that can start a fire','Shocks to people','Lightning strikes','Low voltage'],c:0,e:'An AFCI (arc-fault) breaker watches for the signature of dangerous arcing, like a damaged cord or a loose connection, and shuts it off before it starts a fire. A GFCI is the one that protects people from shock.'},
-   {h:'Toolbox talk',q:'14 AWG copper building wire normally gets what size breaker?',a:['15 A','20 A','30 A','40 A'],c:0,e:'14 AWG copper gets 15 A, 12 AWG gets 20 A, and 10 AWG gets 30 A.'},
-   {h:'Toolbox talk',q:'Which of these wires is the thickest?',a:['10 AWG','12 AWG','14 AWG','18 AWG'],c:0,e:'With AWG sizes, a smaller number means a bigger wire.'},
-   {h:'Toolbox talk',q:'The National Electrical Code (NEC) is also known as&hellip;',a:['NFPA 70','OSHA 1910','UL 94','IEEE 802'],c:0,e:'The NEC is NFPA 70, published by the National Fire Protection Association. A new edition comes out every 3 years.'}
-  ],m2=>{const t=miss+m2;result(j,t===0?3:t<=3?2:1,'Lock out, tag out, then test before you touch: live, dead, live. Never trust a breaker label or a light switch to tell you it\'s off. And know your basics: 14 AWG copper gets 15 A, 12 AWG gets 20 A, 10 AWG gets 30 A, and a smaller AWG number means a bigger wire.')});
- }
+ function round2(){
+  $('#lo').innerHTML='';$('#msg').className='msg';$('#msg').textContent='';
+  const sp=shuffle([14,12,10,14,12,10]).map(aw=>({html:spool(aw,aw===14?'#4FA8FF':aw===12?'#FFC93C':'#FF8A3D'),bin:String(aw===14?15:aw===12?20:30),why:`${aw} AWG copper goes on a ${aw===14?15:aw===12?20:30} A breaker. A smaller AWG number is a thicker wire.`}));
+  sortGame(sp,[['15','15 A'],['20','20 A'],['30','30 A']],'Match wire to breaker',(s1,sc1)=>{
+   if(s1>=3){result(j,0,'Match the wire to the breaker: 14 AWG copper gets 15 A, 12 AWG gets 20 A, 10 AWG gets 30 A. A smaller AWG number means a thicker wire.');return}
+   const HZ=shuffle([['A hair dryer falls into a full sink','g'],['A kid touches a cracked outdoor outlet in the rain','g'],['A drill with a nicked cord on a wet garage floor','g'],['The dog chewed a lamp cord, and it\'s sparking behind the couch','a'],['A loose wire nut is arcing inside a bedroom wall','a'],['A picture nail went through a cable behind the drywall','a']]).map(h=>({html:`<div class="hz">${h[0]}</div>`,bin:h[1],why:h[1]==='g'?'Shock risk to a person: that\'s GFCI territory.':'Arcing that can start a fire: that\'s what an AFCI catches.'}));
+   sortGame(HZ,[['g','GFCI stops it'],['a','AFCI stops it']],'Which protects?',(s2,sc2)=>{
+    const st=(s1+s2)>=3?0:(miss+s1+s2)===0?3:(miss+s1+s2)<=3?2:1;
+    result(j,st,'Lock out, tag out, then test before you touch: live, dead, live. Match wire to breaker: 14 AWG gets 15 A, 12 AWG gets 20 A, 10 AWG gets 30 A, and a smaller AWG number is a thicker wire. GFCIs protect people from shock. AFCIs catch arcing before it starts a fire. All of it comes from the NEC, also called NFPA 70, updated every 3 years.',`<p style="margin:0 0 4px">Order mistakes: ${miss} &middot; Sort misses: ${s1+s2}</p>`)})})}
 }
 
-/* ---------- YEAR 2: BOX FILL ---------- */
+/* ---------- YEAR 2: PACK THE BOX ---------- */
 function boxfill(){
- const j=J('boxfill'),aw=Math.random()<.5?14:12,per=aw===14?2:2.25,dev=Math.random()<.5?'receptacle':'switch';
- const cab=shuffle([[2,2],[2,3],[3,2],[1,3]])[0]; // [count, insulated per cable]
- const nC=cab[0],ins=cab[1],insul=nC*ins,N=insul+1+2,need=N*per;
- const BX=[['Single-gang plastic, 18.0 cu in',18],['4 in. square, 1½ in. deep, 21.0 cu in',21],['Deep single-gang plastic, 22.5 cu in',22.5],['4 in. square, 2⅛ in. deep, 30.3 cu in',30.3],['Two-gang plastic, 32.0 cu in',32]];
- const ok=BX.findIndex(b=>b[1]>=need);
+ const j=J('boxfill'),aw=Math.random()<.5?14:12,per=aw===14?2:2.25,dev=Math.random()<.5?'Receptacle':'Switch';
+ const cab=shuffle([[2,2],[2,3],[3,2],[1,3],[3,3]])[0],nC=cab[0],ins=cab[1];
+ const ITEMS=[...Array.from({length:nC},(_,i)=>({id:'c'+i,n:`${aw}/${ins} cable`,v:ins,why:`+${ins}: each insulated wire coming in counts 1.`})),{id:'g',n:'Ground bundle',v:1,why:'+1: all the grounds together count 1.'},{id:'d',n:dev+' on a yoke',v:2,why:'+2: a device on a yoke counts 2.'}];
+ const N=ITEMS.reduce((a,b)=>a+b.v,0),need=N*per;
+ const BX=[['Single-gang plastic',18],['4 in. square, 1½ in. deep',21],['Deep single-gang',22.5],['4 in. square, 2⅛ in. deep',30.3],['Two-gang plastic',32],['4 11/16 in. square deep',42]];
+ const best=BX.findIndex(b=>b[1]>=need);let box=null,placed=[],fails=0,first=null;
+ shell(j,`Pack the box. ${nC} cable${nC>1?'s':''} of ${aw}/${ins} with ground, plus a ${dev.toLowerCase()}. Pick a box off the shelf, then load it up. Too small and it bulges, and the inspector fails it.`,
+ `<div id="bx"></div><div class="msg" id="msg"></div>`);
  const f2=n=>(Math.round(n*100)/100).toFixed(2);
- const cl=`${aw}/${ins} with ground`;
- const pic=`<svg viewBox="0 0 360 170" style="display:block;width:100%"><rect x="110" y="20" width="140" height="130" rx="14" fill="#9FD8F5" stroke="${INK}" stroke-width="4"/><rect x="152" y="42" width="56" height="86" rx="12" fill="#FFF8E7" stroke="${INK}" stroke-width="3.5"/><text x="180" y="90" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${dev==='receptacle'?'RECEP':'SWITCH'}</text>
- ${Array.from({length:nC},(_,i)=>{const y=40+i*(90/Math.max(1,nC-1||1));const x2=i%2?250:110,x1=i%2?345:15;return `<path d="M${x1} ${nC===1?85:y}H${x2}" stroke="${INK}" stroke-width="12" stroke-linecap="round"/><path d="M${x1} ${nC===1?85:y}H${x2}" stroke="#F4F1EA" stroke-width="7" stroke-linecap="round"/>`}).join('')}
- <text x="180" y="166" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">${nC} cable${nC>1?'s':''} of ${cl}</text></svg>`;
- const opts=[...new Set([N,N-1,N-2,N+nC-1,N+1])].slice(0,4);
- steps(j,`New ${dev} box, ${aw} AWG copper. ${nC} cable${nC>1?'s':''} of ${cl} come in, and the ${dev} goes on a yoke. No internal clamps. The inspector will check your box fill.`,[
-  {html:pic,q:'How many conductors does this box count as for box fill?',a:opts.map(n=>n+' conductors'),c:0,e:`Each insulated wire coming in counts 1 (${insul}). All the grounds together count 1. The ${dev} counts 2. Total: ${insul} + 1 + 2 = ${N}. Internal clamps would add 1 more, and pigtails that stay in the box don't count.`},
-  {q:`Each ${aw} AWG conductor counts ${aw===14?'2.00':'2.25'} cubic inches. How much box volume do you need?`,a:[f2(need),f2(N*(aw===14?2.25:2)),f2((N-1)*per),f2((N+2)*per)].map(v=>v+' cu in'),c:0,e:`${N} × ${aw===14?'2.00':'2.25'} = ${f2(need)} cubic inches. 14 AWG is 2.00 cu in per conductor, and 12 AWG is 2.25.`},
-  {q:`You need at least ${f2(need)} cu in. Which is the smallest box that passes?`,a:[BX[ok][0],...BX.filter((_,i)=>i!==ok).map(b=>b[0])],c:0,e:`The ${BX[ok][0].split(',')[0].toLowerCase()} holds ${BX[ok][1]} cu in, enough for ${f2(need)}. ${ok>0?'Anything smaller fails. ':''}Box volume is stamped inside the box.`}
- ],miss=>result(j,miss===0?3:miss<=2?2:1,'Box fill keeps wires from getting crammed and overheating. Count each insulated wire coming in as 1, all the grounds together as 1, each device as 2, and internal clamps as 1. Multiply by 2.00 cu in for 14 AWG or 2.25 for 12 AWG, then pick a box at least that big.'));
+ function shelf(){placed=[];
+  $('#bx').innerHTML=`<div class="qcard card"><h3>${aw} AWG = ${aw===14?'2.00':'2.25'} cu in per conductor</h3><p class="q" style="font-size:18px">Pick a box. Volume is stamped inside each one.</p></div><div class="shop">${BX.map((b,i)=>`<button class="si card bxb" data-i="${i}"><svg viewBox="0 0 60 50" style="width:70px;height:56px"><rect x="${30-b[1]/2.2}" y="${25-b[1]/3}" width="${b[1]/1.1}" height="${b[1]/1.5}" rx="4" fill="#9FD8F5" stroke="${INK}" stroke-width="3"/></svg><b>${b[0]}</b><span class="pay">${b[1]} cu in</span></button>`).join('')}</div>`;
+  app.querySelectorAll('.bxb').forEach(b=>b.onclick=()=>{box=+b.dataset.i;if(first===null)first=box;tick();pack()})}
+ function pack(){const cap=BX[box][1];
+  const draw=()=>{const used=placed.reduce((a,id)=>a+ITEMS.find(x=>x.id===id).v,0)*per,pct=used/cap*100,over=used>cap;
+   $('#bx').innerHTML=`<div class="stage card" style="text-align:center"><svg viewBox="0 0 200 150" style="width:220px;height:165px" class="${over?'bulge':''}"><rect x="30" y="20" width="140" height="110" rx="14" fill="${over?'#FFC9C9':'#9FD8F5'}" stroke="${INK}" stroke-width="4"/>${placed.map((id,k)=>`<rect x="${42+(k%3)*42}" y="${32+Math.floor(k/3)*30}" width="36" height="24" rx="6" fill="${id==='d'?'#FFF8E7':id==='g'?'#D0843F':'#F4F1EA'}" stroke="${INK}" stroke-width="2.5"/>`).join('')}</svg>
+   <p style="margin:2px 0 6px;font-weight:600">${BX[box][0]}: ${f2(used)} of ${cap} cu in</p><div class="bar" style="margin:0 6px"><div style="width:${Math.min(100,pct)}%;background:${over?'#FF5A5A':pct>85?'#FFC93C':'#35C76F'}"></div></div></div>
+   <div class="chips">${ITEMS.map(it=>`<button class="chip pk" data-id="${it.id}" ${placed.includes(it.id)?'disabled':''}>${it.n}</button>`).join('')}</div>`;
+   app.querySelectorAll('.pk').forEach(b=>b.onclick=()=>{const it=ITEMS.find(x=>x.id===b.dataset.id);placed.push(it.id);tick();const m=$('#msg');m.className='msg';m.textContent=it.why;draw();after()})};
+  const after=()=>{const used=placed.reduce((a,id)=>a+ITEMS.find(x=>x.id===id).v,0)*per,m=$('#msg');
+   if(used>cap){fails++;zap();m.className='msg bad';m.innerHTML=`<b>Bulging box!</b> ${N} conductors × ${aw===14?'2.00':'2.25'} = ${f2(need)} cu in, and this box only holds ${cap}. Pick a bigger one.`;app.querySelectorAll('.pk').forEach(b=>b.disabled=true);setTimeout(shelf,2200);return}
+   if(placed.length===ITEMS.length){good();const smallest=box===best;m.className='msg ok';m.innerHTML=`<b>Passed!</b> ${N} conductors × ${aw===14?'2.00':'2.25'} = ${f2(need)} cu in, and it fits in ${cap}.${smallest?' Smallest box that works. Nice.':' It fits, but a smaller box would have done the job.'}`;
+    const st=fails===0&&smallest?3:fails<=1?2:1;setTimeout(()=>result(j,st,'Box fill: each insulated wire coming in counts 1, all the grounds together count 1, each device on a yoke counts 2, and internal clamps count 1. Multiply by 2.00 cu in for 14 AWG or 2.25 for 12 AWG, then pick a box at least that big.'),1600)}};
+  draw()}
+ shelf();
+}
+
+/* ---------- YEAR 2: WATER HEATER PANEL BUILD ---------- */
+function heater240(){
+ const j=J('heater240'),W=[3500,4500,5500][Math.floor(Math.random()*3)],I=W/240,M=I*1.25;
+ const BRK=[['15-1','15 A single-pole',15,1],['20-2','20 A 2-pole',20,2],['30-2','30 A 2-pole',30,2],['40-2','40 A 2-pole',40,2],['30-1','30 A single-pole',30,1]],SP=[[14,15],[12,20],[10,30]];
+ let br=null,wr=null,miss=0;
+ const plate=`<svg viewBox="0 0 360 120" style="display:block;width:100%"><rect x="16" y="8" width="96" height="104" rx="16" fill="#fff" stroke="${INK}" stroke-width="4"/><path d="M50 72c4-6 0-9 6-13 0 6 6 6 4 12 4-3 6 0 4 5a8 8 0 0 1-14-4z" fill="#FF8A3D" stroke="${INK}" stroke-width="2"/><rect x="132" y="18" width="210" height="84" rx="8" fill="#E3E7EC" stroke="${INK}" stroke-width="3"/><text x="237" y="44" text-anchor="middle" font-size="14" font-weight="700" fill="${INK}">WATER HEATER, 50 GAL</text><text x="237" y="68" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">${W.toLocaleString('en-US')} W, 240 V</text><text x="237" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="${INK}">Size circuit at 125%</text></svg>`;
+ shell(j,'New 50-gallon electric water heater. Read the nameplate, grab the right breaker and wire off the truck, then land it in the panel.',`<div id="hz"></div><div class="msg" id="msg"></div>`);
+ function parts(){
+  $('#hz').innerHTML=`<div class="stage card">${plate}</div><h2 class="sec" style="font-size:19px">Breaker</h2><div class="chips">${BRK.map(b=>`<button class="chip bk" data-k="${b[0]}">${b[1]}</button>`).join('')}</div><h2 class="sec" style="font-size:19px">Wire spool</h2><div class="chips">${SP.map(s=>`<button class="chip sp" data-a="${s[0]}">${s[0]} AWG copper</button>`).join('')}</div><button class="btn go" id="grab" style="width:100%" disabled>Grab parts</button>`;
+  const upd=()=>{app.querySelectorAll('.bk').forEach(x=>x.classList.toggle('sel',x.dataset.k===br));app.querySelectorAll('.sp').forEach(x=>x.classList.toggle('sel',+x.dataset.a===wr));$('#grab').disabled=!(br&&wr)};
+  app.querySelectorAll('.bk').forEach(b=>b.onclick=()=>{br=b.dataset.k;tick();upd()});app.querySelectorAll('.sp').forEach(b=>b.onclick=()=>{wr=+b.dataset.a;tick();upd()});
+  $('#grab').onclick=()=>{const b=BRK.find(x=>x[0]===br),amp=SP.find(s=>s[0]===wr)[1],m=$('#msg');m.className='msg bad';
+   if(b[3]===1){miss++;bad();m.innerHTML='<b>Single-pole won\'t work.</b> It only connects to one hot leg, which is 120 V. A 240 V heater needs a 2-pole breaker across both legs.';return}
+   if(b[2]<M){miss++;bad();m.innerHTML=`<b>Too small.</b> ${W.toLocaleString('en-US')} W ÷ 240 V = ${fmt1(I)} A, and water heaters are sized at 125%: ${fmt1(M)} A. A ${b[2]} A breaker is too small.`;return}
+   if(amp<b[2]){miss++;zap();m.innerHTML=`<b>Wire too small.</b> ${wr} AWG copper is only good for ${amp} A. On a ${b[2]} A breaker it could overheat before the breaker trips.`;return}
+   good();m.className='msg ok';m.innerHTML=`Good parts. ${fmt1(I)} A × 1.25 = ${fmt1(M)} A, so a ${b[2]} A 2-pole breaker with ${wr} AWG copper works. Now land it.`;setTimeout(()=>{m.className='msg';m.textContent='';wire(b[2])},1400)}}
+ function wire(rating){
+  const Wr={blk:{c:'#262626',x:135,n:'Black'},wht:{c:'#F7F7F7',x:180,n:'White'},bare:{c:'#D0843F',x:225,n:'Bare'}};
+  const pos=shuffle([135,180,225]);Object.keys(Wr).forEach((k,i)=>Wr[k].x=pos[i]);
+  const T={pa:{x:150,y:80,c:'#B4BCC6',n:'Pole A'},pb:{x:210,y:80,c:'#B4BCC6',n:'Pole B'},nb:{x:112,y:250,c:'#D5DAE1',n:'Neutral bar'},gb:{x:248,y:250,c:'#3DBE5B',n:'Ground bar'}};
+  const st={sel:null,map:{},done:false};let tries=0;
+  $('#hz').innerHTML=`<div class="stage card"><svg id="rc" viewBox="0 0 360 380" aria-label="Panel with a 2-pole breaker, neutral bar and ground bar">
+  <rect x="68" y="8" width="224" height="326" rx="10" fill="#A7B1BD" stroke="${INK}" stroke-width="4"/><rect x="82" y="22" width="196" height="298" rx="6" fill="#8592A1"/>
+  <rect x="128" y="96" width="104" height="54" rx="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><rect x="150" y="112" width="60" height="18" rx="4" fill="#FFF8E7" stroke="${INK}" stroke-width="2.5"/><text x="180" y="145" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">${rating} A 2-pole</text>
+  <rect x="90" y="236" width="70" height="18" rx="4" fill="#D5DAE1" stroke="${INK}" stroke-width="3"/><rect x="200" y="236" width="70" height="18" rx="4" fill="#9BE3AE" stroke="${INK}" stroke-width="3"/>
+  <rect x="102" y="334" width="156" height="34" rx="14" fill="#F4F1EA" stroke="${INK}" stroke-width="3"/><text x="180" y="356" font-size="14" font-weight="600" fill="${INK}" text-anchor="middle">${wr}/2 with ground</text>${FXG}</svg></div>
+  <button class="btn alt" id="tape" style="width:100%;margin-bottom:12px">Tape the white wire black</button>${WIREUI}`;
+  const draw=wiring(Wr,T,st);
+  $('#tape').onclick=()=>{if(st.done)return;Wr.wht.tape=!Wr.wht.tape;Wr.wht.n=Wr.wht.tape?'White (taped)':'White';$('#tape').textContent=Wr.wht.tape?'Remove the tape':'Tape the white wire black';tick();draw()};
+  $('#hint').onclick=()=>{tick();miss++;const m=$('#msg');m.className='msg ok';m.innerHTML='<b>Hint:</b> 240 V needs two hots: black and the white (re-marked) go on the two poles. Bare goes to ground. No neutral.'};
+  $('#flip').onclick=()=>{tries++;const mp=st.map,m=$('#msg');$('#fxg').innerHTML='';m.className='msg bad';
+   if(['blk','wht'].some(k=>mp[k]==='gb')){zap();if(!st.sh){st.sh=1;failPost(j,'caused a dead short 💥')}sparksAt(T.gb.x,T.gb.y);badgeAt('BREAKER TRIPPED','#FFC9C9');m.innerHTML='<b>Bang!</b> A wire that\'s supposed to be hot is on the ground bar. Dead short.';return}
+   if(mp.bare!=='gb'){zap();sparksAt(T[mp.bare].x,T[mp.bare].y);badgeAt('WIRING FAULT','#FFC9C9');m.innerHTML='<b>Wiring fault.</b> The bare ground belongs on the ground bar, never on a breaker or the neutral.';return}
+   if(mp.wht==='nb'||mp.blk==='nb'){bad();badgeAt('ONLY 120 V','#FFC9C9');m.innerHTML='<b>Lukewarm water.</b> One wire is on the neutral bar, so the heater only sees 120 V and puts out a quarter of its heat. A 240 V heater needs both poles and no neutral.';return}
+   if(!Wr.wht.tape){bad();badgeAt('INSPECTOR: FAIL','#FFC9C9');m.innerHTML='<b>Re-mark the white.</b> It\'s being used as a hot, so it needs black (or red) tape everywhere it\'s visible. Otherwise the next electrician thinks it\'s a safe neutral.';return}
+   st.done=true;draw();good();badgeAt('HOT WATER!','#BFF0CF');m.className='msg ok';m.textContent='Breaker on. The elements heat up, and the customer has hot water.';
+   const t=miss+tries-1;setTimeout(()=>result(j,t===0?3:t<=2?2:1,'240 V loads use a 2-pole breaker across both hot legs, with no neutral. Size water heater circuits at 125% of the nameplate, then match the wire to the breaker: 12 AWG for 20 A, 10 AWG for 30 A. A white wire used as a hot must be re-marked with tape.'),1300)};
+  draw()}
+ parts();
 }
 
 /* ---------- YEAR 2: ROUGH-IN STAPLES ---------- */
@@ -812,20 +938,6 @@ function roughin(){
   const stars=tries===1&&st.length<=need+1?3:tries<=2?2:1;
   setTimeout(()=>steps(j,'The inspector has one more question while he\'s here.',[{h:'Inspector',q:'You bored a hole for the cable, and its edge is only 1 in. from the face of the stud. What does it need?',a:['A steel nail plate over it','Nothing, it\'s inside the wall','Electrical tape','A bigger hole'],c:0,e:'When the hole\'s edge is closer than 1¼ in. to the face of the stud, cover it with a steel plate at least 1/16 in. thick, so drywall screws and nails can\'t hit the cable.'}],m2=>result(j,Math.max(1,stars-m2),'NM cable gets secured within 12 in. of every box and at least every 4½ ft along the run. Keep holes 1¼ in. back from the face of the stud, or add a steel nail plate. Inspectors check this before the drywall goes up, so get it right the first time.')),1200)};
  draw();
-}
-
-/* ---------- YEAR 2: 240 V WATER HEATER ---------- */
-function heater240(){
- const j=J('heater240'),W=[3500,4500,5500][Math.floor(Math.random()*3)],I=W/240,M=I*1.25,small=M<=20;
- const plate=`<svg viewBox="0 0 360 140" style="display:block;width:100%"><rect x="20" y="10" width="110" height="122" rx="18" fill="#fff" stroke="${INK}" stroke-width="4"/><rect x="40" y="2" width="16" height="14" rx="3" fill="#B4BCC6" stroke="${INK}" stroke-width="3"/><rect x="94" y="2" width="16" height="14" rx="3" fill="#B4BCC6" stroke="${INK}" stroke-width="3"/><rect x="150" y="26" width="190" height="90" rx="8" fill="#E3E7EC" stroke="${INK}" stroke-width="3"/><text x="245" y="52" text-anchor="middle" font-size="14" font-weight="700" fill="${INK}">WATER HEATER</text><text x="245" y="76" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">${W.toLocaleString('en-US')} W elements</text><text x="245" y="100" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">240 V, single-phase</text></svg>`;
- const setups=small?['20 A breaker, 12 AWG copper','15 A breaker, 14 AWG copper','20 A breaker, 14 AWG copper','30 A breaker, 12 AWG copper']:['30 A breaker, 10 AWG copper','20 A breaker, 12 AWG copper','30 A breaker, 12 AWG copper','40 A breaker, 12 AWG copper'];
- steps(j,'New 50-gallon electric water heater in a basement. Read the nameplate, size the circuit, and wire it at the panel.',[
-  {html:plate,q:'How many amps does it draw at 240 V?',a:[fmt1(I)+' A',fmt1(W/120)+' A',fmt1(I/2)+' A',fmt1(W/208*1.5)+' A'],c:0,e:`Amps = watts ÷ volts. ${W.toLocaleString('en-US')} ÷ 240 = ${fmt1(I)} A.`},
-  {html:plate,q:'A water heater like this is sized at 125% of its nameplate. What\'s the minimum circuit rating?',a:[fmt1(M)+' A',fmt1(I)+' A',fmt1(I*.8)+' A',fmt1(I*2)+' A'],c:0,e:`Storage water heaters (120 gal or less) count as continuous loads, so the circuit must be at least 125%: ${fmt1(I)} × 1.25 = ${fmt1(M)} A.`},
-  {q:`You need at least ${fmt1(M)} A. Which setup meets code?`,a:setups,c:0,e:small?`${fmt1(M)} A fits on a 20 A breaker, and 20 A needs 12 AWG copper.`:`${fmt1(M)} A is over 20 A, so go to 30 A, and 30 A needs 10 AWG copper. 12 AWG tops out at 20 A.`},
-  {q:'How do you get 240 V at the panel?',a:['A 2-pole breaker that connects to both hot legs','Two single-pole breakers on the same leg','A single-pole breaker with a bigger wire','A GFCI breaker'],c:0,e:'A 2-pole breaker grabs both hot legs (buses), and the voltage between them is 240 V. Its handles are tied so both legs shut off together.'},
-  {q:'This heater needs only two hots and a ground, but your 10/2 cable has black, white and bare. What do you do with the white?',a:['Use it as the second hot and re-mark it with black or red tape at both ends','Leave it unhooked','Use it as the ground','Land it on the neutral bar'],c:0,e:'In a cable, a white wire can be used as a hot if you re-mark it with tape (black or red) at every place it\'s visible, so nobody mistakes it for a neutral.'}
- ],miss=>result(j,miss===0?3:miss<=2?2:1,'240 V loads use a 2-pole breaker across both hot legs. Size water heater circuits at 125% of the nameplate, then match the wire to the breaker: 12 AWG for 20 A, 10 AWG for 30 A. A white wire used as a hot must be re-marked.'));
 }
 
 /* ---------- YEAR 2: GARAGE SUBPANEL ---------- */
