@@ -56,6 +56,21 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .mi{flex:1}.mi b{display:block;font-weight:600;line-height:1.2;overflow-wrap:anywhere}.mi em{font-style:normal;font-size:12px;background:var(--ink);color:#fff;border-radius:6px;padding:1px 6px;vertical-align:2px}.mi small{font-size:14px;opacity:.75}
 .ms{display:flex;align-items:center;gap:4px;font-weight:700;white-space:nowrap}.ms .stars{margin:0}
 .news{padding:4px 12px}.nw{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:2px dashed #D3D9E0}.nw:last-child{border:0}.nw small{white-space:nowrap;opacity:.7;font-size:13px}
+.ce{padding:12px 14px;margin-bottom:12px;background:#FFE1E1}.ce b{font-weight:700;font-size:17px}.ce p{margin:4px 0 8px;font-size:15px}
+.cebadge{font-size:12px;font-weight:700;background:#FF5A5A;color:#fff;border-radius:6px;padding:1px 6px;white-space:nowrap}
+.tags{position:absolute;top:8px;right:8px;display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}.tg{background:#fff;border:2px solid var(--ink);border-radius:999px;font-size:13px;font-weight:700;padding:1px 8px}.tg.nw{background:var(--red);color:#fff}
+.job.held{opacity:.55}
+.dailybar{padding:10px 12px;margin-bottom:12px;background:var(--yel);font-size:15px;cursor:pointer}.dailybar b{font-weight:700}.dailybar span{float:right;font-weight:600;opacity:.7}
+.codebox{display:flex;flex-direction:column;align-items:stretch;gap:8px;padding:10px 12px;margin-top:12px}.codebox b{font-weight:600}.codebox small{display:block;font-size:13px;opacity:.75}.codebox .btn{white-space:nowrap;font-variant-numeric:tabular-nums}
+.gear{display:flex;gap:6px;margin-top:2px}
+.earn2{font-weight:700;color:#1E8C4C;white-space:nowrap;font-size:17px}
+.sh{font-size:20px;font-weight:700;margin:16px 4px 8px;color:#fff;-webkit-text-stroke:1px var(--ink);paint-order:stroke fill;text-shadow:0 2px 0 var(--ink)}
+.shop{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.si{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;text-align:center}.si>svg{width:72px;height:52px}.si b{font-weight:600;font-size:15px}.si .btn{width:100%;min-height:42px;font-size:15px;padding:6px 8px}.si.eq{background:#FFF3C4}
+.inp{display:block;width:100%;margin:8px 0 6px;font:500 18px Fredoka,system-ui,sans-serif;padding:12px;border:3px solid var(--ink);border-radius:12px;min-height:50px}
+.err{margin:0 0 10px;font-size:14px;color:#C0392B;min-height:20px}
+.seg.on{background:var(--yel)}
+.cash{cursor:pointer;font-family:inherit}
 .exam{display:flex;align-items:center;gap:12px;width:100%;margin-top:14px;padding:12px;text-align:left;background:var(--pap)}
 .exam svg{width:52px;height:52px;flex:none}.exam b{font-size:19px;font-weight:600;display:block}.exam small{font-size:14px}
 .exam.locked{opacity:.65}
@@ -78,7 +93,7 @@ button:focus-visible{outline:3px solid #fff;outline-offset:3px}
 .meter p{margin:0;font-size:15px}
 .opts{display:grid;gap:10px}
 .opts .btn{text-align:left;font-size:17px;background:#fff}
-.opts .btn.right{background:#BFF0CF}.opts .btn.wrong{background:#FFC9C9}
+.opts .btn.right{background:#BFF0CF}.opts .btn.wrong{background:#FFC9C9}.opts .btn.wrong:disabled,.opts .btn:disabled{opacity:.75}
 .hint{font-size:15px;margin:0 2px 10px}
 .circ{padding:10px;margin-bottom:10px;transition:background .2s}
 .circ.over{background:#FFE1E1;animation:wob .35s infinite alternate}
@@ -134,10 +149,11 @@ const $=s=>document.querySelector(s);
 const app=$('#app');
 const INK='#1B2A41';
 const KEY='sparkup-v1';
-let S={cash:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0};
+let S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:false,view:0,look:{hat:'yellow'},owned:{}};
 try{const d=JSON.parse(localStorage.getItem(KEY));if(d)S=Object.assign(S,d)}catch(e){}
 if(!S.exams)S.exams={};if(S.exam&&!S.exams[1])S.exams[1]=1;
-const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+if(!S.look)S.look={hat:'yellow'};if(!S.owned)S.owned={};S.earned=Math.max(S.earned||0,S.cash||0);
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}queueBackup()};
 const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 
 let AC=null;
@@ -163,48 +179,83 @@ hat:`<svg viewBox="0 0 48 48"><path d="M6 34c0-11 8-20 18-20s18 9 18 20z" fill="
 sw:`<svg viewBox="0 0 48 48"><rect x="10" y="3" width="28" height="42" rx="7" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="18" y="11" width="12" height="26" rx="4" fill="#FFF8E7" stroke="${INK}" stroke-width="3"/><rect x="20" y="13" width="8" height="11" rx="2" fill="${INK}"/><circle cx="24" cy="7.5" r="1.6" fill="${INK}"/><circle cx="24" cy="40.5" r="1.6" fill="${INK}"/></svg>`,
 chain:`<svg viewBox="0 0 48 48"><path d="M6 14h18v20h18" fill="none" stroke="${INK}" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 14h18v20h18" fill="none" stroke="#F4F1EA" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="6" width="16" height="16" rx="5" fill="#8EE59B" stroke="${INK}" stroke-width="3"/><rect x="16" y="20" width="16" height="16" rx="5" fill="#8EE59B" stroke="${INK}" stroke-width="3"/><rect x="29" y="26" width="16" height="16" rx="5" fill="#FF8A8A" stroke="${INK}" stroke-width="3"/></svg>`,
 insp:`<svg viewBox="0 0 48 48"><circle cx="20" cy="20" r="14" fill="#fff" stroke="${INK}" stroke-width="3.5"/><path d="M30 30l12 12" stroke="${INK}" stroke-width="7" stroke-linecap="round"/><path d="M13 20l5 5 9-10" fill="none" stroke="#35C76F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+bulb:`<svg viewBox="0 0 48 48"><circle cx="24" cy="19" r="14" fill="#FFE070" stroke="${INK}" stroke-width="3"/><path d="M19 19l5 6 5-6" fill="none" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><rect x="17" y="32" width="14" height="11" rx="3" fill="#B4BCC6" stroke="${INK}" stroke-width="3"/></svg>`,
+lock:`<svg viewBox="0 0 48 48"><path d="M15 21v-6a9 9 0 0 1 18 0v6" fill="none" stroke="${INK}" stroke-width="4"/><rect x="9" y="20" width="30" height="24" rx="5" fill="#FF5A5A" stroke="${INK}" stroke-width="3"/><circle cx="24" cy="30" r="3.5" fill="${INK}"/><path d="M24 33v5" stroke="${INK}" stroke-width="3" stroke-linecap="round"/></svg>`,
 snd:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#FFC93C" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11" fill="none" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`,
 off:`<svg viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="#E3E7EC" stroke="${INK}" stroke-width="2" stroke-linejoin="round"/><path d="M16 9l5 6M21 9l-5 6" stroke="${INK}" stroke-width="2" stroke-linecap="round"/></svg>`
 };
-const RANK=['','1st year apprentice','2nd year apprentice','3rd year apprentice','4th year apprentice','Journeyman'];
-const YMAX=2,ORD=['','1st','2nd','3rd','4th'];
+const RANK=['','1st year apprentice','2nd year apprentice','3rd year apprentice','4th year apprentice','5th year apprentice','Journeyman','Master electrician'];
+const YMAX=2,PLAN={1:6,2:8,3:10,4:16,5:20};
 const JOBS=[
- {id:'install',yr:1,kind:'Install job',title:'Swap a kitchen receptacle',pay:80,xp:40,icon:'plug',color:'#FFC93C'},
+ {id:'install',yr:1,kind:'Install job',title:'Swap a receptacle',pay:80,xp:40,icon:'plug',color:'#FFC93C'},
  {id:'service',yr:1,kind:'Service call',title:'"My bathroom outlets died!"',pay:120,xp:50,icon:'meter',color:'#7FD8FF'},
  {id:'layout',yr:1,kind:'Layout job',title:'Route the kitchen circuit',pay:100,xp:50,icon:'grid',color:'#8EE59B'},
  {id:'emerg',yr:1,kind:'Emergency call',title:'Party panel meltdown',pay:100,xp:50,icon:'bolt',color:'#FF9C9C'},
+ {id:'bench',yr:1,kind:'Shop job',title:'Bench test with the foreman',pay:90,xp:40,icon:'bulb',color:'#FFD6A5'},
+ {id:'lockout',yr:1,kind:'Safety job',title:'Lock it out, prove it dead',pay:90,xp:40,icon:'lock',color:'#B8E1FF'},
  {id:'install2',yr:2,kind:'Install job',title:'Wire a 3-way switch',pay:140,xp:60,icon:'sw',color:'#FFC93C'},
- {id:'service2',yr:2,kind:'Service call',title:'"Half my bedroom is dead!"',pay:160,xp:70,icon:'chain',color:'#7FD8FF'},
+ {id:'service2',yr:2,kind:'Service call',title:'"Some of my outlets quit!"',pay:160,xp:70,icon:'chain',color:'#7FD8FF'},
  {id:'layout2',yr:2,kind:'Layout job',title:'Bathroom remodel circuit',pay:140,xp:60,icon:'grid',color:'#8EE59B'},
  {id:'inspect2',yr:2,kind:'Inspection rush',title:'Safe or hazard?',pay:140,xp:60,icon:'insp',color:'#C9B6FF'}];
 const J=id=>JOBS.find(j=>j.id===id);
 let timers=[];
 const stop=()=>{timers.forEach(clearInterval);timers=[]};
 
-function hud(){return `<div class="hud card"><div class="rank">${IC.hat}<div><small>Rank</small><b>${RANK[S.year]}</b></div></div><div class="cash">$${S.cash}</div><button class="mute" id="mute" aria-label="Sound ${S.mute?'off':'on'}">${S.mute?IC.off:IC.snd}</button></div>`}
-function bindHud(){const m=$('#mute');if(m)m.onclick=()=>{S.mute=!S.mute;save();m.innerHTML=S.mute?IC.off:IC.snd;tick()}}
+const HATS={yellow:['Safety yellow','#FFC93C',0],orange:['Blaze orange','#FF8A3D',150],blue:['Sky blue','#4FA8FF',300],lime:['Lime','#7BE07B',450],white:['Foreman white','#FFFFFF',600],red:['Fire red','#FF5A5A',1000],black:['Midnight','#3A3F4A',1500],gold:['Solid gold','#E2A72E',5000]};
+const TRUCKS={pickup:['Pickup truck',1500],van:['Work van',3000],bucket:['Bucket truck',8000]};
+const GEAR={belt:['Leather tool belt',400]};
+const hatSvg=(k,st)=>{const c=(HATS[k]||HATS.yellow)[1];return IC.hat.split('#FFC93C').join(c).replace('<svg',`<svg style="${st||''}"`)};
+function truckSvg(k,st){const s=st?` style="${st}"`:'';
+ if(k==='pickup')return `<svg viewBox="0 0 64 40"${s}><path d="M4 20h22l6-10h14l6 10h8v12H4z" fill="#FF8A3D" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M35 13h9l4 7H32z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/></svg>`;
+ if(k==='van')return `<svg viewBox="0 0 64 40"${s}><path d="M4 6h40l10 10h6v16H4z" fill="#fff" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M45 9l7 8h-7z" fill="#BFE8FF" stroke="${INK}" stroke-width="2.5" stroke-linejoin="round"/><path d="M10 18h26" stroke="#FFC93C" stroke-width="5"/><circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/></svg>`;
+ if(k==='bucket')return `<svg viewBox="0 0 64 40"${s}><path d="M14 22L40 4" stroke="${INK}" stroke-width="6" stroke-linecap="round"/><path d="M14 22L40 4" stroke="#B4BCC6" stroke-width="2.5" stroke-linecap="round"/><rect x="38" y="0" width="12" height="9" rx="2" fill="#FFC93C" stroke="${INK}" stroke-width="2.5"/><path d="M4 20h36v-8h12l8 8v12H4z" fill="#FFC93C" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><circle cx="16" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/><circle cx="48" cy="32" r="6" fill="#3A3F4A" stroke="${INK}" stroke-width="3"/></svg>`;
+ return ''}
+const beltSvg=st=>`<svg viewBox="0 0 64 40"${st?` style="${st}"`:''}><rect x="2" y="12" width="60" height="9" rx="3" fill="#9A5B2C" stroke="${INK}" stroke-width="3"/><rect x="27" y="10" width="11" height="13" rx="2" fill="#E2A72E" stroke="${INK}" stroke-width="2.5"/><path d="M8 21h14v14a3 3 0 0 1-3 3h-8a3 3 0 0 1-3-3z" fill="#B87333" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M44 21h12v11h-12z" fill="#B87333" stroke="${INK}" stroke-width="3" stroke-linejoin="round"/><path d="M48 21V6" stroke="${INK}" stroke-width="3" stroke-linecap="round"/></svg>`;
+const money=n=>'$'+Math.round(n||0).toLocaleString('en-US');
+const jobsOf=y=>JOBS.filter(j=>j.yr===y);
+const doneAll=y=>jobsOf(y).every(j=>S.stars[j.id]>0);
+function ceYear(){for(let y=1;y<S.year&&y<=YMAX;y++)if(S.exams[y]&&!doneAll(y))return y;return 0}
+const dayKey=()=>{const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+function dailyId(){const ce=ceYear(),top=ce||Math.min(S.year,YMAX);const pool=JOBS.filter(j=>j.yr<=top);if(!pool.length)return null;let h=7;for(const c of dayKey())h=(h*31+c.charCodeAt(0))>>>0;return pool[h%pool.length].id}
+
+function hud(){const ce=ceYear();return `<div class="hud card"><div class="rank">${hatSvg(S.look.hat)}<div><small>Rank${ce?' &middot; <span class="cebadge">CE due</span>':''}</small><b>${RANK[S.year]}</b></div></div><button class="cash" id="cashb" aria-label="Open the shop">${money(S.cash)}</button><button class="mute" id="mute" aria-label="Sound ${S.mute?'off':'on'}">${S.mute?IC.off:IC.snd}</button></div>`}
+function bindHud(){const m=$('#mute');if(m)m.onclick=()=>{S.mute=!S.mute;save();m.innerHTML=S.mute?IC.off:IC.snd;tick()};const c=$('#cashb');if(c)c.onclick=()=>{tick();shop()}}
+function nav(which){return `<div class="tabs" style="margin-bottom:10px">${[['jobs','Job board','nj'],['hall','Union Hall','nh'],['shop','Shop','ns']].map(t=>`<button class="tab${which===t[0]?' on':''}" id="${t[2]}">${t[1]}</button>`).join('')}</div>`}
+function bindNav(){$('#nj').onclick=()=>{tick();board()};$('#nh').onclick=()=>{tick();hall()};$('#ns').onclick=()=>{tick();shop()}}
 
 function title(){
  let armed=false;
  app.innerHTML=`<div class="title"><svg class="logo" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="#FFF8E7" stroke="${INK}" stroke-width="5"/><path d="M68 12L32 66h24l-8 42 40-58H64z" fill="#FFC93C" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/></svg><h1>Spark Up</h1><p>Wire it. Fix it. Pass the exam. Go from apprentice to journeyman.</p><button class="btn big" id="go">${S.xp?'Clock back in':'Clock in'}</button>${S.xp?'<button class="link" id="wipe">Start over</button>':''}</div>`;
  $('#go').onclick=()=>{tick();S.name?board():signup()};
- const w=$('#wipe');if(w)w.onclick=()=>{if(!armed){armed=true;w.textContent='Tap again to erase your progress';return}S={cash:0,xp:0,year:1,stars:{},exams:{},mute:S.mute,view:0,name:S.name,joinPosted:S.joinPosted,joinedSync:S.joinedSync};save();syncMe();title()};
+ const w=$('#wipe');if(w)w.onclick=()=>{if(!armed){armed=true;w.textContent='Tap again to erase your progress and earnings';return}
+  S={cash:0,earned:0,xp:0,year:1,stars:{},exams:{},mute:S.mute,view:0,look:{hat:'yellow'},owned:{},name:S.name,pid:S.pid,code:S.code,ownerUid:S.ownerUid,joinPosted:S.joinPosted,joinedSync:S.joinedSync};save();syncMe();title()};
 }
 
 function board(){
  stop();onHall=false;
- const yr=S.view=Math.max(1,Math.min(S.view||S.year,S.year,YMAX));
- const js=JOBS.filter(j=>j.yr===yr);
- const done=js.filter(j=>S.stars[j.id]>0).length,need=Math.max(0,3-done),passed=S.exams[yr];
- const exTxt=passed?(yr>=YMAX?`Passed! Year ${yr+1} jobs are coming in the next update. Replay jobs to collect every star.`:`Passed! Year ${yr+1} is unlocked.`):need?`Finish ${need} more job${need>1?'s':''} to unlock.`:`Unlocked. Pass it to make ${ORD[yr+1]} year.`;
+ const ce=ceYear(),daily=dailyId(),dDone=S.dailyDone===dayKey();
+ const yr=S.view=Math.max(1,Math.min(S.view||ce||S.year,S.year,YMAX));
+ const js=jobsOf(yr),left=js.filter(j=>!(S.stars[j.id]>0)).length,passed=S.exams[yr],blocked=!!(ce&&yr>ce);
+ const more=(PLAN[yr]||0)-js.length;
+ const exTxt=blocked?`On hold until your Year ${ce} continued education is done.`:passed?(yr>=YMAX?`Passed! Year ${yr+1} jobs are coming soon. Replay jobs to stack up cash.`:`Passed! Year ${yr+1} is unlocked.`):left?`Finish all ${js.length} jobs to unlock it. ${left} to go.`:`Unlocked. Pass it to become a ${RANK[yr+1]}.`;
  const tabs=[];for(let y=1;y<=YMAX+1;y++)tabs.push(y>YMAX?`<button class="tab" disabled>Year ${y} soon</button>`:`<button class="tab${y===yr?' on':''}" data-y="${y}" ${y>S.year?'disabled':''}>Year ${y}${S.exams[y]?' ✓':''}</button>`);
- app.innerHTML=hud()+nav('jobs')+`<div class="tabs">${tabs.join('')}</div><h2 class="sec">Year ${yr} job board</h2><div class="jobs">${js.map(j=>`<button class="job card" data-j="${j.id}" style="--c:${j.color}"><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays $${j.pay}</span>${starRow(S.stars[j.id]||0)}</button>`).join('')}</div>
- <button class="exam card${need&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>Year ${yr} exam${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
+ const ceN=ce?jobsOf(ce).filter(j=>!(S.stars[j.id]>0)).length:0;
+ const ceBox=ce?`<div class="ce card"><b>Continued education due</b><p>Year ${ce} has ${ceN} new job${ceN>1?'s':''}. Finish ${ceN>1?'them':'it'} to get back to work in Year ${Math.min(S.year,YMAX)}. Your rank, cash and hall spot are safe.</p>${yr!==ce?`<button class="btn sm" id="goce">Go to Year ${ce}</button>`:''}</div>`:'';
+ const dj=daily&&!dDone?J(daily):null;
+ app.innerHTML=hud()+nav('jobs')+ceBox+`<div class="tabs">${tabs.join('')}</div>
+ ${dj?`<div class="dailybar card" id="dj"><b>Job of the day:</b> ${dj.title.replace(/"/g,'')} pays double. <span>Year ${dj.yr}</span></div>`:''}
+ <h2 class="sec">Year ${yr} job board</h2><div class="jobs">${js.map(j=>{const isNew=passed&&!(S.stars[j.id]>0);return `<button class="job card${blocked?' held':''}" data-j="${j.id}" style="--c:${j.color}"><span class="tags">${j.id===daily&&!dDone?'<span class="tg">2× pay</span>':''}${isNew?'<span class="tg nw">NEW</span>':''}</span><span class="jic">${IC[j.icon]}</span><span class="kind">${j.kind}</span><span class="jt">${j.title}</span><span class="pay">Pays ${money(j.pay)}</span>${starRow(S.stars[j.id]||0)}</button>`}).join('')}</div>
+ ${more>0?`<p class="fine" style="margin:12px 0 0">${more} more Year ${yr} job${more>1?'s are':' is'} on the way.</p>`:''}
+ <button class="exam card${(left||blocked)&&!passed?' locked':''}" id="exam">${IC.clip}<div><b>Year ${yr} exam${passed?' ✓':''}</b><small>${exTxt}</small></div></button>
+ <div class="msg" id="bmsg"></div>
  <p class="fine">Practice game based on the NEC. Always check the current code book and your local rules.</p>`;
  bindHud();bindNav();
+ const g=$('#goce');if(g)g.onclick=()=>{S.view=ce;save();tick();board()};
+ const dd=$('#dj');if(dd)dd.onclick=()=>{tick();S.view=dj.yr;save();JOBF[dj.id]()};
  app.querySelectorAll('.tab[data-y]').forEach(b=>b.onclick=()=>{S.view=+b.dataset.y;save();tick();board()});
- app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{tick();JOBF[b.dataset.j]()});
- $('#exam').onclick=()=>{if(need&&!passed){bad();return}tick();exam(yr)};
+ const bm=t=>{const m=$('#bmsg');m.className='msg bad';m.textContent=t;bad()};
+ app.querySelectorAll('.job').forEach(b=>b.onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}tick();JOBF[b.dataset.j]()});
+ $('#exam').onclick=()=>{if(blocked){bm(`Continued education first: finish the new Year ${ce} jobs.`);return}if(left&&!passed){bm(`Finish all ${js.length} Year ${yr} jobs first. ${left} to go.`);return}tick();exam(yr)};
 }
 
 function shell(j,order,body){
@@ -215,12 +266,16 @@ function shell(j,order,body){
 
 function result(j,stars,lesson,extra){
  stop();
+ const dId=dailyId(),wasCE=ceYear();
  const prevSt=S.stars[j.id]||0;if(stars>prevSt)S.stars[j.id]=stars;
- const pay=stars?Math.round(j.pay*stars/3):0;S.cash+=pay;if(stars)S.xp+=j.xp;save();
+ let pay=stars?Math.round(j.pay*stars/3):0,bonus='';
+ if(stars&&j.id===dId&&S.dailyDone!==dayKey()){pay*=2;S.dailyDone=dayKey();bonus='<p style="margin:0 0 4px;font-weight:600">Job of the day: double pay!</p>'}
+ S.cash+=pay;S.earned=(S.earned||0)+pay;if(stars)S.xp+=j.xp;save();
+ if(wasCE&&!ceYear()){bonus+='<p style="margin:0 0 4px;font-weight:600">Continued education complete. Back to work!</p>';post(`${S.name} finished continued education.`)}
  if(stars){good();confetti()}else bad();
  syncMe();if(stars===3&&prevSt<3)post(`${S.name} nailed the ${j.kind.toLowerCase()}: ${j.title.replace(/"/g,'')} (3 stars)`);
  const o=document.createElement('div');o.className='modal';
- o.innerHTML=`<div class="res card"><h2>${stars?'Job done!':'Not this time'}</h2>${starRow(stars,1)}${extra||''}<div class="earn">${stars?'+$'+pay:'$0'}</div><div class="why"><b>Why it matters</b><p>${lesson}</p></div><div class="row"><button class="btn alt" id="again">Replay</button><button class="btn" id="tb">Job board</button></div></div>`;
+ o.innerHTML=`<div class="res card"><h2>${stars?'Job done!':'Not this time'}</h2>${starRow(stars,1)}${bonus}${extra||''}<div class="earn">${stars?'+'+money(pay):'$0'}</div><div class="why"><b>Why it matters</b><p>${lesson}</p></div><div class="row"><button class="btn alt" id="again">Replay</button><button class="btn" id="tb">Job board</button></div></div>`;
  document.body.appendChild(o);
  o.querySelector('#again').onclick=()=>{o.remove();tick();JOBF[j.id]()};
  o.querySelector('#tb').onclick=()=>{o.remove();tick();board()};
@@ -239,7 +294,7 @@ function wiring(W,T,st){
   for(const k in T){const t=T[k],left=t.x<=180;
    tg+=`<circle cx="${t.x}" cy="${t.y}" r="15" fill="${t.c}" stroke="${INK}" stroke-width="3.5"/><path d="M${t.x-8} ${t.y}h16" stroke="${t.dark?'#fff':INK}" stroke-width="3" stroke-linecap="round"/>${st.sel&&!st.done?`<circle cx="${t.x}" cy="${t.y}" r="22" fill="none" stroke="#FFC93C" stroke-width="4" class="pulse"/>`:''}<text x="${t.x+(left?-24:24)}" y="${t.y+5}" text-anchor="${left?'end':'start'}" font-size="14" font-weight="600" fill="${INK}">${t.n}</text><circle data-t="${k}" cx="${t.x}" cy="${t.y}" r="23" fill="transparent"/>`}
   $('#wg').innerHTML=wg;$('#tg').innerHTML=tg;$('#sg').innerHTML=sg;
-  $('#chips').innerHTML=Object.keys(W).map(k=>`<button class="chip${st.sel===k?' sel':''}" data-w="${k}"><i style="background:${W[k].c}"></i>${W[k].n}${st.map[k]?' &rarr; '+T[st.map[k]].n:''}</button>`).join('');
+  $('#chips').innerHTML=Object.keys(W).map(k=>`<button class="chip${st.sel===k?' sel':''}" data-w="${k}"><i style="background:${W[k].c}"></i>${W[k].n}${st.map[k]?' &rarr; '+(T[st.map[k]].f||T[st.map[k]].n):''}</button>`).join('');
   $('#flip').disabled=Object.keys(st.map).length<Object.keys(W).length||st.done;
  }
  function pickW(k){if(st.done)return;st.sel=st.sel===k?null:k;tick();draw()}
@@ -257,30 +312,34 @@ const BOXBG=`<rect x="68" y="8" width="224" height="326" rx="20" fill="#A7B1BD" 
 const FXG='<g id="wg"></g><g id="sg"></g><g id="tg"></g><g id="fxg"></g>';
 const WIREUI=`<p class="hint">Tap a wire, then tap a screw.</p><div class="chips" id="chips"></div><div class="row"><button class="btn alt" id="hint">Hint</button><button class="btn go" id="flip" disabled>Flip breaker ON</button></div><div class="msg" id="msg"></div>`;
 
-/* ---------- INSTALL (year 1) ---------- */
+/* ---------- INSTALL (year 1): receptacle or GFCI, shuffled ---------- */
 function install(){
- const j=J('install');
- const W={black:{c:'#262626',x:135,n:'Black'},white:{c:'#F7F7F7',x:180,n:'White'},bare:{c:'#D0843F',x:225,n:'Bare copper'}};
- const T={silver:{x:112,y:165,c:'#D5DAE1',n:'Silver'},brass:{x:248,y:165,c:'#E8B64C',n:'Brass'},green:{x:180,y:290,c:'#3DBE5B',n:'Green'}};
+ const j=J('install'),gf=Math.random()<.5,xs=shuffle([135,180,225]);
+ const W={black:{c:'#262626',x:xs[0],n:'Black'},white:{c:'#F7F7F7',x:xs[1],n:'White'},bare:{c:'#D0843F',x:xs[2],n:'Bare copper'}};
+ const T=gf?{lsil:{x:112,y:118,c:'#D5DAE1',n:'LINE',f:'Line silver'},lbr:{x:248,y:118,c:'#E8B64C',n:'LINE',f:'Line brass'},dsil:{x:112,y:214,c:'#D5DAE1',n:'LOAD',f:'Load silver'},dbr:{x:248,y:214,c:'#E8B64C',n:'LOAD',f:'Load brass'},green:{x:180,y:290,c:'#3DBE5B',n:'Green'}}
+  :{silver:{x:112,y:165,c:'#D5DAE1',n:'Silver'},brass:{x:248,y:165,c:'#E8B64C',n:'Brass'},green:{x:180,y:290,c:'#3DBE5B',n:'Green'}};
+ const HOT=gf?'lbr':'brass',NEU=gf?'lsil':'silver',LOADS=['dsil','dbr'];
  const st={sel:null,map:{},done:false};let tries=0,hint=false;
- shell(j,'The kitchen receptacle is cracked. The breaker is OFF and locked out. Land each wire on the right screw, then flip the breaker back on.',
- `<div class="stage card"><svg id="rc" viewBox="0 0 360 380" aria-label="Receptacle with three terminal screws and a cable with three wires">${BOXBG}
- <rect x="122" y="52" width="116" height="228" rx="28" fill="#FFF8E7" stroke="${INK}" stroke-width="4"/>
- ${[78,172].map(y=>`<rect x="144" y="${y}" width="72" height="78" rx="24" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="157" y="${y+16}" width="8" height="25" rx="2" fill="${INK}"/><rect x="195" y="${y+18}" width="7" height="20" rx="2" fill="${INK}"/><path d="M174 ${y+66}v-5a6 6 0 0 1 12 0v5z" fill="${INK}"/>`).join('')}
+ const outlet=(y,h)=>`<rect x="144" y="${y}" width="72" height="${h}" rx="22" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="157" y="${y+h*.2}" width="8" height="${h*.32}" rx="2" fill="${INK}"/><rect x="195" y="${y+h*.23}" width="7" height="${h*.26}" rx="2" fill="${INK}"/><path d="M174 ${y+h*.85}v-5a6 6 0 0 1 12 0v5z" fill="${INK}"/>`;
+ const face=gf?`${outlet(62,68)}<rect x="146" y="140" width="32" height="20" rx="5" fill="#fff" stroke="${INK}" stroke-width="3"/><rect x="182" y="140" width="32" height="20" rx="5" fill="#FF8A8A" stroke="${INK}" stroke-width="3"/><text x="180" y="180" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">TEST  RESET</text>${outlet(190,68)}`:`${outlet(78,78)}${outlet(172,78)}`;
+ shell(j,gf?'The bathroom receptacle needs to be a GFCI. It\'s the only receptacle on this circuit, so nothing is downstream. The breaker is OFF and locked out. Land the wires, then flip the breaker.':'The kitchen receptacle is cracked. The breaker is OFF and locked out. Land each wire on the right screw, then flip the breaker back on.',
+ `<div class="stage card"><svg id="rc" viewBox="0 0 360 380" aria-label="${gf?'GFCI receptacle with line and load terminals':'Receptacle with three terminal screws'} and a cable with three wires">${BOXBG}
+ <rect x="122" y="52" width="116" height="228" rx="28" fill="#FFF8E7" stroke="${INK}" stroke-width="4"/>${face}
  <rect x="102" y="334" width="156" height="34" rx="14" fill="#F4F1EA" stroke="${INK}" stroke-width="3"/>
- <text x="180" y="356" font-size="14" font-weight="600" fill="${INK}" text-anchor="middle">14/2 with ground</text>${FXG}</svg></div>${WIREUI}`);
+ <text x="180" y="356" font-size="14" font-weight="600" fill="${INK}" text-anchor="middle">${gf?'12/2':'14/2'} with ground</text>${FXG}</svg></div>${WIREUI}`);
  const draw=wiring(W,T,st);
- $('#hint').onclick=()=>{hint=true;tick();const m=$('#msg');m.className='msg ok';m.innerHTML='<b>Hint:</b> Black to brass. White to light (silver). Bare to green.'};
+ $('#hint').onclick=()=>{hint=true;tick();const m=$('#msg');m.className='msg ok';m.innerHTML=gf?'<b>Hint:</b> Power from the panel goes on LINE. Black to the line brass, white to the line silver, bare to green.':'<b>Hint:</b> Black to brass. White to light (silver). Bare to green.'};
  $('#flip').onclick=()=>{
   tries++;const b=st.map.black,w=st.map.white,g=st.map.bare,m=$('#msg');$('#fxg').innerHTML='';
-  if(b==='brass'&&w==='silver'&&g==='green'){st.done=true;draw();
-   $('#fxg').innerHTML=`<rect x="122" y="52" width="116" height="228" rx="28" fill="#FFE070" opacity=".45" class="pulse"/>`;badgeAt('Tester: CORRECT','#BFF0CF');
-   m.className='msg ok';m.textContent='Power on. The plug-in tester shows correct wiring.';
-   setTimeout(()=>result(j,Math.max(1,(hint?2:3)-(tries-1)),'Black (hot) goes to the brass screw, white (neutral) to the silver screw, and bare or green (ground) to the green screw. Polarity matters: the wide slot is the neutral, so the threaded shell of a lamp socket stays safe instead of being live.'),1100);return}
+  if(b===HOT&&w===NEU&&g==='green'){st.done=true;draw();
+   $('#fxg').innerHTML=`<rect x="122" y="52" width="116" height="228" rx="28" fill="#FFE070" opacity=".45" class="pulse"/>`;badgeAt(gf?'GFCI: RESET OK':'Tester: CORRECT','#BFF0CF');
+   m.className='msg ok';m.textContent=gf?'Power on. You press TEST, it trips. Press RESET, power comes back. Perfect.':'Power on. The plug-in tester shows correct wiring.';
+   setTimeout(()=>result(j,Math.max(1,(hint?2:3)-(tries-1)),gf?'A GFCI has LINE terminals for the power coming from the panel and LOAD terminals for protecting outlets further down the line. The feed always goes on LINE. Black still goes to brass, white to silver, bare to green. Wire it backwards and most GFCIs won\'t reset, which is your clue.':'Black (hot) goes to the brass screw, white (neutral) to the silver screw, and bare or green (ground) to the green screw. Polarity matters: the wide slot is the neutral, so the threaded shell of a lamp socket stays safe instead of being live.'),1100);return}
   m.className='msg bad';
   if(b==='green'){zap();sparksAt(T.green.x,T.green.y);badgeAt('BREAKER TRIPPED','#FFC9C9');m.innerHTML='<b>Bang!</b> The hot wire is on the green screw. That screw bonds to the strap and the grounded metal box, so hot went straight to ground: a dead short. The breaker tripped. Fix it and try again.'}
-  else if(g!=='green'){zap();sparksAt(T[g].x,T[g].y);badgeAt('Tester: WIRING FAULT','#FFC9C9');m.innerHTML='<b>Wiring fault.</b> The bare ground is on a screw that carries normal current. The ground should only carry current during a fault, so it can safely trip the breaker. Never use it as a hot or a neutral.'}
-  else{bad();badgeAt('Tester: HOT/NEU REVERSED','#FFC9C9');m.innerHTML='<b>It works, but it\'s wrong.</b> Hot is on the silver screw, so the wide slot is now hot. A lamp plugged in here would have a live socket shell. That\'s reversed polarity: a shock hazard.'}
+  else if(g!=='green'){zap();sparksAt(T[g].x,T[g].y);badgeAt('WIRING FAULT','#FFC9C9');m.innerHTML='<b>Wiring fault.</b> The bare ground is on a screw that carries normal current. The ground should only carry current during a fault, so it can safely trip the breaker. Never use it as a hot or a neutral.'}
+  else if(gf&&(LOADS.includes(b)||LOADS.includes(w))){bad();badgeAt('WON\'T RESET','#FFC9C9');m.innerHTML='<b>No power, and it won\'t reset.</b> Power from the panel is on the LOAD side. LOAD is only for feeding other outlets you want protected. The feed must land on LINE.'}
+  else{bad();badgeAt('HOT/NEU REVERSED','#FFC9C9');m.innerHTML='<b>It works, but it\'s wrong.</b> Hot is on the silver screw, so the wide slot is now hot. A lamp plugged in here would have a live socket shell. That\'s reversed polarity: a shock hazard.'}
   m.innerHTML+=' The breaker is back OFF.';
  };
  draw();
@@ -289,7 +348,7 @@ function install(){
 /* ---------- INSTALL (year 2): 3-way switch ---------- */
 function install2(){
  const j=J('install2');
- const W={red:{c:'#E23B3B',x:108,n:'Red from switch A'},blk:{c:'#262626',x:148,n:'Black from switch A'},leg:{c:'#262626',x:212,n:'Black to the light'},bare:{c:'#D0843F',x:252,n:'Bare ground'}};
+ const tx=shuffle([108,148]);const W={red:{c:'#E23B3B',x:tx[0],n:'Red from switch A'},blk:{c:'#262626',x:tx[1],n:'Black from switch A'},leg:{c:'#262626',x:212,n:'Black to the light'},bare:{c:'#D0843F',x:252,n:'Bare ground'}};
  const T={com:{x:112,y:166,c:'#3A3A3A',n:'Common',dark:1},t1:{x:248,y:118,c:'#E8B64C',n:'Brass'},t2:{x:248,y:214,c:'#E8B64C',n:'Brass'},green:{x:180,y:290,c:'#3DBE5B',n:'Green'}};
  const st={sel:null,map:{},done:false};let tries=0,hint=false,a=0,b=0,seen,lastOn;
  shell(j,'Hallway light, switched from both ends. Switch A at the other end is already wired. Wire switch B, flip the breaker, then test it from both switches.',
@@ -313,7 +372,7 @@ function install2(){
   if(seen.size<4)return;
   const ok=st.map.leg==='com';
   if(ok){st.done=true;m.className='msg ok';m.textContent='Every flip of either switch changes the light. That\'s a working 3-way.';
-   setTimeout(()=>result(j,Math.max(1,(hint?2:3)-(tries-1)),'A 3-way switch has no ON or OFF. It sends power down one of two travelers, and either switch can swap which traveler is live, so flipping either one always changes the light. The dark common screw is the pivot: at the first switch it gets the power coming in, and at the last switch it gets the wire going to the light.'),1300)}
+   setTimeout(()=>result(j,Math.max(1,(hint?2:3)-(tries-1)),'A 3-way switch has no ON or OFF. It sends power down one of two travelers, and either switch can swap which traveler is live, so flipping either one always changes the light. The dark common screw is the pivot: at the first switch it gets the power coming in, and at the last switch it gets the wire going to the light. Need a third location? Add a 4-way switch between the two 3-ways.'),1300)}
   else{bad();$('#tst').innerHTML='';m.className='msg bad';m.innerHTML='<b>Not a working 3-way.</b> Some flips did nothing, so the light only works in certain combos. That means a traveler is on the common screw. The breaker is back OFF. Fix it and try again.';st.done=false;draw()}}
  $('#flip').onclick=()=>{
   tries++;const m=$('#msg');$('#fxg').innerHTML='';$('#tst').innerHTML='';
@@ -325,17 +384,17 @@ function install2(){
  draw();
 }
 
-/* ---------- SERVICE ---------- */
+/* ---------- SERVICE (year 1): tripped GFCI, two layouts ---------- */
 function service(){
- const j=J('service');
+ const j=J('service'),sc=Math.random()<.5?'garage':'bath';
  const P={
   panel:{x:52,y:62,r:'120 V',t:'Breaker 9 is ON, with 120 V on its terminal.'},
-  gfci:{x:120,y:112,r:'0 V',t:'Garage GFCI receptacle: 0 V at the slots. The RESET button is popped out.'},
-  bath:{x:205,y:186,r:'0 V',t:'Bathroom receptacle: 0 V. Dead.'},
+  gfci:{x:120,y:112,r:sc==='garage'?'0 V':'120 V',t:sc==='garage'?'Garage GFCI receptacle: 0 V at the slots. The RESET button is popped out.':'Garage receptacle: 120 V. It\'s a regular receptacle, and it works.'},
+  bath:{x:205,y:186,r:'0 V',t:sc==='garage'?'Bathroom receptacle: 0 V. Dead. It\'s a regular receptacle with no buttons.':'Bathroom GFCI receptacle: 0 V at the slots. The RESET button is popped out.'},
   patio:{x:180,y:268,r:'0 V',t:'Patio receptacle: 0 V. Dead.'},
   kitchen:{x:290,y:76,r:'120 V',t:'Kitchen receptacle: 120 V. This one is on a different circuit.'},
   bed:{x:296,y:186,r:'120 V',t:'Bedroom receptacle: 120 V. Different circuit, working fine.'}};
- const tested={};let tests=0,wrongs=0,done=false;
+ const tested={};let tests=0,wrongs=0,done=false;const right=sc==='garage'?'rg':'rb';
  shell(j,'Customer says: "The bathroom and patio outlets stopped working this morning." Tap spots with your meter to find the problem, then make the fix.',
  `<div class="stage card"><svg id="fp" viewBox="0 0 360 300" aria-label="Floor plan of a house with test points">
  <rect x="0" y="236" width="360" height="64" fill="#7BD88F"/>
@@ -352,11 +411,7 @@ function service(){
  <g id="pts"></g></svg></div>
  <div class="meter card"><div class="lcd" id="lcd">--- V</div><p id="mt">Tap a test point on the plan. Tests so far: 0</p></div>
  <h2 class="sec" style="font-size:21px">Make the fix</h2>
- <div class="opts" id="fix">
-  <button class="btn" data-f="breaker">Replace breaker 9</button>
-  <button class="btn" data-f="bath">Replace the bathroom receptacle</button>
-  <button class="btn" data-f="gfci">Reset the garage GFCI</button>
-  <button class="btn" data-f="utility">Call the power company</button></div>
+ <div class="opts" id="fix">${shuffle([['breaker','Replace breaker 9'],['rg','Press RESET on the garage receptacle'],['rb','Press RESET on the bathroom receptacle'],['swap','Replace the bathroom receptacle'],['utility','Call the power company']]).map(o=>`<button class="btn" data-f="${o[0]}">${o[1]}</button>`).join('')}</div>
  <div class="msg" id="msg"></div>`);
  function draw(){$('#pts').innerHTML=Object.keys(P).map(k=>{const p=P[k],t=tested[k];
   const col=t?(p.r==='0 V'?'#FF8A8A':'#8EE59B'):'#FFC93C';
@@ -364,12 +419,14 @@ function service(){
  $('#fp').addEventListener('click',e=>{const g=e.target.closest('[data-p]');if(!g||done)return;const k=g.dataset.p,p=P[k];
   if(!tested[k]){tested[k]=1;tests++}tick();$('#lcd').textContent=p.r;$('#mt').textContent=p.t+' Tests so far: '+tests;draw()});
  const why={breaker:'You swapped breaker 9 and it\'s still dead. Your meter already showed 120 V on that breaker, so the breaker was fine. That was a $40 part for nothing.',
-  bath:'New receptacle, still 0 V. No power is reaching this box at all, so the problem is upstream.',
+  rg:'The garage receptacle is a regular one. There\'s no RESET button, and it already has power.',
+  rb:'The bathroom receptacle is a regular one. There\'s no RESET button on it. The GFCI protecting it is somewhere upstream.',
+  swap:sc==='garage'?'New receptacle, still 0 V. No power is reaching this box at all, so the problem is upstream.':'The new GFCI works, but the old one was only tripped. That\'s a $25 part and 20 minutes for nothing. Try RESET first.',
   utility:'The utility tech shows up, sees the kitchen and bedroom have power, and leaves. The service is fine. The problem is inside the house.'};
  $('#fix').onclick=e=>{const b=e.target.closest('[data-f]');if(!b||done)return;const f=b.dataset.f,m=$('#msg');
-  if(f==='gfci'){done=true;b.classList.add('right');good();m.className='msg ok';m.textContent='Click. You press RESET, and the bathroom and patio come back on.';
+  if(f===right){done=true;b.classList.add('right');good();m.className='msg ok';m.textContent='Click. You press RESET, and the bathroom and patio come back on.';
    const st=wrongs?1:tests<=4?3:2;
-   setTimeout(()=>result(j,st,'One GFCI protects every receptacle wired after it on its LOAD terminals, even in other rooms. When it trips, those outlets all go dead. Check for a tripped GFCI first. Then find out why it tripped, because a GFCI that keeps tripping is warning you about a ground fault.',`<p style="margin:0 0 4px">Tests used: ${tests} &middot; Wrong fixes: ${wrongs}</p>`),1100)}
+   setTimeout(()=>result(j,st,'A GFCI trips when it senses about 5 milliamps leaking out of the circuit, which is enough to protect a person. One GFCI also protects every receptacle wired after it on its LOAD terminals, even in other rooms. When it trips, those outlets all go dead. Check for a tripped GFCI first, then find out why it tripped.',`<p style="margin:0 0 4px">Tests used: ${tests} &middot; Wrong fixes: ${wrongs}</p>`),1100)}
   else{wrongs++;b.classList.add('wrong');b.disabled=true;bad();m.className='msg bad';m.textContent=why[f]}};
  draw();
 }
@@ -411,24 +468,22 @@ function emerg(){
    if(acc>=1){acc=0;score+=CI.filter(c=>!c.trip).length}
    render();
    if(hearts<=0||t<=0){over=true;stop();
-    setTimeout(()=>result(j,Math.max(0,hearts),'Every appliance adds amps to its circuit. A 15 A breaker holds about 1,800 W at 120 V (15 &times; 120). Two heat-making appliances like a heater and a hair dryer will trip it. That\'s why kitchens get 20 A circuits and big loads often get their own circuit. A tripped breaker isn\'t the problem. It\'s protecting the wire from overheating.',`<p style="margin:0 0 4px">Score: ${score} &middot; Lives left: ${Math.max(0,hearts)}</p>`),500)}
+    setTimeout(()=>result(j,Math.max(0,hearts),'Every appliance adds amps to its circuit. A 15 A breaker holds about 1,800 W at 120 V (15 &times; 120). Two heat-making appliances like a heater and a hair dryer will trip it. That\'s why kitchens get 20 A circuits and big loads often get their own circuit. A tripped breaker isn\'t the problem. It\'s protecting the wire from overheating. And if a load runs 3 hours or more, it\'s a continuous load: keep it to 80% of the breaker, like 12 A on a 15 A circuit.',`<p style="margin:0 0 4px">Score: ${score} &middot; Lives left: ${Math.max(0,hearts)}</p>`),500)}
   },100));
   spawn();spawn();render();
  }
 }
 
-/* ---------- SERVICE (year 2): dead chain ---------- */
+/* ---------- SERVICE (year 2): dead chain, random break ---------- */
 function service2(){
  const j=J('service2');
- const P={
-  panel:{x:50,y:70,r:'120 V',t:'Breaker 14 is ON, with 120 V on its terminal.'},
-  r1:{x:150,y:70,r:'120 V',t:'Living room outlet 1: 120 V. Working.'},
-  r2:{x:262,y:70,r:'120 V',t:'Living room outlet 2: 120 V. Working.'},
-  r3:{x:262,y:190,r:'0 V',t:'Bedroom outlet 1: 0 V. Dead.'},
-  r4:{x:160,y:190,r:'0 V',t:'Bedroom outlet 2: 0 V. Dead.'},
-  r5:{x:60,y:190,r:'0 V',t:'Bedroom outlet 3: 0 V. Dead.'}};
+ const POS=[[150,70],[262,70],[262,190],[160,190],[60,190]],NM=['Living room outlet 1','Living room outlet 2','Bedroom outlet 1','Bedroom outlet 2','Bedroom outlet 3'];
+ const k=1+Math.floor(Math.random()*3);
+ const P={panel:{x:50,y:70,r:'120 V',t:'Breaker 14 is ON, with 120 V on its terminal.'}};
+ POS.forEach((p,i)=>{P['o'+i]={x:p[0],y:p[1],r:i<k?'120 V':'0 V',t:NM[i]+(i<k?': 120 V. Working.':': 0 V. Dead.')}});
  const tested={};let tests=0,wrongs=0,done=false;
- shell(j,'Customer says: "Half my bedroom outlets quit, but the breaker isn\'t tripped. The living room still works." All these outlets are on breaker 14. Find where the power stops.',
+ const opts=[['breaker','Replace breaker 14'],...shuffle([['o'+(k-1),'Open '+NM[k-1].toLowerCase()],['o'+k,'Open '+NM[k].toLowerCase()]]),['new','Run a brand-new circuit']];
+ shell(j,'Customer says: "Some of my outlets quit, but the breaker isn\'t tripped." All of these outlets are on breaker 14. Find where the power stops, then fix it.',
  `<div class="stage card"><svg id="fp" viewBox="0 0 360 260" aria-label="Two rooms with a chain of outlets on one circuit">
  <rect x="14" y="14" width="332" height="112" rx="10" fill="#FFF8E7" stroke="${INK}" stroke-width="5"/>
  <rect x="14" y="134" width="332" height="112" rx="10" fill="#EAE4FF" stroke="${INK}" stroke-width="5"/>
@@ -439,24 +494,20 @@ function service2(){
  <g id="pts"></g></svg></div>
  <div class="meter card"><div class="lcd" id="lcd">--- V</div><p id="mt">Tap the panel and outlets to test them. Tests so far: 0</p></div>
  <h2 class="sec" style="font-size:21px">Make the fix</h2>
- <div class="opts" id="fix">
-  <button class="btn" data-f="breaker">Replace breaker 14</button>
-  <button class="btn" data-f="r3">Open bedroom outlet 1 (first dead one)</button>
-  <button class="btn" data-f="r2">Open living room outlet 2 (last working one)</button>
-  <button class="btn" data-f="new">Run a brand-new circuit to the bedroom</button></div>
+ <div class="opts" id="fix">${opts.map(o=>`<button class="btn" data-f="${o[0]}">${o[1]}</button>`).join('')}</div>
  <div class="msg" id="msg"></div>`);
- function draw(){$('#pts').innerHTML=Object.keys(P).map(k=>{const p=P[k],t=tested[k];
+ function draw(){$('#pts').innerHTML=Object.keys(P).map(q=>{const p=P[q],t=tested[q];
   const col=t?(p.r==='0 V'?'#FF8A8A':'#8EE59B'):'#FFC93C';
-  return `<g data-p="${k}" style="cursor:pointer"><circle cx="${p.x}" cy="${p.y}" r="24" fill="transparent"/><rect x="${p.x-15}" y="${p.y-19}" width="30" height="38" rx="9" fill="${col}" stroke="${INK}" stroke-width="3.5" ${t?'':'class="pulse"'}/>${t?`<text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${p.r==='0 V'?'0':'120'}</text>`:`<rect x="${p.x-7}" y="${p.y-9}" width="4" height="10" rx="1" fill="${INK}"/><rect x="${p.x+3}" y="${p.y-8}" width="4" height="8" rx="1" fill="${INK}"/><circle cx="${p.x}" cy="${p.y+9}" r="3" fill="${INK}"/>`}</g>`}).join('')}
- $('#fp').addEventListener('click',e=>{const g=e.target.closest('[data-p]');if(!g||done)return;const k=g.dataset.p,p=P[k];
-  if(!tested[k]){tested[k]=1;tests++}tick();$('#lcd').textContent=p.r;$('#mt').textContent=p.t+' Tests so far: '+tests;draw()});
- const why={breaker:'Still dead. The breaker already had 120 V on it, and the living room works on the same breaker. That was a $40 part for nothing.',
+  return `<g data-p="${q}" style="cursor:pointer"><circle cx="${p.x}" cy="${p.y}" r="24" fill="transparent"/><rect x="${p.x-15}" y="${p.y-19}" width="30" height="38" rx="9" fill="${col}" stroke="${INK}" stroke-width="3.5" ${t?'':'class="pulse"'}/>${t?`<text x="${p.x}" y="${p.y+5}" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">${p.r==='0 V'?'0':'120'}</text>`:`<rect x="${p.x-7}" y="${p.y-9}" width="4" height="10" rx="1" fill="${INK}"/><rect x="${p.x+3}" y="${p.y-8}" width="4" height="8" rx="1" fill="${INK}"/><circle cx="${p.x}" cy="${p.y+9}" r="3" fill="${INK}"/>`}</g>`}).join('')}
+ $('#fp').addEventListener('click',e=>{const g=e.target.closest('[data-p]');if(!g||done)return;const q=g.dataset.p,p=P[q];
+  if(!tested[q]){tested[q]=1;tests++}tick();$('#lcd').textContent=p.r;$('#mt').textContent=p.t+' Tests so far: '+tests;draw()});
+ const why={breaker:'Still dead. The breaker already had 120 V on it, and the first outlets work on the same breaker. That was a $40 part for nothing.',
   new:'That\'s a $600 fix for what turned out to be one loose wire. The next electrician finds the real problem in 5 minutes, and your customer is not happy.'};
  $('#fix').onclick=e=>{const b=e.target.closest('[data-f]');if(!b||done)return;const f=b.dataset.f,m=$('#msg');
-  if(f==='r2'){done=true;b.classList.add('right');good();m.className='msg ok';m.textContent='Found it! The wire feeding the bedroom was pushed into a backstab hole and burned loose. You move it to the screw terminal, and the bedroom comes back on.';
+  if(f==='o'+(k-1)){done=true;b.classList.add('right');good();m.className='msg ok';m.textContent='Found it! The wire feeding the next outlet was pushed into a backstab hole and burned loose. You move it to the screw terminal, and everything comes back on.';
    const st=wrongs?1:tests<=5?3:2;
    setTimeout(()=>result(j,st,'Outlets on a circuit are usually chained: power passes through each box to the next one. Everything after a bad connection goes dead, so the problem is in the last working box or the first dead one. Push-in "backstab" connections are a common culprit. Moving wires to the screw terminals, or using a pigtail, makes a solid connection.',`<p style="margin:0 0 4px">Tests used: ${tests} &middot; Wrong fixes: ${wrongs}</p>`),1300)}
-  else if(f==='r3'){b.disabled=true;tick();m.className='msg';m.textContent='Good thinking, but the connections here are tight. No power is arriving on the cable, so the break is further upstream.'}
+  else if(f==='o'+k){b.disabled=true;tick();m.className='msg';m.textContent='Good thinking, but the connections here are tight. No power is arriving on the cable, so the break is further upstream.'}
   else{wrongs++;b.classList.add('wrong');b.disabled=true;bad();m.className='msg bad';m.textContent=why[f]}};
  draw();
 }
@@ -465,7 +516,11 @@ function service2(){
 function puzzle(cfg){
  const j=J(cfg.id);const N=5,C=70;
  const rot=m=>((m<<1)|(m>>3))&15;
- const SOL=cfg.sol,[pr,pc]=cfg.panel.split(',').map(Number);
+ const mx=Math.random()<.5,my=Math.random()<.5;
+ const tm=m=>{if(mx)m=(m&5)|(m&2?8:0)|(m&8?2:0);if(my)m=(m&10)|(m&1?4:0)|(m&4?1:0);return m};
+ const tk=k=>{let[r,c]=k.split(',').map(Number);if(mx)c=4-c;if(my)r=4-r;return r+','+c};
+ const SOL={};for(const k in cfg.sol){const s=cfg.sol[k];SOL[tk(k)]=Object.assign({},s,{m:tm(s.m)})}
+ const PAN=tk(cfg.panel),TGT=cfg.targets.map(tk),[pr,pc]=PAN.split(',').map(Number);
  const DEC=[3,10,5,6,12,9,7,11,14,5,3,10];
  const g=[];let par=0,moves=0,solved=false,di=0;
  for(let r=0;r<N;r++){g[r]=[];for(let c=0;c<N;c++){const s=SOL[r+','+c];
@@ -478,7 +533,7 @@ function puzzle(cfg){
  shell(j,cfg.order,`<div class="gamehud card"><span>Moves: <b id="mv">0</b></span><span>Par: ${par}</span></div>
  <div class="stage card"><svg id="lg" viewBox="0 0 ${N*C} ${N*C}" aria-label="Wire tile puzzle"></svg></div><div id="code"></div>`);
  const D=[[-1,0,1],[0,1,2],[1,0,4],[0,-1,8]],OPP={1:4,2:8,4:1,8:2};
- function powered(){const on=new Set([cfg.panel]),q=[[pr,pc]];while(q.length){const[r,c]=q.shift();const m=g[r][c].m;
+ function powered(){const on=new Set([PAN]),q=[[pr,pc]];while(q.length){const[r,c]=q.shift();const m=g[r][c].m;
   for(const[dr,dc,b]of D){if(!(m&b))continue;const nr=r+dr,nc=c+dc;if(nr<0||nc<0||nr>=N||nc>=N)continue;const k=nr+','+nc;if(on.has(k))continue;if(g[nr][nc].m&OPP[b]){on.add(k);q.push([nr,nc])}}}return on}
  function draw(){const on=powered();let h='';
   for(let r=0;r<N;r++)for(let c=0;c<N;c++){const t=g[r][c],x=c*C,y=r*C,cx=x+C/2,cy=y+C/2,p=on.has(r+','+c);
@@ -490,7 +545,7 @@ function puzzle(cfg){
    else if([7,11,13,14].includes(t.m))h+=`<circle cx="${cx}" cy="${cy}" r="7" fill="${p?'#FFC93C':'#9AA5B1'}" stroke="${INK}" stroke-width="3"/>`;
    h+='</g>'}
   $('#lg').innerHTML=h;
-  if(cfg.targets.every(k=>on.has(k))&&!solved){solved=true;good();askCode()}}
+  if(TGT.every(k=>on.has(k))&&!solved){solved=true;good();askCode()}}
  $('#lg').addEventListener('click',e=>{if(solved)return;const el=e.target.closest('[data-rc]');if(!el)return;const[r,c]=el.dataset.rc.split(',').map(Number),t=g[r][c];if(t.f)return;t.m=rot(t.m);moves++;$('#mv').textContent=moves;tick();draw()});
  function askCode(){
   const ord=shuffle(cfg.opts.map((o,i)=>i));let wrong=0;
@@ -521,6 +576,7 @@ const INS=[
  ['A receptacle is missing its cover plate.',1,'Without a plate, live terminals are exposed to fingers.'],
  ['A power strip is plugged into another power strip.',1,'Daisy-chaining power strips can overload them. Manufacturers and OSHA say no.'],
  ['A lamp cord runs under the living room rug.',1,'Cords under rugs get crushed and can\'t shed heat. That\'s a fire risk.'],
+ ['A garage receptacle has no GFCI protection.',1,'Garage receptacles need GFCI protection. Concrete floors and power tools are a shock risk.'],
  ['A bathroom receptacle has no GFCI protection.',1,'Bathroom receptacles need GFCI protection.'],
  ['14 AWG copper is on a 20 A breaker.',1,'14 AWG copper is limited to 15 A. A 20 A breaker would let it overheat.'],
  ['Two wires are under one receptacle screw.',1,'Most device screws are made for one wire. Use a pigtail instead.'],
@@ -560,84 +616,146 @@ function inspect2(){
  }
 }
 
-/* ---------- EXAM ---------- */
+/* ---------- STEP-BY-STEP QUESTIONS (shared) ---------- */
+function steps(j,order,list,done){
+ let i=0,miss=0;
+ shell(j,order,`<div class="dots" id="sd"></div><div id="sb"></div>`);
+ function show(){const s=list[i],ord=shuffle(s.a.map((_,k)=>k));let tried=false;
+  $('#sd').innerHTML=list.map((_,k)=>`<i class="${k<i?'r':k===i?'c':''}"></i>`).join('');
+  $('#sb').innerHTML=`${s.html?`<div class="stage card">${s.html}</div>`:''}<div class="qcard card"><h3>${s.h||'Step '+(i+1)+' of '+list.length}</h3><p class="q">${s.q}</p></div><div class="opts" id="so">${ord.map(k=>`<button class="btn" data-k="${k}">${s.a[k]}</button>`).join('')}</div><div id="sx"></div>`;
+  if(s.init)s.init();
+  $('#so').onclick=e=>{const b=e.target.closest('[data-k]');if(!b||b.disabled)return;const k=+b.dataset.k;
+   if(k===s.c){b.classList.add('right');good();$('#so').onclick=null;
+    $('#sx').innerHTML=`<div class="expl"><b>${tried?'Got it.':'Right!'}</b> ${s.e}</div><button class="btn" id="sn" style="width:100%;margin-top:12px">${i<list.length-1?'Next':'Finish'}</button>`;
+    $('#sn').onclick=()=>{tick();i++;i<list.length?show():done(miss)};$('#sn').scrollIntoView({behavior:'smooth',block:'nearest'})}
+   else{tried=true;miss++;b.classList.add('wrong');b.disabled=true;bad()}}}
+ show();
+}
+const fmt1=n=>(Math.round(n*10)/10).toLocaleString('en-US');
+
+/* ---------- BENCH TEST (year 1) ---------- */
+function bench(){
+ const j=J('bench');
+ const R=[8,10,12,15,20,24,30,40][Math.floor(Math.random()*8)],I=120/R,P=120*I;
+ const heater=`<svg viewBox="0 0 360 150" style="display:block;width:100%"><rect x="16" y="34" width="196" height="76" rx="14" fill="#FFF8E7" stroke="${INK}" stroke-width="4"/><path d="M36 72l12-20 12 40 12-40 12 40 12-40 12 40 12-40 12 40 12-40 12 20" fill="none" stroke="#FF8A3D" stroke-width="6" stroke-linejoin="round"/><text x="114" y="136" text-anchor="middle" font-size="15" font-weight="600" fill="${INK}">Heater element</text><rect x="234" y="18" width="110" height="112" rx="14" fill="#FFC93C" stroke="${INK}" stroke-width="4"/><rect x="246" y="32" width="86" height="42" rx="6" fill="#C8E6B0" stroke="${INK}" stroke-width="3"/><text x="289" y="61" text-anchor="middle" font-size="20" font-weight="700" fill="${INK}" font-family="Courier New,monospace">${R} &#937;</text><text x="289" y="110" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Ohmmeter</text></svg>`;
+ let mode='series',pulled=false;
+ const lamp=(x,y,on,gone)=>gone?`<circle cx="${x}" cy="${y}" r="14" fill="none" stroke="${INK}" stroke-width="3" stroke-dasharray="4 4"/>`:`<circle cx="${x}" cy="${y}" r="${on?20:0}" fill="#FFE070" opacity=".5"/><circle cx="${x}" cy="${y}" r="14" fill="${on?'#FFE070':'#E3E7EC'}" stroke="${INK}" stroke-width="3.5"/>`;
+ function sp(){const ser=mode==='series',on1=!pulled,on2=ser?!pulled:true;
+  const w=ser?`<path d="M44 66V36H136M164 36H236M264 36H330V136H44V106" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${lamp(150,36,on1&&on2,pulled)}${lamp(250,36,on2,false)}<text x="150" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Lamp 1</text><text x="250" y="70" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Lamp 2</text>`
+   :`<path d="M44 66V30H290M44 106V140H290M170 30V56M170 114V140M290 30V56M290 114V140" fill="none" stroke="${INK}" stroke-width="5" stroke-linejoin="round"/>${lamp(170,85,on1,pulled)}${lamp(290,85,on2,false)}<text x="214" y="90" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">Lamp 1</text><text x="332" y="90" text-anchor="middle" font-size="14" font-weight="600" fill="${INK}">2</text>`;
+  $('#spv').innerHTML=`<rect x="18" y="66" width="52" height="40" rx="8" fill="#A7B1BD" stroke="${INK}" stroke-width="3.5"/><text x="44" y="91" text-anchor="middle" font-size="13" font-weight="700" fill="${INK}">120 V</text>${w}`;
+  $('#sm1').classList.toggle('on',ser);$('#sm2').classList.toggle('on',!ser);$('#spl').textContent=pulled?'Put lamp 1 back':'Pull lamp 1'}
+ const spHtml=`<svg id="spv" viewBox="0 0 360 160" style="display:block;width:100%"></svg><div class="row" style="margin-top:8px"><button class="btn alt sm seg" id="sm1">Series</button><button class="btn alt sm seg" id="sm2">Parallel</button></div><button class="btn sm" id="spl" style="width:100%;margin-top:8px">Pull lamp 1</button>`;
+ const spInit=()=>{sp();$('#sm1').onclick=()=>{mode='series';tick();sp()};$('#sm2').onclick=()=>{mode='parallel';tick();sp()};$('#spl').onclick=()=>{pulled=!pulled;pulled?snd(220,.1,'triangle'):tick();sp()}};
+ steps(j,'Slow morning. The foreman has you at the training bench with a heater element, two lamps and a meter. Work through his questions.',[
+  {html:heater,q:`The heater element reads ${R} Ω. Plugged into 120 V, how many amps will it draw?`,a:[fmt1(I)+' A',fmt1(120*R)+' A',fmt1(I*2)+' A',fmt1(R/120)+' A'],c:0,e:`Ohm's law: amps = volts ÷ ohms (I = V ÷ R). 120 ÷ ${R} = ${fmt1(I)} A. Resistance is measured in ohms (Ω).`},
+  {html:heater,q:'Same heater. How many watts does it put out?',a:[fmt1(P)+' W',fmt1(120+I)+' W',fmt1(P/2)+' W',fmt1(I/120)+' W'],c:0,e:`Power = volts × amps (P = V × I). 120 × ${fmt1(I)} = ${fmt1(P)} W.`},
+  {html:spHtml,init:spInit,q:'Try both setups and pull lamp 1. Which setup keeps lamp 2 lit?',a:['Parallel','Series','Both','Neither'],c:0,e:'Series has one path, so the same current flows through everything, and one break kills it all. Parallel gives every branch its own path with the same full voltage. That\'s why the outlets in a house are wired in parallel.'},
+  {q:'You want to measure how many amps the heater draws. How do you hook up the multimeter?',a:['In series, so the current flows through the meter','Across the heater, in parallel','From hot to ground','On the ohms setting, with the power on'],c:0,e:'To read amps, current has to flow through the meter, so it goes in series. To read volts, you go across (in parallel). A clamp meter reads amps without opening the circuit.'},
+  {q:'At a house panel you measure hot to neutral, then hot to hot. What do you read?',a:['About 120 V, then 240 V','120 V both times','240 V, then 480 V','120 V, then 0 V'],c:0,e:'Most homes get 120/240 V single-phase service: 120 V from either hot to neutral, and 240 V between the two hots.'}
+ ],miss=>result(j,miss===0?3:miss<=2?2:1,'Ohm\'s law (I = V ÷ R) and power (P = V × I) let you size almost anything. Series circuits share one path. Parallel circuits give every branch the same voltage, which is how house wiring works. Read volts across a load, and read amps in series or with a clamp meter.'));
+}
+
+/* ---------- LOCKOUT (year 1) ---------- */
+function lockout(){
+ const j=J('lockout');
+ const ST=['Tell everyone affected that the power is going off','Find the right breaker using the panel directory','Switch the breaker OFF','Put your lock and tag on the breaker','Test your tester on a known live circuit','Test the circuit and confirm it\'s dead','Test your tester again on the live circuit'];
+ const HINT=['Start by warning the people who\'ll lose power. Someone could be using something important.','You need to know which breaker before you touch one.','Found it? Now switch it OFF.','Lock and tag it, so nobody flips it back on while you\'re working.','Before you trust your tester, prove it works on something live.','Now test the circuit you\'re about to work on.','Last step: prove your tester still works. Live, dead, live.'];
+ const ord=shuffle(ST.map((_,i)=>i));let next=0,miss=0;
+ shell(j,'You\'re replacing a light fixture in an office that\'s open for business. Before you touch anything, set up your lockout. Tap the steps in the right order.',
+ `<div class="qcard card" style="padding:12px 14px"><h3>Your procedure</h3><ol id="pl" style="margin:6px 0 0;padding-left:22px;font-size:16px;min-height:24px"></ol></div><div class="opts" id="lo"></div><div class="msg" id="msg"></div>`);
+ function draw(){$('#pl').innerHTML=ST.slice(0,next).map(s=>`<li>${s}</li>`).join('')||'<li style="list-style:none;margin-left:-22px;opacity:.6">Tap the first step below.</li>';
+  $('#lo').innerHTML=ord.filter(i=>i>=next).map(i=>`<button class="btn" data-i="${i}">${ST[i]}</button>`).join('')}
+ $('#lo').onclick=e=>{const b=e.target.closest('[data-i]');if(!b)return;const i=+b.dataset.i,m=$('#msg');
+  if(i===next){next++;tick();m.className='msg';m.textContent='';draw();if(next===ST.length){good();setTimeout(toolbox,500)}}
+  else{miss++;bad();b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),600);m.className='msg bad';m.textContent='Not yet. '+HINT[next]}};
+ draw();
+ function toolbox(){
+  steps(j,'Locked out and proven dead. Before you start, the foreman runs a quick toolbox talk.',[
+   {h:'Toolbox talk',q:'What does an AFCI breaker protect against?',a:['Arcing that can start a fire','Shocks to people','Lightning strikes','Low voltage'],c:0,e:'An AFCI (arc-fault) breaker watches for the signature of dangerous arcing, like a damaged cord or a loose connection, and shuts it off before it starts a fire. A GFCI is the one that protects people from shock.'},
+   {h:'Toolbox talk',q:'14 AWG copper building wire normally gets what size breaker?',a:['15 A','20 A','30 A','40 A'],c:0,e:'14 AWG copper gets 15 A, 12 AWG gets 20 A, and 10 AWG gets 30 A.'},
+   {h:'Toolbox talk',q:'Which of these wires is the thickest?',a:['10 AWG','12 AWG','14 AWG','18 AWG'],c:0,e:'With AWG sizes, a smaller number means a bigger wire.'},
+   {h:'Toolbox talk',q:'The National Electrical Code (NEC) is also known as&hellip;',a:['NFPA 70','OSHA 1910','UL 94','IEEE 802'],c:0,e:'The NEC is NFPA 70, published by the National Fire Protection Association. A new edition comes out every 3 years.'}
+  ],m2=>{const t=miss+m2;result(j,t===0?3:t<=3?2:1,'Lock out, tag out, then test before you touch: live, dead, live. Never trust a breaker label or a light switch to tell you it\'s off. And know your basics: 14 AWG copper gets 15 A, 12 AWG gets 20 A, 10 AWG gets 30 A, and a smaller AWG number means a bigger wire.')});
+ }
+}
+
+/* ---------- EXAM (every question is taught in a job) ---------- */
 const QB1=[
- ['A 120 V circuit has 10 Ω of resistance. How many amps flow?',['12 A','1,200 A','0.08 A','130 A'],0,'Ohm\'s law: I = V ÷ R. 120 ÷ 10 = 12 A.'],
- ['A 1,200 W toaster runs on 120 V. How many amps does it draw?',['10 A','12 A','100 A','1.2 A'],0,'Amps = watts ÷ volts. 1,200 ÷ 120 = 10 A.'],
- ['In US wiring, white insulation normally marks the&hellip;',['Grounded conductor (neutral)','Hot conductor','Equipment ground','Traveler'],0,'White or gray marks the grounded conductor, which is the neutral.'],
- ['Bare copper or green insulation is the&hellip;',['Equipment grounding conductor','Neutral','Hot','Switch leg'],0,'Green, green with yellow stripes, or bare is the equipment ground. It only carries current during a fault.'],
- ['On a standard receptacle, the hot wire lands on the&hellip;',['Brass screw','Silver screw','Green screw','Any screw'],0,'Hot goes on brass, neutral on silver, and ground on green.'],
- ['14 AWG copper building wire is normally protected by a&hellip;',['15 A breaker','20 A breaker','30 A breaker','40 A breaker'],0,'The NEC limits 14 AWG copper to 15 A overcurrent protection. 12 AWG gets 20 A, and 10 AWG gets 30 A.'],
- ['Which wire is the thickest?',['10 AWG','12 AWG','14 AWG','18 AWG'],0,'With AWG, a smaller number means a bigger wire.'],
- ['In a series circuit, what\'s the same everywhere?',['Current','Voltage','Resistance','Power'],0,'There\'s only one path, so the same current flows through every part.'],
- ['In a parallel circuit, what\'s the same across every branch?',['Voltage','Current','Resistance','Nothing'],0,'Every branch connects across the same two points, so each one sees the same voltage. That\'s why house outlets are wired in parallel.'],
- ['A GFCI trips when it senses a leak of about&hellip;',['5 milliamps','5 amps','15 amps','50 milliamps'],0,'A Class A GFCI trips at about 4 to 6 mA of imbalance between hot and neutral. That\'s small enough to protect a person.'],
- ['An AFCI mainly protects against&hellip;',['Arcing that can start fires','Shock to people','Lightning','Low voltage'],0,'Arc-fault breakers look for the signature of dangerous arcing, like a damaged cord or a loose connection, before it starts a fire.'],
- ['Before you touch a conductor you just turned off, you should&hellip;',['Lock it out and test it dead with a tester you\'ve proven works','Trust the breaker label','Touch it quickly with the back of your hand','Ask the homeowner'],0,'Lock out and tag out, then test before touch. Check your tester on a known live source before and after.'],
- ['What is the unit of resistance?',['Ohm','Volt','Amp','Watt'],0,'Resistance is measured in ohms (Ω).'],
- ['Power (watts) equals&hellip;',['Volts × amps','Volts ÷ amps','Amps ÷ ohms','Ohms × watts'],0,'P = V × I. For example, 120 V × 10 A = 1,200 W.'],
- ['Typical US house service is&hellip;',['120/240 V single-phase','208 V three-phase','480 V','12 V DC'],0,'Most homes get 120/240 V single-phase: 120 V from either hot to neutral, and 240 V between the two hots.'],
- ['To measure current with a regular multimeter, the meter goes&hellip;',['In series with the load','In parallel with the load','Across the breaker','Between hot and ground'],0,'Current has to flow through the meter, so it goes in series. Clamp meters let you skip opening the circuit.'],
- ['A "continuous load" runs for&hellip;',['3 hours or more','30 minutes','10 minutes','24 hours'],0,'The NEC defines a continuous load as one expected to run for 3 hours or more. Size it at 125%, which means loading the breaker to about 80%.'],
- ['The National Electrical Code is also known as&hellip;',['NFPA 70','OSHA 1910','UL 94','IEEE 802'],0,'The NEC is NFPA 70, published by the National Fire Protection Association and updated every 3 years.'],
- ['In a 3-wire cable (12/3), the red wire is usually&hellip;',['A second hot or traveler','The neutral','The ground','Unused'],0,'Red is usually another ungrounded (hot) conductor, like a traveler on 3-way switches or the second hot of a 240 V circuit.'],
- ['Kitchen countertop receptacles need at least&hellip;',['Two 20 A small-appliance circuits','One 15 A circuit','One 30 A circuit','Three 15 A circuits'],0,'The NEC requires at least two 20 A small-appliance branch circuits for kitchen countertop receptacles.']];
+ ['A 120 V circuit has 10 Ω of resistance. How many amps flow?',['12 A','1,200 A','0.08 A','130 A'],0,'Ohm\'s law: I = V ÷ R. 120 ÷ 10 = 12 A.','bench'],
+ ['A 1,200 W toaster runs on 120 V. How many amps does it draw?',['10 A','12 A','100 A','1.2 A'],0,'Amps = watts ÷ volts. 1,200 ÷ 120 = 10 A.','emerg'],
+ ['In US wiring, white insulation normally marks the&hellip;',['Grounded conductor (neutral)','Hot conductor','Equipment ground','Traveler'],0,'White or gray marks the grounded conductor, which is the neutral.','install'],
+ ['Bare copper or green insulation is the&hellip;',['Equipment grounding conductor','Neutral','Hot','Switch leg'],0,'Green, green with yellow stripes, or bare is the equipment ground. It only carries current during a fault.','install'],
+ ['On a standard receptacle, the hot wire lands on the&hellip;',['Brass screw','Silver screw','Green screw','Any screw'],0,'Hot goes on brass, neutral on silver, and ground on green.','install'],
+ ['On a GFCI receptacle, the wires coming from the panel go on the&hellip;',['LINE terminals','LOAD terminals','Either side','Green screw'],0,'The feed always goes on LINE. LOAD is only for outlets further down the line that you want protected.','install'],
+ ['14 AWG copper building wire is normally protected by a&hellip;',['15 A breaker','20 A breaker','30 A breaker','40 A breaker'],0,'14 AWG copper gets 15 A. 12 AWG gets 20 A, and 10 AWG gets 30 A.','lockout'],
+ ['Which wire is the thickest?',['10 AWG','12 AWG','14 AWG','18 AWG'],0,'With AWG, a smaller number means a bigger wire.','lockout'],
+ ['In a series circuit, what\'s the same everywhere?',['Current','Voltage','Resistance','Power'],0,'There\'s only one path, so the same current flows through every part.','bench'],
+ ['In a parallel circuit, what\'s the same across every branch?',['Voltage','Current','Resistance','Nothing'],0,'Every branch connects across the same two points, so each one sees the same voltage. That\'s why house outlets are wired in parallel.','bench'],
+ ['A GFCI trips when it senses a leak of about&hellip;',['5 milliamps','5 amps','15 amps','50 milliamps'],0,'A GFCI trips at about 4 to 6 mA. That\'s small enough to protect a person.','service'],
+ ['One GFCI can also protect the outlets wired to its&hellip;',['LOAD terminals','LINE terminals','Ground screw','Test button'],0,'Everything fed from a GFCI\'s LOAD terminals is protected too, even in another room. That\'s why one trip can kill outlets all over the house.','service'],
+ ['An AFCI mainly protects against&hellip;',['Arcing that can start fires','Shock to people','Lightning','Low voltage'],0,'Arc-fault breakers look for the signature of dangerous arcing, like a damaged cord or a loose connection, before it starts a fire.','lockout'],
+ ['Before you touch a conductor you just turned off, you should&hellip;',['Lock it out and test it dead with a tester you\'ve proven works','Trust the breaker label','Touch it quickly with the back of your hand','Ask the homeowner'],0,'Lock out and tag out, then test before touch: live, dead, live.','lockout'],
+ ['What is the unit of resistance?',['Ohm','Volt','Amp','Watt'],0,'Resistance is measured in ohms (Ω).','bench'],
+ ['Power (watts) equals&hellip;',['Volts × amps','Volts ÷ amps','Amps ÷ ohms','Ohms × watts'],0,'P = V × I. For example, 120 V × 10 A = 1,200 W.','bench'],
+ ['Typical US house service is&hellip;',['120/240 V single-phase','208 V three-phase','480 V','12 V DC'],0,'Most homes get 120/240 V single-phase: 120 V from either hot to neutral, and 240 V between the two hots.','bench'],
+ ['To measure current with a regular multimeter, the meter goes&hellip;',['In series with the load','In parallel with the load','Across the breaker','Between hot and ground'],0,'Current has to flow through the meter, so it goes in series. Clamp meters let you skip opening the circuit.','bench'],
+ ['A "continuous load" runs for&hellip;',['3 hours or more','30 minutes','10 minutes','24 hours'],0,'A continuous load runs 3 hours or more. Keep it to 80% of the breaker rating.','emerg'],
+ ['The National Electrical Code is also known as&hellip;',['NFPA 70','OSHA 1910','UL 94','IEEE 802'],0,'The NEC is NFPA 70, published by the National Fire Protection Association and updated every 3 years.','lockout'],
+ ['Kitchen countertop receptacles need at least&hellip;',['Two 20 A small-appliance circuits','One 15 A circuit','One 30 A circuit','Three 15 A circuits'],0,'The NEC requires at least two 20 A small-appliance branch circuits for kitchen countertop receptacles.','layout']];
 const MATCH1=[['Black wire','Hot conductor'],['White wire','Neutral'],['Bare copper','Equipment ground'],['GFCI','Protects people from shock'],['AFCI','Protects against arcing fires']];
-
-
 const QB2=[
- ['How many travelers run between two 3-way switches?',['2','1','3','4'],0,'Two travelers. Each 3-way switch picks which one is live.'],
- ['To control one light from 3 places, you need&hellip;',['Two 3-way switches and one 4-way','Three 3-way switches','Three single-pole switches','One 3-way and two 4-ways'],0,'The 3-ways go at the ends and the 4-way goes in the middle. Add one more 4-way for each extra location.'],
- ['On a 3-way switch, the common terminal is usually&hellip;',['The dark (black) screw','A brass screw','The green screw','Unmarked'],0,'The common is the darker screw. The two lighter brass screws are the travelers.'],
- ['In box fill, each 12 AWG conductor counts as&hellip;',['2.25 cu in','2.00 cu in','2.50 cu in','3.00 cu in'],0,'12 AWG is 2.25 cubic inches per conductor, and 14 AWG is 2.00.'],
- ['In box fill, a receptacle or switch on its strap counts as&hellip;',['2 conductors','1 conductor','None','4 conductors'],0,'Each device yoke counts as 2 conductors, based on the largest wire connected to it.'],
- ['In box fill, all the equipment grounds together count as&hellip;',['1 conductor','1 each','None','2 each'],0,'All the equipment grounding conductors together count as just 1, based on the largest one.'],
- ['NM cable must be secured within how far of most boxes?',['12 in.','24 in.','36 in.','6 ft'],0,'NM cable must be secured within 12 in. of the box, and then at least every 4½ ft.'],
- ['NM cable runs must be supported at least every&hellip;',['4½ ft','10 ft','2 ft','8 ft'],0,'Secure NM cable at intervals of no more than 4½ ft.'],
- ['Two 10 Ω resistors in parallel equal&hellip;',['5 Ω','20 Ω','10 Ω','100 Ω'],0,'Equal resistors in parallel: divide one by how many there are. 10 ÷ 2 = 5 Ω. In series they would add up to 20 Ω.'],
- ['Two 10 Ω resistors in series equal&hellip;',['20 Ω','5 Ω','10 Ω','1 Ω'],0,'In series, resistances add: 10 + 10 = 20 Ω.'],
- ['Voltage drop gets worse when the wire run gets&hellip;',['Longer','Shorter','Thicker','Colder'],0,'A longer wire has more resistance, so more voltage is lost along the way. Bigger wire helps fix it.'],
- ['A 240 V water heater is fed from a&hellip;',['2-pole breaker','Single-pole breaker','GFCI receptacle','3-way switch'],0,'A 2-pole breaker grabs both hot legs, and 240 V is the voltage between them.'],
- ['How many watts can a 240 V, 20 A circuit deliver?',['4,800 W','2,400 W','1,200 W','9,600 W'],0,'Watts = volts × amps. 240 × 20 = 4,800 W.'],
- ['What\'s the most continuous load a 20 A breaker should carry?',['16 A','20 A','18 A','25 A'],0,'Continuous loads are limited to 80% of the breaker rating. 20 × 0.8 = 16 A.'],
- ['10 AWG copper building wire is normally protected at&hellip;',['30 A','20 A','40 A','15 A'],0,'14 AWG goes with 15 A, 12 AWG with 20 A, and 10 AWG with 30 A.'],
- ['Where are neutral and ground bonded together?',['Only at the service (main panel)','In every subpanel','At every receptacle','Nowhere'],0,'They\'re bonded only at the service. In a subpanel, neutrals and grounds stay on separate bars.'],
- ['What makes a breaker trip when a hot wire touches a metal box?',['The equipment ground back to the panel','The ground rod','The neutral at the light','The meter'],0,'Fault current races back to the panel on the equipment ground, so the breaker trips fast. A ground rod can\'t carry enough current to do that.'],
- ['A receptacle reads 120 V hot to neutral and 0 V hot to ground. Most likely&hellip;',['The ground is open (not connected)','It\'s wired perfectly','The neutral is open','It\'s on 240 V'],0,'If hot to ground reads 0 V while hot to neutral reads 120 V, the ground path is missing.'],
- ['Which home location needs GFCI protection for its receptacles?',['Garage','Bedroom','Hallway','Living room'],0,'Garages need GFCI protection, along with bathrooms, kitchens, outdoors, basements, laundry areas and more.'],
- ['Bonding means&hellip;',['Connecting metal parts so they stay at the same voltage and give fault current a path','Burying a ground rod','Taping a splice','Labeling a panel'],0,'Bonding ties metal parts together, so there\'s no shock voltage between them and there\'s a solid path for fault current.']];
-const MATCH2=[['3-way switch','Controls a light from 2 places'],['4-way switch','Goes between two 3-ways'],['2-pole breaker','Feeds 240 V loads'],['Traveler','Wire between 3-way switches'],['Pigtail','Short jumper, one wire per screw']];
+ ['How many travelers run between two 3-way switches?',['2','1','3','4'],0,'Two travelers. Each 3-way switch picks which one is live.','install2'],
+ ['To control one light from 3 places, you need&hellip;',['Two 3-way switches and one 4-way','Three 3-way switches','Three single-pole switches','One 3-way and two 4-ways'],0,'The 3-ways go at the ends and the 4-way goes in the middle. Add one more 4-way for each extra location.','install2'],
+ ['On a 3-way switch, the common terminal is usually&hellip;',['The dark (black) screw','A brass screw','The green screw','Unmarked'],0,'The common is the darker screw. The two lighter brass screws are the travelers.','install2'],
+ ['In a 3-wire cable (12/3), the red wire is often used as&hellip;',['A traveler or second hot','The neutral','The ground','Nothing'],0,'Red is usually another ungrounded (hot) conductor, like a traveler between 3-way switches.','install2'],
+ ['Outlets quit partway down a circuit, but the breaker is fine. Where\'s the problem most likely?',['The last working box or the first dead one','The breaker','The service entrance','The last outlet on the run'],0,'Power passes through each box to the next. The break is at the last box that works or the first one that doesn\'t.','service2'],
+ ['Push-in "backstab" connections are known for&hellip;',['Working loose and overheating','Being required by code','Carrying more current than screws','Only being used on GFCIs'],0,'Backstabs can loosen and burn. Screw terminals or pigtails make a more solid connection.','service2'],
+ ['Bathroom receptacles need&hellip;',['A 20 A circuit with GFCI protection','A 15 A circuit, no GFCI','An AFCI only','A dedicated 30 A circuit'],0,'Bathroom receptacles need a 20 A branch circuit and GFCI protection.','layout2'],
+ ['Which home location needs GFCI protection for its receptacles?',['Garage','Bedroom','Hallway','Living room'],0,'Garages need GFCI protection, along with bathrooms, kitchens, outdoors, basements, laundry areas and more.','inspect2'],
+ ['Using an extension cord as permanent wiring is&hellip;',['Not allowed. Cords can\'t replace permanent wiring','Fine if it\'s heavy duty','Fine indoors','Required for window AC units'],0,'Flexible cords can\'t take the place of permanent wiring. Install a proper receptacle.','inspect2'],
+ ['Two wires need to land on one receptacle terminal. The right fix?',['Use a pigtail','Twist them under the screw','Use the backstab holes for one','Tape them together'],0,'Most device screws are made for one wire. Splice the wires with a short pigtail, and land just the pigtail.','inspect2'],
+ ['What\'s the most continuous load a 20 A breaker should carry?',['16 A','20 A','18 A','25 A'],0,'Continuous loads are limited to 80% of the breaker rating. 20 × 0.8 = 16 A.','emerg'],
+ ['10 AWG copper building wire is normally protected at&hellip;',['30 A','20 A','40 A','15 A'],0,'14 AWG goes with 15 A, 12 AWG with 20 A, and 10 AWG with 30 A.','lockout'],
+ ['In box fill, each 12 AWG conductor counts as&hellip;',['2.25 cu in','2.00 cu in','2.50 cu in','3.00 cu in'],0,'12 AWG is 2.25 cubic inches per conductor, and 14 AWG is 2.00.','boxfill'],
+ ['NM cable must be secured within how far of most boxes?',['12 in.','24 in.','36 in.','6 ft'],0,'NM cable must be secured within 12 in. of the box, and then at least every 4½ ft.','roughin'],
+ ['A 240 V water heater is fed from a&hellip;',['2-pole breaker','Single-pole breaker','GFCI receptacle','3-way switch'],0,'A 2-pole breaker grabs both hot legs, and 240 V is the voltage between them.','heater240'],
+ ['Where are neutral and ground bonded together?',['Only at the service (main panel)','In every subpanel','At every receptacle','Nowhere'],0,'They\'re bonded only at the service. In a subpanel, neutrals and grounds stay on separate bars.','subpanel']];
+const MATCH2=[['3-way switch','Controls a light from 2 places'],['4-way switch','Goes between two 3-ways'],['Traveler','Wire between 3-way switches'],['Backstab','Push-in hole that can work loose'],['Pigtail','Short jumper, one wire per screw']];
 const QB={1:QB1,2:QB2},MATCH={1:MATCH1,2:MATCH2};
+
 function exam(yr){
- const qs=shuffle(QB[yr]).slice(0,8).map(q=>{const ord=shuffle([0,1,2,3]);return{q:q[0],a:ord.map(i=>q[1][i]),c:ord.indexOf(q[2]),e:q[3]}});
+ const pool=QB[yr].filter(q=>{const s=J(q[4]);return s&&s.yr<=yr});
+ const N=Math.min(8,pool.length),TOT=N+5,PASS=Math.ceil(TOT*.75);
+ const qs=shuffle(pool).slice(0,N).map(q=>{const ord=shuffle([0,1,2,3]);return{q:q[0],a:ord.map(i=>q[1][i]),c:ord.indexOf(q[2]),e:q[3],src:q[4]}});
  let qi=0,right=0,res=[];
+ const top=`<div class="top"><button class="btn alt sm" id="back">&larr; Quit</button><span class="tag" style="--c:#FFC93C">Year ${yr} exam</span></div>`;
  function showQ(){const q=qs[qi];let answered=false;
-  app.innerHTML=`<div class="top"><button class="btn alt sm" id="back">&larr; Quit</button><span class="tag" style="--c:#FFC93C">Year ${yr} exam</span></div>
-  <div class="dots">${qs.map((_,i)=>`<i class="${res[i]===1?'r':res[i]===0?'w':i===qi?'c':''}"></i>`).join('')}</div>
-  <div class="qcard card"><h3>Question ${qi+1} of 8</h3><p class="q">${q.q}</p></div>
+  app.innerHTML=top+`<div class="dots">${qs.map((_,i)=>`<i class="${res[i]===1?'r':res[i]===0?'w':i===qi?'c':''}"></i>`).join('')}</div>
+  <div class="qcard card"><h3>Question ${qi+1} of ${N}</h3><p class="q">${q.q}</p></div>
   <div class="opts" id="ao">${q.a.map((a,i)=>`<button class="btn" data-i="${i}">${a}</button>`).join('')}</div><div id="ex"></div>`;
   $('#back').onclick=()=>{tick();board()};
   $('#ao').onclick=e=>{const b=e.target.closest('[data-i]');if(!b||answered)return;answered=true;const i=+b.dataset.i,ok=i===q.c;
    res[qi]=ok?1:0;if(ok){right++;good()}else bad();
    $('#ao').querySelectorAll('button').forEach((x,k)=>{if(k===q.c)x.classList.add('right');else if(k===i)x.classList.add('wrong')});
-   $('#ex').innerHTML=`<div class="expl"><b>${ok?'Right!':'Not quite.'}</b> ${q.e}</div><button class="btn" id="nx" style="width:100%;margin-top:12px">${qi<7?'Next question':'On to the match-up'}</button>`;
-   $('#nx').onclick=()=>{tick();qi++;qi<8?showQ():match()};
+   $('#ex').innerHTML=`<div class="expl"><b>${ok?'Right!':'Not quite.'}</b> ${q.e}${ok?'':`<br><small style="font-weight:600">Review this job: ${J(q.src).title}</small>`}</div><button class="btn" id="nx" style="width:100%;margin-top:12px">${qi<N-1?'Next question':'On to the match-up'}</button>`;
+   $('#nx').onclick=()=>{tick();qi++;qi<N?showQ():match()};
    $('#nx').scrollIntoView({behavior:'smooth',block:'nearest'})}}
  function match(){
   const L=shuffle(MATCH[yr].map((p,i)=>[p[0],i])),R=shuffle(MATCH[yr].map((p,i)=>[p[1],i]));let sl=null,mist=0,got=0;
-  app.innerHTML=`<div class="top"><button class="btn alt sm" id="back">&larr; Quit</button><span class="tag" style="--c:#FFC93C">Year ${yr} exam</span></div>
-  <div class="qcard card"><h3>Final round: match-up</h3><p class="q">Tap an item on the left, then its match on the right.</p></div>
+  app.innerHTML=top+`<div class="qcard card"><h3>Final round: match-up</h3><p class="q">Tap an item on the left, then its match on the right.</p></div>
   <div class="match"><div class="col" id="ml">${L.map(x=>`<button class="mb" data-i="${x[1]}">${x[0]}</button>`).join('')}</div><div class="col" id="mr">${R.map(x=>`<button class="mb" data-i="${x[1]}">${x[0]}</button>`).join('')}</div></div><p class="msg" id="msg">Mistakes: 0</p>`;
   $('#back').onclick=()=>{tick();board()};
   $('#ml').onclick=e=>{const b=e.target.closest('.mb');if(!b||b.classList.contains('done'))return;$('#ml').querySelectorAll('.mb').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');sl=b;tick()};
   $('#mr').onclick=e=>{const b=e.target.closest('.mb');if(!b||!sl||b.classList.contains('done'))return;
    if(b.dataset.i===sl.dataset.i){b.classList.add('done');sl.classList.remove('sel');sl.classList.add('done');sl=null;got++;good();if(got===5)setTimeout(finish,500)}
    else{mist++;bad();b.classList.remove('no');void b.offsetWidth;b.classList.add('no');$('#msg').textContent='Mistakes: '+mist}};
-  function finish(){const mp=Math.max(0,5-mist),tot=right+mp,pass=tot>=10;
-   if(pass&&!S.exams[yr]){S.exams[yr]=1;S.year=Math.max(S.year,yr+1);S.cash+=200*yr;if(yr<YMAX)S.view=yr+1;post(`${S.name} passed the Year ${yr} exam and made ${ORD[yr+1]} year!`)}save();syncMe();
+  function finish(){const mp=Math.max(0,5-mist),tot=right+mp,pass=tot>=PASS;let bonusTxt='';
+   if(pass&&!S.exams[yr]){S.exams[yr]=1;S.year=Math.max(S.year,yr+1);const bn=200*yr;S.cash+=bn;S.earned=(S.earned||0)+bn;bonusTxt=`You earned a ${money(bn)} bonus. `;if(yr<YMAX)S.view=yr+1;post(`${S.name} passed the Year ${yr} exam and is now a ${RANK[yr+1]}!`)}
+   save();syncMe();
    if(pass){good();confetti()}else bad();
    const o=document.createElement('div');o.className='modal';
-   o.innerHTML=`<div class="res card"><h2>${pass?'You passed!':'Not yet'}</h2><div class="earn" style="color:${pass?'#1E8C4C':'#C0392B'}">${tot} / 13</div><p style="margin:0 0 10px">Quiz: ${right}/8 &middot; Match-up: ${mp}/5. You need 10 to pass.</p><div class="why"><b>${pass?'Promoted to '+ORD[yr+1]+' year apprentice':'Study up and try again'}</b><p>${pass?'Nice work. You earned a $'+200*yr+' bonus. '+(yr<YMAX?'Year '+(yr+1)+' jobs are unlocked on the job board.':'Year '+(yr+1)+' jobs are coming in the next update.'):'Replay the jobs, since their "Why it matters" notes cover a lot of what\'s on the exam. You get a new mix of questions each try.'}</p></div><button class="btn" id="tb" style="width:100%">Job board</button></div>`;
+   o.innerHTML=`<div class="res card"><h2>${pass?'You passed!':'Not yet'}</h2><div class="earn" style="color:${pass?'#1E8C4C':'#C0392B'}">${tot} / ${TOT}</div><p style="margin:0 0 10px">Quiz: ${right}/${N} &middot; Match-up: ${mp}/5. You need ${PASS} to pass.</p><div class="why"><b>${pass?'Promoted to '+RANK[yr+1]:'Study up and try again'}</b><p>${pass?bonusTxt+(yr<YMAX?`Year ${yr+1} jobs are unlocked on the job board.`:`Year ${yr+1} jobs are coming in the next update.`):'Every question comes from a job you\'ve done. Replay the ones it pointed you to, then try again. You get a new mix of questions each time.'}</p></div><button class="btn" id="tb" style="width:100%">Job board</button></div>`;
    document.body.appendChild(o);o.querySelector('#tb').onclick=()=>{o.remove();tick();board()}}
  }
  showQ();
@@ -648,8 +766,13 @@ const LOCAL='Spark Up Local 1';
 const FBV='10.12.2';
 const CFG={apiKey:"AIzaSyD7yXia334pZkVavBGu822shVQPKD9r4uM",authDomain:"spark-up-81558.firebaseapp.com",projectId:"spark-up-81558",storageBucket:"spark-up-81558.firebasestorage.app",messagingSenderId:"740705988313",appId:"1:740705988313:web:7b393f83b21281b36698c8"};
 const esc=t=>String(t==null?'':t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let fb=null,fbState='connecting',MEM=[],NEWS=[],onHall=false;
+let fb=null,fbState='connecting',MEM=[],NEWS=[],onHall=false,bkT=null;
 const totalStars=()=>Object.values(S.stars).reduce((a,b)=>a+(+b||0),0);
+const ALPH='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+function genCode(){const a=new Uint32Array(10);crypto.getRandomValues(a);return Array.from(a,x=>ALPH[x%ALPH.length]).join('')}
+const fmtCode=c=>c?c.slice(0,4)+'-'+c.slice(4,8)+'-'+c.slice(8):'';
+const saveLocal=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
 async function initFB(){
  const to=new Promise((_,rej)=>setTimeout(()=>rej(new Error('timeout')),12000));
  try{
@@ -660,64 +783,109 @@ async function initFB(){
    fb={db:F.getFirestore(app),uid:cred.user.uid,F};
   })()]);
   fbState='online';
+  await ensureId();
   const F=fb.F;
-  F.onSnapshot(F.query(F.collection(fb.db,'members'),F.limit(300)),snap=>{MEM=snap.docs.map(d=>Object.assign({id:d.id},d.data()));if(onHall)hall()},()=>{});
+  F.onSnapshot(F.query(F.collection(fb.db,'members'),F.limit(500)),snap=>{MEM=snap.docs.map(d=>Object.assign({id:d.id},d.data()));if(onHall)hall()},()=>{});
   F.onSnapshot(F.query(F.collection(fb.db,'news'),F.orderBy('at','desc'),F.limit(20)),snap=>{NEWS=snap.docs.map(d=>d.data());if(onHall)hall()},()=>{});
-  syncMe();
-  if(S.name&&!S.joinPosted){S.joinPosted=1;save();post(`${S.name} joined the hall. Welcome!`)}
+  syncMe();backup();
+  if(S.name&&!S.joinPosted){S.joinPosted=1;saveLocal();post(`${S.name} joined the hall. Welcome!`)}
  }catch(e){fb=null;fbState='offline';if(onHall)hall()}
 }
-function syncMe(){if(!fb||!S.name)return;const F=fb.F;
- const d={name:S.name,year:Math.min(5,S.year),stars:Math.min(200,totalStars()),updated:F.serverTimestamp()};
+async function ensureId(){const F=fb.F;
+ if(!S.pid||!S.code){S.pid=S.pid||fb.uid;S.code=S.code||genCode();saveLocal()}
+ if(S.ownerUid!==fb.uid){try{await F.setDoc(F.doc(fb.db,'owners',S.pid),{uid:fb.uid,code:S.code});S.ownerUid=fb.uid;saveLocal()}catch(e){}}
+}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'){clearTimeout(bkT);backup()}});
+function queueBackup(){if(!fb||!S.code)return;clearTimeout(bkT);bkT=setTimeout(backup,3000)}
+function backup(){if(!fb||!S.code||!S.pid)return;const F=fb.F,d=Object.assign({},S);delete d.ownerUid;
+ F.setDoc(F.doc(fb.db,'saves',S.code),{pid:S.pid,data:JSON.stringify(d),updated:F.serverTimestamp()}).catch(()=>{})}
+function syncMe(){if(!fb||!S.name||!S.pid)return;const F=fb.F;
+ const d={name:S.name,year:Math.min(10,S.year),stars:Math.min(1000,totalStars()),earned:Math.min(1e8,Math.round(S.earned||0)),ce:!!ceYear(),look:{hat:S.look.hat||'yellow',truck:S.look.truck||'',belt:S.look.belt||''},updated:F.serverTimestamp()};
  if(!S.joinedSync)d.joined=F.serverTimestamp();
- F.setDoc(F.doc(fb.db,'members',fb.uid),d,{merge:true}).then(()=>{if(!S.joinedSync){S.joinedSync=1;save()}}).catch(()=>{})}
+ F.setDoc(F.doc(fb.db,'members',S.pid),d,{merge:true}).then(()=>{if(!S.joinedSync){S.joinedSync=1;saveLocal()}}).catch(()=>{})}
 function post(text){if(!fb||!S.name)return;const F=fb.F;
  F.addDoc(F.collection(fb.db,'news'),{uid:fb.uid,name:S.name,text:String(text).slice(0,120),at:F.serverTimestamp()}).catch(()=>{})}
+async function restore(raw){
+ const code=String(raw).toUpperCase().replace(/[^A-Z0-9]/g,'');
+ if(code.length!==10)throw new Error('A hall code is 10 letters and numbers, like ABCD-EFGH-JK.');
+ if(!fb)throw new Error('Can\'t reach the hall right now. Check your connection and try again.');
+ const F=fb.F;let snap;
+ try{snap=await F.getDoc(F.doc(fb.db,'saves',code))}catch(e){throw new Error('Can\'t reach the hall right now. Try again in a minute.')}
+ if(!snap.exists())throw new Error('No hall card matches that code. Check it and try again.');
+ const {pid,data}=snap.data();let d;try{d=JSON.parse(data)}catch(e){throw new Error('That card\'s backup is damaged.')}
+ await F.setDoc(F.doc(fb.db,'owners',pid),{uid:fb.uid,code});
+ S=Object.assign({cash:0,earned:0,xp:0,year:1,stars:{},exams:{},view:0,look:{hat:'yellow'},owned:{}},d,{pid,code,ownerUid:fb.uid,mute:S.mute,joinPosted:1,joinedSync:1});
+ saveLocal();syncMe();backup();
+}
 const ago=ts=>{if(!ts||!ts.toMillis)return 'just now';const s=(Date.now()-ts.toMillis())/1000;return s<60?'just now':s<3600?Math.floor(s/60)+'m ago':s<86400?Math.floor(s/3600)+'h ago':Math.floor(s/86400)+'d ago'};
-const YC=['#E3E7EC','#FFC93C','#7FD8FF','#8EE59B','#C9B6FF','#FF9C9C'];
-const initials=n=>esc(String(n).trim().split(/\s+/).map(w=>w[0]).slice(0,2).join('').toUpperCase());
 
 function signup(edit){
- app.innerHTML=`<div class="title" style="padding-top:4vh">${IC.hat.replace('<svg','<svg style="width:110px;height:110px"')}
+ app.innerHTML=`<div class="title" style="padding-top:4vh">${hatSvg(S.look.hat,'width:110px;height:110px')}
  <h1 style="font-size:44px">Union Hall</h1><p>${edit?'Change the name on your hall card.':'Sign in at '+LOCAL+' before you clock in. Just your name. Other members will see it on the roster.'}</p>
  <div class="card" style="padding:16px;text-align:left;max-width:360px;margin:0 auto"><label for="nm" style="font-weight:600">Your name</label>
- <input id="nm" maxlength="24" autocomplete="name" value="${esc(S.name||'')}" placeholder="First name and last initial" style="display:block;width:100%;margin:8px 0 6px;font:500 18px Fredoka,system-ui,sans-serif;padding:12px;border:3px solid ${INK};border-radius:12px;min-height:50px">
- <p id="ne" style="margin:0 0 10px;font-size:14px;color:#C0392B;min-height:20px"></p>
+ <input id="nm" maxlength="24" autocomplete="name" value="${esc(S.name||'')}" placeholder="First name and last initial" class="inp">
+ <p id="ne" class="err"></p>
  <button class="btn" id="join" style="width:100%">${edit?'Save name':'Join the hall'}</button>
  ${edit?'<button class="link" id="cx">Cancel</button>':''}</div>
+ ${edit?'':`<button class="link" id="rsl">Already in the hall? Use your hall code</button>
+ <div class="card" id="rsb" style="padding:16px;text-align:left;max-width:360px;margin:6px auto 0;display:none"><label for="rc" style="font-weight:600">Hall code</label>
+ <input id="rcx" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="ABCD-EFGH-JK" class="inp">
+ <p id="re" class="err"></p><button class="btn alt" id="rsg" style="width:100%">Bring back my card</button></div>`}
  <p class="fine">Tip: first name and last initial works great, like "Mike R."</p></div>`;
  const inp=$('#nm');inp.oninput=()=>{$('#ne').textContent=''};
  const go=()=>{const v=inp.value.replace(/\s+/g,' ').trim();
   if(v.length<2){$('#ne').textContent='Enter at least 2 letters.';return}
   if(!/^[A-Za-zÀ-ÿ' .\-]+$/.test(v)){$('#ne').textContent='Letters only, please. Spaces, periods, dashes and apostrophes are OK.';return}
   const first=!S.name;S.name=v;save();good();syncMe();
-  if(first&&fb&&!S.joinPosted){S.joinPosted=1;save();post(`${v} joined the hall. Welcome!`)}
+  if(first&&fb&&!S.joinPosted){S.joinPosted=1;saveLocal();post(`${v} joined the hall. Welcome!`)}
   edit?hall():board()};
  $('#join').onclick=go;inp.onkeydown=e=>{if(e.key==='Enter')go()};
  const cx=$('#cx');if(cx)cx.onclick=()=>{tick();hall()};
+ const rl=$('#rsl');if(rl){rl.onclick=()=>{tick();$('#rsb').style.display='block';rl.style.display='none';$('#rcx').focus()};
+  $('#rcx').oninput=()=>{$('#re').textContent=''};
+  $('#rsg').onclick=async()=>{const b=$('#rsg');b.disabled=true;b.textContent='Checking…';
+   try{await restore($('#rcx').value);good();confetti();board()}catch(e){bad();$('#re').textContent=e.message;b.disabled=false;b.textContent='Bring back my card'}}}
  if(!edit)setTimeout(()=>inp.focus(),50);
 }
 
-function nav(which){return `<div class="tabs" style="margin-bottom:10px"><button class="tab${which==='jobs'?' on':''}" id="nj">Job board</button><button class="tab${which==='hall'?' on':''}" id="nh">Union Hall</button></div>`}
-function bindNav(){$('#nj').onclick=()=>{tick();board()};$('#nh').onclick=()=>{tick();hall()}}
-
 function hall(){
  stop();onHall=true;
- const me=fb&&fb.uid;
- let mem=MEM.slice();
- if(!mem.find(m=>m.id===me)&&S.name)mem.push({id:me||'me',name:S.name,year:S.year,stars:totalStars()});
- mem.sort((a,b)=>(b.year||1)-(a.year||1)||(b.stars||0)-(a.stars||0)||String(a.name).localeCompare(String(b.name)));
- const status=fbState==='online'?'':fbState==='connecting'?'<div class="msg">Connecting to the hall&hellip;</div>':'<div class="msg bad">The hall is offline right now. You can keep playing; your card updates when you\'re back online.</div>';
+ const me=S.pid;let mem=MEM.slice();
+ if(S.name&&!mem.find(m=>m.id===me))mem.push({id:me||'me',name:S.name,year:S.year,earned:S.earned,look:S.look,ce:!!ceYear()});
+ mem=mem.map(m=>m.id===me?Object.assign({},m,{name:S.name,year:S.year,earned:S.earned,look:S.look,ce:!!ceYear()}):m);
+ mem.sort((a,b)=>(+b.earned||0)-(+a.earned||0)||(+b.year||1)-(+a.year||1)||String(a.name).localeCompare(String(b.name)));
+ const status=fbState==='online'?'':fbState==='connecting'?'<div class="msg">Connecting to the hall&hellip;</div>':'<div class="msg bad">The hall is offline right now. You can keep playing. Your card updates when you\'re back online.</div>';
  app.innerHTML=hud()+nav('hall')+`<h2 class="sec">${LOCAL}</h2>${status}
- <div class="card" style="padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;background:#FFF8E7"><span><b style="font-weight:600">${mem.length}</b> member${mem.length===1?'':'s'} on the roster</span><button class="btn alt sm" id="ed">Edit my name</button></div>
- <div class="roster">${mem.map((m,i)=>{const y=Math.max(1,Math.min(5,m.year||1)),mine=m.id===me||m.id==='me';
-  return `<div class="mem card${mine?' me':''}"><span class="pos">${i+1}</span><span class="av" style="background:${YC[y]}">${initials(m.name)}</span><div class="mi"><b>${esc(m.name)}${mine?' <em>You</em>':''}</b><small>${RANK[y]}</small></div><span class="ms"><svg viewBox="0 0 24 24" style="width:22px;height:22px"><g fill="#FFC93C">${STAR}</g></svg>${+m.stars||0}</span></div>`}).join('')}</div>
+ <div class="card" style="padding:10px 12px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:#FFF8E7"><span><b style="font-weight:600">${mem.length}</b> member${mem.length===1?'':'s'}, ranked by career earnings</span><button class="btn alt sm" id="ed">Edit name</button></div>
+ <div class="roster">${mem.map((m,i)=>{const y=Math.max(1,Math.min(7,parseInt(m.year)||1)),mine=m.id===me||m.id==='me',lk=m.look&&typeof m.look==='object'?m.look:{};
+  const hk=HATS[lk.hat]?lk.hat:'yellow',tk=TRUCKS[lk.truck]?lk.truck:'',bt=lk.belt==='belt';
+  return `<div class="mem card${mine?' me':''}"><span class="pos">${i+1}</span>${hatSvg(hk,'width:44px;height:44px;flex:none')}<div class="mi"><b>${esc(m.name)}${mine?' <em>You</em>':''}</b><small>${RANK[y]}${m.ce?' <span class="cebadge">CE due</span>':''}</small>${tk||bt?`<span class="gear">${tk?truckSvg(tk,'height:20px;width:32px'):''}${bt?beltSvg('height:20px;width:32px'):''}</span>`:''}</div><span class="earn2">${money(+m.earned||0)}</span></div>`}).join('')}</div>
+ ${S.code?`<div class="card codebox"><div><b>Your hall code</b><small>Keep it somewhere safe. It moves your card and progress to a new phone.</small></div><button class="btn alt sm" id="cc">${fmtCode(S.code)}</button></div>`:''}
  <h2 class="sec" style="font-size:22px;margin-top:18px">Hall news</h2>
- <div class="card news">${NEWS.length?NEWS.map(n=>`<div class="nw"><span>${esc(n.text)}</span><small>${ago(n.at)}</small></div>`).join(''):`<p style="margin:12px">${fbState==='online'?'No news yet. Go earn some stars!':'News shows up when the hall is online.'}</p>`}</div>`;
+ <div class="card news">${NEWS.length?NEWS.map(n=>`<div class="nw"><span>${esc(n.text)}</span><small>${ago(n.at)}</small></div>`).join(''):`<p style="margin:12px">${fbState==='online'?'No news yet. Go earn some cash!':'News shows up when the hall is online.'}</p>`}</div>`;
  bindHud();bindNav();$('#ed').onclick=()=>{tick();onHall=false;signup(true)};
+ const cc=$('#cc');if(cc)cc.onclick=()=>{try{navigator.clipboard.writeText(fmtCode(S.code)).then(()=>{cc.textContent='Copied!';setTimeout(()=>{cc.textContent=fmtCode(S.code)},1500)}).catch(()=>{})}catch(e){}};
 }
 
-const JOBF={install,service,layout,emerg,install2,service2,layout2,inspect2};
+/* ---------- SHOP ---------- */
+function shop(){
+ stop();onHall=false;
+ const item=(kind,key,name,price,svg)=>{const own=price===0||S.owned[kind+'_'+key],eq=S.look[kind]===key;
+  return `<div class="si card${eq?' eq':''}">${svg}<b>${name}</b><button class="btn${own?' alt':''}" data-k="${kind}" data-v="${key}" data-p="${price}">${eq?(kind==='hat'?'Wearing':'Using: tap to remove'):own?'Use':money(price)}</button></div>`};
+ app.innerHTML=hud()+nav('shop')+`<h2 class="sec">Supply house</h2>
+ <div class="card" style="padding:10px 12px;margin-bottom:6px;background:#FFF8E7">Spend your cash on gear that shows on your Union Hall card. Spending never lowers your career earnings.</div>
+ <h3 class="sh">Hard hats</h3><div class="shop">${Object.entries(HATS).map(([k,h])=>item('hat',k,h[0],h[2],hatSvg(k))).join('')}</div>
+ <h3 class="sh">Work trucks</h3><div class="shop">${Object.entries(TRUCKS).map(([k,t])=>item('truck',k,t[0],t[1],truckSvg(k))).join('')}</div>
+ <h3 class="sh">Gear</h3><div class="shop">${item('belt','belt',GEAR.belt[0],GEAR.belt[1],beltSvg())}</div>
+ <div class="msg" id="smsg"></div>`;
+ bindHud();bindNav();
+ app.querySelectorAll('.si .btn').forEach(b=>b.onclick=()=>{const k=b.dataset.k,v=b.dataset.v,p=+b.dataset.p,id=k+'_'+v,m=$('#smsg');
+  if(p>0&&!S.owned[id]){if(S.cash<p){bad();m.className='msg bad';m.textContent=`You need ${money(p-S.cash)} more. Get back to work!`;return}
+   S.cash-=p;S.owned[id]=1;S.look[k]=v;save();syncMe();good();confetti();shop();return}
+  S.look[k]=(S.look[k]===v&&k!=='hat')?'':v;save();syncMe();tick();shop()});
+}
+
+const JOBF={install,service,layout,emerg,bench,lockout,install2,service2,layout2,inspect2};
 title();
 initFB();
 }

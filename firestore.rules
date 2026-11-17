@@ -2,28 +2,70 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Union Hall roster: anyone can read; each phone can only write its own card.
-    match /members/{uid} {
+    function signedIn() { return request.auth != null; }
+
+    // A player card is owned by the phone that made it, or by a phone that
+    // later proved it knows the card's secret hall code (see /owners).
+    function ownsPlayer(pid) {
+      return signedIn() && (request.auth.uid == pid ||
+        (exists(/databases/$(database)/documents/owners/$(pid)) &&
+         get(/databases/$(database)/documents/owners/$(pid)).data.uid == request.auth.uid));
+    }
+
+    function validMember() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['name', 'year', 'stars', 'earned', 'ce', 'look', 'badges', 'joined', 'updated'])
+        && d.name is string && d.name.size() >= 2 && d.name.size() <= 24
+        && d.year is int && d.year >= 1 && d.year <= 10
+        && d.stars is int && d.stars >= 0 && d.stars <= 1000
+        && (!('earned' in d) || (d.earned is int && d.earned >= 0 && d.earned <= 100000000))
+        && (!('ce' in d) || d.ce is bool)
+        && (!('look' in d) || (d.look is map && d.look.size() <= 10))
+        && (!('badges' in d) || (d.badges is list && d.badges.size() <= 20));
+    }
+
+    // Union Hall roster: anyone can read; only the card's owner can write it.
+    match /members/{pid} {
       allow read: if true;
-      allow create, update: if request.auth != null
-        && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['name', 'year', 'stars', 'joined', 'updated'])
-        && request.resource.data.name is string
-        && request.resource.data.name.size() >= 2
-        && request.resource.data.name.size() <= 24
-        && request.resource.data.year is int
-        && request.resource.data.year >= 1
-        && request.resource.data.year <= 5
-        && request.resource.data.stars is int
-        && request.resource.data.stars >= 0
-        && request.resource.data.stars <= 200;
+      allow create: if signedIn() && request.auth.uid == pid && validMember();
+      allow update: if ownsPlayer(pid) && validMember();
       allow delete: if false;
     }
 
-    // Hall news: anyone can read; signed-in players can add short posts under their own ID.
+    // Who currently owns each card. Never readable. Moving a card to a new
+    // phone requires writing the matching secret code.
+    match /owners/{pid} {
+      allow read: if false;
+      allow create: if signedIn() && request.auth.uid == pid
+        && request.resource.data.keys().hasOnly(['uid', 'code'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.code is string && request.resource.data.code.size() == 10;
+      allow update: if signedIn()
+        && request.resource.data.keys().hasOnly(['uid', 'code'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.code == resource.data.code;
+      allow delete: if false;
+    }
+
+    // Progress backups, stored under the secret hall code. Can be fetched only
+    // by someone who knows the code; can never be listed.
+    match /saves/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.pid == request.auth.uid
+        && request.resource.data.keys().hasOnly(['pid', 'data', 'updated'])
+        && request.resource.data.data is string && request.resource.data.data.size() <= 60000;
+      allow update: if ownsPlayer(resource.data.pid)
+        && request.resource.data.pid == resource.data.pid
+        && request.resource.data.keys().hasOnly(['pid', 'data', 'updated'])
+        && request.resource.data.data is string && request.resource.data.data.size() <= 60000;
+      allow delete: if false;
+    }
+
+    // Hall news: anyone can read; signed-in players add short posts.
     match /news/{postId} {
       allow read: if true;
-      allow create: if request.auth != null
+      allow create: if signedIn()
         && request.resource.data.keys().hasOnly(['uid', 'name', 'text', 'at'])
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.name is string
